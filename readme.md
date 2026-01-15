@@ -1,10 +1,3 @@
-
-
-Here is the updated portfolio with a LinkedIn link added to the contact header.
-
-**Note:** I have added a placeholder `[Your LinkedIn Profile URL]`—please replace this text with your actual LinkedIn link before saving the file.
-
-```markdown
 # Dipak Giri
 ### Data Engineer | Consultant
 
@@ -86,5 +79,4 @@ I am currently leading the development of a **Predictive Insights Center**, a we
 
 ---
 
-*© 2024 Dipak Giri. Built with Markdown.*
-```
+*© 2026 Dipak Giri. Built with Markdown.*
