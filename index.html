@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dipak Giri | Senior Data Engineer</title>
+    <!-- Tech/Data Focused Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            /* LIGHT MODE DEFAULTS */
+            --bg-body: #f1f5f9;       /* Slate 100 */
+            --bg-card: #ffffff;       /* White */
+            --bg-card-hover: #f8fafc; /* Slate 50 */
+
+            --text-main: #0f172a;     /* Slate 900 */
+            --text-muted: #64748b;    /* Slate 500 */
+
+            --border-color: #e2e8f0;
+            --border-radius: 12px;
+
+            /* Accents (Same for both, but glow changes) */
+            --color-primary: #0284c7; /* Sky 600 */
+            --color-secondary: #9333ea; /* Purple 600 */
+            --color-success: #16a34a; /* Green 600 */
+            --color-accent: #db2777;  /* Pink 600 */
+
+            /* Shadows */
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-glow: 0 0 0 transparent;
+
+            /* Background Gradient (None in light mode) */
+            --bg-gradient: none;
+        }
+
+        /* DARK MODE OVERRIDES */
+        [data-theme="dark"] {
+            --bg-body: #0f172a;       /* Slate 900 */
+            --bg-card: #1e293b;       /* Slate 800 */
+            --bg-card-hover: #334155; /* Slate 700 */
+
+            --text-main: #f1f5f9;     /* Slate 100 */
+            --text-muted: #94a3b8;    /* Slate 400 */
+
+            --border-color: rgba(255,255,255,0.05);
+
+            /* Darker accents for contrast on dark bg */
+            --color-primary: #38bdf8; /* Sky 400 */
+            --color-secondary: #a855f7; /* Purple 500 */
+            --color-success: #4ade80; /* Green 400 */
+            --color-accent: #f472b6;  /* Pink 400 */
+
+            --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 20px rgba(56, 189, 248, 0.15);
+
+            /* Radial Gradients for Background */
+            --bg-gradient:
+                radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 20%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            background-image: var(--bg-gradient);
+            background-attachment: fixed; /* Keeps gradient fixed on scroll */
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+        }
+
+        /* --- Sidebar --- */
+        aside {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .profile-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--bg-body);
+            margin: 0 auto 20px;
+            object-fit: cover;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-main);
+        }
+
+        .role {
+            color: var(--color-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .contact-row i {
+            color: var(--color-secondary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .module {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+        }
+
+        .module-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--color-success);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .skill-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            background: var(--bg-body);
+            border: 1px solid var(--color-secondary);
+            color: var(--text-muted);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .skill-tag:hover {
+            background: var(--color-secondary);
+            color: #fff;
+            box-shadow: 0 0 10px var(--color-secondary);
+        }
+
+        .cert-badge {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+        .cert-badge i { color: var(--color-primary); margin-top: 3px; }
+        .cert-name { font-weight: 600; color: var(--text-main); display: block; }
+        .cert-date { color: var(--text-muted); font-size: 0.75rem; }
+
+        /* --- Main Content --- */
+        main { display: flex; flex-direction: column; gap: 30px; }
+
+        .section { position: relative; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .section-title { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+
+        .timeline { position: relative; padding-left: 20px; }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary), transparent);
+        }
+
+        .job-card {
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            box-shadow: var(--shadow-card);
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--color-primary);
+        }
+
+        .job-card::after {
+            content: '';
+            position: absolute;
+            left: -25px;
+            top: 30px;
+            width: 12px;
+            height: 12px;
+            background: var(--bg-card);
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--color-primary);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .job-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+
+        .company-badge {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--color-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .client-name { color: var(--text-muted); font-size: 0.9rem; font-style: italic; }
+
+        .date-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+            padding: 4px 8px;
+            border-radius: 4px;
+            opacity: 0.8;
+        }
+
+        .job-desc ul { list-style: none; }
+        .job-desc li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .job-desc li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--color-secondary);
+            font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tech-highlight { color: var(--color-primary); font-weight: 600; }
+
+        .achievement-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .achievement-card {
+            background: var(--bg-card-hover);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 3px solid var(--color-accent);
+            box-shadow: var(--shadow-card);
+        }
+        .achievement-title { font-weight: 700; color: var(--text-main); margin-bottom: 5px; font-size: 1rem; }
+        .achievement-detail { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* --- Buttons --- */
+        .action-bar {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        @media (max-width: 850px) {
+            .container { grid-template-columns: 1fr; }
+            .achievement-grid { grid-template-columns: 1fr; }
+            .action-bar { bottom: 20px; right: 20px; }
+        }
+
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; background-image: none !important; }
+            .container { max-width: 100%; display: block; box-shadow: none; }
+            .module, .job-card, .profile-card {
+                background: white !important; color: black !important; border: 1px solid #ccc !important; box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+            .timeline::before { border-left: 2px solid #333; }
+            .job-card::after { background: white !important; border: 2px solid #333 !important; box-shadow: none !important; }
+            .text-muted { color: #444 !important; }
+            .tech-highlight { color: #000 !important; text-decoration: underline; }
+            .section-icon { background: #333 !important; color: white !important; }
+            .action-bar { display: none !important; }
+            .skill-tag { border: 1px solid #000 !important; color: #000 !important; background: transparent !important; }
+            .company-badge { background: #eee !important; color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Action Buttons -->
+    <div class="action-bar">
+        <!-- Theme Toggle -->
+        <button class="action-btn" id="theme-toggle" title="Toggle Dark/Light Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+        <!-- Print Button -->
+        <button class="action-btn" onclick="window.print()" title="Print / Save PDF">
+            <i class="fas fa-print"></i>
+        </button>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="profile-card">
+                <img src="https://picsum.photos/seed/dipakgiri/200/200" alt="Dipak Giri" class="avatar">
+                <h1 class="name">Dipak Giri</h1>
+                <div class="role code-font">&lt;Senior_Data_Engineer /&gt;</div>
+
+                <div class="contact-row">
+                    <i class="fas fa-envelope"></i>
+                    <span>dipakgiree@gmail.com</span>
+                </div>
+                <div class="contact-row">
+                    <i class="fas fa-phone"></i>
+                    <span>+91 77 095 89 051</span>
+                </div>
+                <div class="contact-row">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Pune, India</span>
+                </div>
+                <div class="contact-row">
+                    <i class="fab fa-linkedin"></i>
+                    <span>linkedin.com/in/dipakgiri</span>
+                </div>
+            </div>
+
+            <div class="module">
+                <div class="module-title">
+                    <i class="fas fa-microchip"></i> Tech_Stack
+                </div>
+                <div class="skill-cloud">
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">PySpark</span>
+                    <span class="skill-tag">SQL</span>
+                    <span class="skill-tag">Databricks</span>
+                    <span class="skill-tag">AWS S3</span>
+                    <span class="skill-tag">PostgreSQL</span>
+                    <span class="skill-tag">MySQL</span>
+                    <span class="skill-tag">Hadoop</span>
+                    <span class="skill-tag">NiFi</span>
+                    <span class="skill-tag">Talend</span>
+                    <span class="skill-tag">Tidal</span>
+                    <span class="skill-tag">Git/GitHub</span>
+                    <span class="skill-tag">Jupyter</span>
+                    <span class="skill-tag">Linux</span>
+                    <span class="skill-tag">Docker</span>
+                </div>
+            </div>
+
+            <div class="module">
+                <div class="module-title">
+                    <i class="fas fa-certificate"></i> Certifications
+                </div>
+                <div class="cert-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <span class="cert-name">Databricks Certified Associate Developer (Apache Spark 3.0)</span>
+                        <span class="cert-date code-font">June 2024</span>
+                    </div>
+                </div>
+                <div class="cert-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <span class="cert-name">Academy Accreditation - Generative AI Fundamentals</span>
+                        <span class="cert-date code-font">Aug 2024</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="module">
+                <div class="module-title">
+                    <i class="fas fa-graduation-cap"></i> Education
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <div class="cert-name">PG Diploma in Advance Computing</div>
+                    <div class="cert-date code-font">CDAC Pune | FEB 2018 - JULY 2018</div>
+                </div>
+                <div>
+                    <div class="cert-name">B.E. Computer</div>
+                    <div class="cert-date code-font">Sanjivani COE, Kopargaon | 2012 - 2017</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Profile Summary -->
+            <div class="module" style="background: linear-gradient(90deg, rgba(56, 189, 248, 0.1), transparent); border: 1px solid var(--border-color);">
+                <p style="color: var(--text-muted); font-size: 1.05rem;">
+                    Innovative Senior Data Engineer with <strong>7 years of experience</strong> specializing in Big Data, ETL pipelines, and cloud-based data architectures. Expert in the <span class="tech-highlight">Databricks</span> ecosystem and <span class="tech-highlight">PySpark</span>. Currently driving data strategy for <strong>Takeda Pharmaceutical</strong>, architecting critical KPI pipelines that power 360-degree business insights. Proven ability to transform legacy systems into modern data lakes, ensuring data integrity and performance optimization.
+                </p>
+            </div>
+
+            <!-- Experience -->
+            <section>
+                <div class="section-header">
+                    <div class="section-icon"><i class="fas fa-network-wired"></i></div>
+                    <h2 class="section-title">Experience</h2>
+                </div>
+
+                <div class="timeline">
+
+                    <!-- Current Role -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Senior Data Engineer</div>
+                                <div class="company-badge">Altimetrik</div>
+                                <div class="client-name">Client: Takeda Pharmaceutical (Japan)</div>
+                            </div>
+                            <div class="date-badge code-font">May 2024 - Present</div>
+                        </div>
+                        <div class="job-desc">
+                            <ul>
+                                <li>Orchestrated the end-to-end KPI and metrics pipeline using <span class="tech-highlight">Databricks</span> and <span class="tech-highlight">PySpark</span>, ensuring high availability for the Predictive Insights Center (PIC).</li>
+                                <li>Engineered automated data ingestion workflows extracting from <span class="tech-highlight">SharePoint</span> and Data Catalogs, integrating them into a unified Lakehouse.</li>
+                                <li>Designed complex transformation logic to calculate business metrics, storing processed results in <span class="tech-highlight">PostgreSQL</span> to support enterprise reporting.</li>
+                                <li>Leveraged <span class="tech-highlight">Tidal</span> for job scheduling and monitoring, significantly reducing pipeline latency.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Gauri Tech Group 1 -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Consultant | Data Engineer</div>
+                                <div class="company-badge">Gauri Technology</div>
+                                <div class="client-name">Client: Groupe Atlantic (UK)</div>
+                            </div>
+                            <div class="date-badge code-font">May 2023 - Dec 2023</div>
+                        </div>
+                        <div class="job-desc">
+                            <ul>
+                                <li>Implemented ETL processes using <span class="tech-highlight">Talend</span> to integrate data from SAP ERP, RouteXL, and Kyrica Payment services.</li>
+                                <li>Automated file transfers from SFTP (CSV, TXT, XML) to shared drives and SAP via API.</li>
+                                <li>Configured and scheduled jobs across SIT, QA, PREPROD, and PROD environments.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Gauri Tech Group 2 -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Consultant | Data Engineer</div>
+                                <div class="company-badge">Gauri Technology</div>
+                                <div class="client-name">Client: TNLCF (Lift & Shift)</div>
+                            </div>
+                            <div class="date-badge code-font">Feb 2023 - May 2023</div>
+                        </div>
+                        <div class="job-desc">
+                            <ul>
+                                <li>Led the migration of on-prem Nutanix infrastructure to <span class="tech-highlight">Azure Cloud</span> virtual machines.</li>
+                                <li>Configured multi-node <span class="tech-highlight">Hadoop</span> and <span class="tech-highlight">NiFi</span> clusters, managing networking and firewall interfaces.</li>
+                                <li>Set up Azure pipelines for CI/CD and enabled monitoring via DataDog agents.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Gauri Tech Group 3 -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Consultant | Data Engineer</div>
+                                <div class="company-badge">Gauri Technology</div>
+                                <div class="client-name">Client: TNLCF (Data Archive)</div>
+                            </div>
+                            <div class="date-badge code-font">Feb 2021 - Apr 2021</div>
+                        </div>
+                        <div class="job-desc">
+                            <ul>
+                                <li>Architected a data archive for the legacy SAP system to support reporting and record verification.</li>
+                                <li>Maintained pipelines using <span class="tech-highlight">PySpark JDBC</span> and Hive, ensuring data accessibility.</li>
+                                <li>Implemented a Hive DB backup strategy for disaster recovery and data restoration.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Gauri Tech Group 4 (Main Long Term) -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Consultant | Data Engineer</div>
+                                <div class="company-badge">Gauri Technology</div>
+                                <div class="client-name">Client: TNLCF (Core Project)</div>
+                            </div>
+                            <div class="date-badge code-font">Feb 2019 - Dec 2023</div>
+                        </div>
+                        <div class="job-desc">
+                            <ul>
+                                <li>Developed robust data pipelines using <span class="tech-highlight">Hadoop, PySpark</span>, and <span class="tech-highlight">NiFi</span> to gather data from Salesforce, SAP, and third-party sources.</li>
+                                <li>Implemented a data deduplication job using <span class="tech-highlight">Machine Learning</span> and phonetic algorithms.</li>
+                                <li>Optimized PySpark jobs using advanced joining techniques and monitored clustered network services.</li>
+                                <li>Managed data warehouse operations using MSSQL and generated reports via PowerBI.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Product Dev Roles -->
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Consultant | Product Developer</div>
+                                <div class="company-badge">Gauri Technology (Internal)</div>
+                                <div class="client-name">Project: Open]po[</div>
+                            </div>
+                            <div class="date-badge code-font">Jan 2019 - Dec 2023</div>
+                        </div>
+                        <div class="job-desc">
+                            <ul>
+                                <li>Extended open-source ERP modules (Project, Timesheet, Expense management) using <span class="tech-highlight">Python</span>.</li>
+                                <li>Deployed source code via CI/CD pipelines and enhanced user experience (UX) design.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Consultant | Product Developer</div>
+                                <div class="company-badge">Gauri Technology (Internal)</div>
+                                <div class="client-name">Project: CiviCRM</div>
+                            </div>
+                            <div class="date-badge code-font">Sept 2018 - Jan 2019</div>
+                        </div>
+                        <div class="job-desc">
+                            <ul>
+                                <li>Developed PHP-based extensions for surveys, multi-language support, and user hierarchy management.</li>
+                                <li>Managed source code using Git/Bitbucket and deployed on CentOS.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Achievements -->
+            <section>
+                <div class="section-header">
+                    <div class="section-icon"><i class="fas fa-trophy"></i></div>
+                    <h2 class="section-title">Verified_Assets</h2>
+                </div>
+
+                <div class="achievement-grid">
+                    <!-- Patent -->
+                    <div class="achievement-card">
+                        <div class="achievement-title"><i class="fas fa-file-contract code-font"></i> Patent Holder</div>
+                        <div class="achievement-detail">
+                            <strong>"A System for Wirelessly Sharing Battery Power Between Smartphone Devices"</strong><br>
+                            <span class="code-font">IN 201721006728</span>
+                        </div>
+                    </div>
+
+                    <!-- Award -->
+                    <div class="achievement-card">
+                        <div class="achievement-title"><i class="fas fa-award code-font"></i> Award Winner</div>
+                        <div class="achievement-detail">
+                            <strong>1st Prize: Techno Sanjivani Project Exhibition</strong><br>
+                            <span class="code-font">Sanjivani COE, Kopargaon</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- JavaScript for Theme Toggle -->
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        const iconElement = toggleBtn.querySelector('i');
+
+        // Check for saved user preference
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+
+        toggleBtn.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateIcon(newTheme);
+        });
+
+        function updateIcon(theme) {
+            if (theme === 'dark') {
+                iconElement.classList.remove('fa-sun');
+                iconElement.classList.add('fa-moon');
+            } else {
+                iconElement.classList.remove('fa-moon');
+                iconElement.classList.add('fa-sun');
+            }
+        }
+    </script>
+</body>
+</html>
