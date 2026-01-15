@@ -1,7 +1,11 @@
 # Dipak Giri
 ### Data Engineer | Consultant
 
-📍 Pune, India | 📧 [dipakgiree@gmail.com](mailto:dipakgiree@gmail.com) | 📱 +91 77 095 89 051 | 🔗 [LinkedIn](https://www.linkedin.com/in/dipakgiri/) | 🔗 [Github][(https://dmgiri.github.io)]   
+📍 Pune, India |   
+📧 [dipakgiree@gmail.com](mailto:dipakgiree@gmail.com)   
+📱 +91 77 095 89 051     
+🔗 [LinkedIn](https://www.linkedin.com/in/dipakgiri/)   
+🔗 [Github](https://dmgiri.github.io) 
    
 ---
 
@@ -24,11 +28,11 @@ I am currently leading the development of a **Predictive Insights Center**, a we
 | Category | Technologies |
 | :--- | :--- |
 | **Data Engineering** | Databricks, Apache Spark, PySpark, Hadoop, Hive, NiFi |
-| **Languages** | Python, Java, JavaScript, PHP, SQL |
+| **Languages** | Python, SQL |
 | **Cloud & Storage** | AWS (S3), Azure (Virtual Machines), SFTP |
 | **Databases** | PostgreSQL, MySQL, MSSQL Server |
 | **ETL Tools** | Talend Studio, Tidal |
-| **DevOps & MLOps** | Git, Azure DevOps, Bitbucket, Datadog, CI/CD Pipelines |
+| **DevOps & Monitoring** | Git, Azure DevOps, Bitbucket, Datadog|
 
 ---
 
