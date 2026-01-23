@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Mastery Academy | Future Tech</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- SLEEK GLASS VARIABLES --- */
+        :root {
+            /* Deep, rich dark gradient background */
+            --bg-gradient: radial-gradient(circle at top left, #1e1b4b, #0f172a, #020617);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --glass-highlight: 1px solid rgba(255, 255, 255, 0.15);
+            --blur-strength: 20px;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            /* Sleek, professional accents */
+            --accent-primary: #38bdf8; /* Sky Blue */
+            --accent-secondary: #818cf8; /* Indigo */
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        html { 
+            scroll-behavior: auto;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        /* Moving Background Blobs for the Blur Effect */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: moveOrb 20s infinite alternate;
+        }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: #4f46e5; }
+        .orb-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #0ea5e9; animation-delay: -5s; }
+        .orb-3 { top: 40%; left: 40%; width: 30vw; height: 30vw; background: #c026d3; opacity: 0.2; animation-duration: 25s; }
+
+        @keyframes moveOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 30px) scale(1.1); }
+        }
+
+        main { flex: 1 0 auto; }
+
+        h1, h2, h3, h4, h5, h6 { font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
+        .mono { font-family: 'Space Mono', monospace; }
+        
+        /* --- SLEEK GLASS MIXIN --- */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--blur-strength));
+            -webkit-backdrop-filter: blur(var(--blur-strength));
+            border: var(--glass-border);
+            /* Top/Left highlight for realism */
+            border-top: 1px solid rgba(255, 255, 255, 0.15); 
+            border-left: 1px solid rgba(255, 255, 255, 0.15); 
+            box-shadow: var(--glass-shadow);
+            border-radius: 24px;
+            color: var(--text-primary);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
+            transform-style: preserve-3d;
+            /* Subtle gradient overlay inside for texture */
+            background-image: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            background: rgba(2, 6, 23, 0.6); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 0 20px;
+            height: 70px;
+            line-height: 70px;
+        }
+        
+        .brand-logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-logo i { margin-right: 8px; color: var(--accent-primary); }
+        .brand-logo span { color: white; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+
+        nav ul a {
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 0 15px;
+            font-size: 0.95rem;
+        }
+        
+        nav ul a:hover { color: white; background: rgba(255,255,255,0.05); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 70px;
+            perspective: 1200px;
+        }
+
+        .hero-content { position: relative; z-index: 2; }
+
+        .hero h1 { 
+            font-size: 3.8rem; 
+            line-height: 1.1; 
+            margin-bottom: 20px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: translateZ(30px);
+        }
+        
+        .hero p { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 40px; font-weight: 300; transform: translateZ(20px); }
+
+        /* 3D Floating Code Window */
+        .code-window {
+            border-radius: 20px; 
+            padding: 30px; 
+            text-align: left; 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(30px); 
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: perspective(1000px) rotateY(-10deg) rotateX(5deg) translateZ(40px);
+            transition: transform 0.5s ease;
+            animation: floatCode 6s ease-in-out infinite;
+        }
+
+        .code-window:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateZ(60px);
+        }
+
+        @keyframes floatCode {
+            0%, 100% { transform: perspective(1000px) rotateY(-10deg) rotateX(5deg) translateY(0); }
+            50% { transform: perspective(1000px) rotateY(-8deg) rotateX(3deg) translateY(-15px); }
+        }
+
+        /* --- BUTTONS --- */
+        .btn-sleek {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 0 35px;
+            height: 54px;
+            line-height: 54px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+            transition: all 0.3s;
+            text-transform: none;
+            display: inline-block;
+        }
+        
+        .btn-sleek:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn-glass-outline {
+            background: rgba(255,255,255,0.03);
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 0 35px;
+            height: 54px;
+            line-height: 52px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-glass-outline:hover { 
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+        }
+
+        /* --- SECTIONS --- */
+        .section-padding { padding: 100px 0; }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- FEATURES --- */
+        .feature-card {
+            padding: 40px 30px;
+            height: 100%;
+            text-align: center;
+            background: transparent; /* Inherits glass from parent if needed, but using panel class below */
+        }
+
+        .feature-icon { 
+            font-size: 3rem; 
+            background: linear-gradient(135deg, #fff, var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px; 
+            opacity: 0.9;
+        }
+
+        /* --- TEACHERS --- */
+        .teacher-card {
+            overflow: visible;
+            position: relative;
+        }
+        
+        .teacher-header {
+            height: 130px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0));
+            border-radius: 24px 24px 0 0;
+            position: relative;
+        }
+
+        .teacher-avatar {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: #0f172a;
+            position: absolute;
+            bottom: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            object-fit: cover;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.8), 0 10px 20px rgba(0,0,0,0.5); /* Fake background cutout */
+        }
+
+        .teacher-content {
+            padding: 65px 25px 30px;
+            text-align: center;
+        }
+
+        .teacher-role {
+            color: var(--accent-primary);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-badge {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .social-icons a {
+            color: var(--text-secondary);
+            margin: 0 8px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .social-icons a:hover { 
+            background: var(--accent-primary);
+            color: #0f172a;
+            transform: translateY(-3px);
+        }
+
+        /* --- CURRICULUM --- */
+        .collapsible {
+            border: none;
+        }
+        
+        .collapsible-header {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 12px;
+            border-radius: 16px;
+        }
+        
+        .collapsible-header i { color: var(--accent-secondary); margin-right: 15px; }
+        .collapsible-header:hover { background: rgba(255,255,255,0.06); }
+
+        .collapsible-body {
+            background: rgba(0,0,0,0.2);
+            color: #cbd5e1;
+            margin-bottom: 12px;
+            border-radius: 0 0 16px 16px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-top: none;
+        }
+
+        .collection .collection-item {
+            background-color: transparent;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #cbd5e1;
+        }
+        .collection .collection-item:hover { background-color: rgba(255,255,255,0.02); }
+
+        .week-tag {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 10px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        /* --- PRICING --- */
+        .price-card {
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .price-card.popular { 
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            background: rgba(56, 189, 248, 0.03);
+        }
+        
+        .price-amount { font-size: 3.5rem; font-weight: 700; color: white; margin: 20px 0; letter-spacing: -1px;}
+        
+        .badge-popular {
+            position: absolute;
+            top: 25px;
+            right: -35px;
+            background: var(--accent-primary);
+            color: #0f172a;
+            padding: 6px 40px;
+            transform: rotate(45deg);
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        /* --- CONTACT FORM --- */
+        .input-sleek input, .input-sleek textarea {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            font-family: 'Outfit', sans-serif;
+            border-radius: 4px 4px 0 0;
+        }
+        
+        .input-sleek input:focus, .input-sleek textarea:focus {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border-bottom: 1px solid var(--accent-primary) !important;
+            box-shadow: 0 1px 0 0 var(--accent-primary) !important;
+        }
+
+        .input-sleek label {
+            color: var(--text-secondary) !important;
+        }
+        
+        /* --- FOOTER --- */
+        footer { 
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px; 
+        }
+
+        /* --- FLOATING ACTIONS --- */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .whatsapp-float:hover { transform: translateY(-5px) scale(1.05); }
+
+        /* --- RESPONSIVE --- */
+        @media only screen and (max-width: 600px) {
+            .hero h1 { font-size: 2.5rem; }
+            .btn-sleek, .btn-glass-outline { width: 100%; margin: 8px 0; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- NAVBAR -->
+    <div class="navbar-fixed" id="navbar">
+        <nav>
+            <div class="nav-wrapper container">
+                <a href="#" class="brand-logo">
+                    <i class="material-icons">terminal</i>
+                    <span>PyMaster</span>
+                </a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                
+                <ul class="right hide-on-med-and-down scrollspy" id="nav-mobile">
+                    <li><a href="#methodology">Methodology</a></li>
+                    <li><a href="#mentors">Mentors</a></li>
+                    <li><a href="#curriculum">Curriculum</a></li>
+                    <li><a href="#pricing">Fees</a></li>
+                    <li><a href="#contact" class="btn-sleek waves-effect waves-light" style="margin-left: 15px;">Enroll Now</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Mobile Side Menu -->
+    <ul class="sidenav" id="mobile-demo" style="background: #0f172a; border-right: 1px solid rgba(255,255,255,0.1);">
+        <li><div class="user-view">
+            <div class="background">
+                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" style="opacity:0.3">
+            </div>
+            <a href="#user"><img class="circle" src="https://i.pravatar.cc/150?u=a042581f4e29026704d"></a>
+            <a href="#name"><span class="white-text name">Student</span></a>
+            <a href="#email"><span class="white-text email">student@pymaster.com</span></a>
+        </div></li>
+        <li><a href="#methodology" class="white-text"><i class="material-icons">school</i>Methodology</a></li>
+        <li><a href="#mentors" class="white-text"><i class="material-icons">people</i>Mentors</a></li>
+        <li><a href="#curriculum" class="white-text"><i class="material-icons">list</i>Curriculum</a></li>
+        <li><a href="#pricing" class="white-text"><i class="material-icons">payments</i>Fees</a></li>
+    </ul>
+
+    <!-- BACK TO TOP BUTTON -->
+    <a href="#" class="btn-floating btn-large waves-effect waves-light glass-panel" id="back-to-top" style="display:none; width:50px; height:50px; line-height:50px; border-radius:50%;">
+        <i class="material-icons">arrow_upward</i>
+    </a>
+
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <div class="container hero-content">
+            <div class="row">
+                <div class="col s12 m7">
+                    <div style="display: inline-block; padding: 5px 15px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 30px; font-size: 0.85rem; color: var(--accent-primary); margin-bottom: 20px;">
+                        <i class="material-icons tiny" style="vertical-align: middle; margin-right: 5px;">auto_awesome</i> Next Batch Open
+                    </div>
+                    <h1>Master Python.<br>Build The Future.</h1>
+                    <p>The only "Bootcamp Style" Python course in Ahmednagar. <br>
+                    5 Days of Learning. 2 Days of Hard Coding. Real Projects.</p>
+                    <div class="hide-on-small-only">
+                        <a href="#pricing" class="btn-sleek waves-effect waves-light">Start Learning</a>
+                        <a href="#curriculum" class="btn-glass-outline waves-effect waves-light">View Syllabus</a>
+                    </div>
+                    <div class="hide-on-med-and-up">
+                        <a href="#pricing" class="btn-sleek waves-effect waves-light">Start Learning</a>
+                        <a href="#curriculum" class="btn-glass-outline waves-effect waves-light">View Syllabus</a>
+                    </div>
+                </div>
+                <div class="col s12 m5 hide-on-small-only center-align" data-aos="fade-left">
+                    <!-- Code Window Visual -->
+                    <div class="code-window">
+                        <div style="display:flex; gap:8px; margin-bottom:20px;">
+                            <span style="background:#ff5f56; width:10px; height:10px; border-radius:50%; opacity:0.6"></span>
+                            <span style="background:#ffbd2e; width:10px; height:10px; border-radius:50%; opacity:0.6"></span>
+                            <span style="background:#27c93f; width:10px; height:10px; border-radius:50%; opacity:0.6"></span>
+                        </div>
+                        <code class="mono" style="color: #e2e8f0; font-size: 0.9rem; line-height: 1.6;">
+                            <span style="color: #c084fc">def</span> <span style="color: #38bdf8">transform_career</span>(student):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;skills = [<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #fbbf24">"Python"</span>, <br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #fbbf24">"Data Engineering"</span>,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #fbbf24">"Problem Solving"</span><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+                            <br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c084fc">if</span> student.commitment == <span style="color: #fbbf24">"High"</span>:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #c084fc">return</span> <span style="color: #4ade80">"Dream Job"</span><br>
+                        </code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- METHODOLOGY -->
+    <section id="methodology" class="section-padding">
+        <div class="container">
+            <div class="center-align" data-aos="fade-up">
+                <h4 class="section-title">Why This Course Works</h4>
+                <p class="section-subtitle">Most courses just teach syntax. We teach you how to think like a programmer.</p>
+            </div>
+            <div class="row">
+                <div class="col s12 m4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="glass-panel feature-card">
+                        <i class="material-icons feature-icon">laptop_chromebook</i>
+                        <h5>Hybrid Model</h5>
+                        <p style="color: var(--text-secondary);">Learn concepts online (Mon-Fri evenings) and practice in-person on weekends (Sat-Sun). Flexible for college students.</p>
+                    </div>
+                </div>
+                <div class="col s12 m4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="glass-panel feature-card">
+                        <i class="material-icons feature-icon">build_circle</i>
+                        <h5>5+2 Formula</h5>
+                        <p style="color: var(--text-secondary);"><strong>5 Days Teaching:</strong> Theory & Live Coding.<br><strong>2 Days Labs:</strong> Mandatory practice sessions. No skipping the hard part.</p>
+                    </div>
+                </div>
+                <div class="col s12 m4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="glass-panel feature-card">
+                        <i class="material-icons feature-icon">emoji_events</i>
+                        <h5>Real Projects</h5>
+                        <p style="color: var(--text-secondary);">Don't just print "Hello World". Build a Contact Book, Weather App, and Banking System by the end of 8 weeks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEACHERS SECTION -->
+    <section id="mentors" class="section-padding">
+        <div class="container">
+            <div class="center-align" data-aos="fade-up">
+                <h4 class="section-title">Learn From The Experts</h4>
+                <p class="section-subtitle">Get guidance directly from industry professionals working in top tech firms.</p>
+            </div>
+            
+            <div class="row" style="margin-top: 50px;">
+                
+                <!-- Teacher 1: Jenit Patel (Data Scientist) -->
+                <div class="col s12 m6 l4 offset-l2" data-aos="fade-up" data-aos-delay="100">
+                    <div class="glass-panel teacher-card hoverable">
+                        <div class="teacher-header">
+                            <img src="https://picsum.photos/seed/jenit/200/200" alt="Jenit Patel" class="teacher-avatar">
+                        </div>
+                        <div class="teacher-content">
+                            <div class="teacher-role">Mentor & Data Scientist</div>
+                            <h5 style="margin: 5px 0; font-size: 1.3rem;">Jenit Patel</h5>
+                            
+                            <div style="margin: 15px 0;">
+                                <span class="stat-badge"><i class="material-icons tiny" style="margin-right:5px;">analytics</i>Data Scientist</span>
+                                <span class="stat-badge"><i class="material-icons tiny" style="margin-right:5px;">schedule</i>5 Yrs Exp</span>
+                            </div>
+
+                            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 25px;">
+                                Specializes in Machine Learning, Predictive Modeling, and Data Visualization. Jenit bridges the gap between theoretical statistics and practical Python implementation.
+                            </p>
+
+                            <div class="social-icons">
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-kaggle"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teacher 2: User (Data Engineer) -->
+                <div class="col s12 m6 l4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="glass-panel teacher-card hoverable">
+                        <div class="teacher-header">
+                            <img src="https://picsum.photos/seed/dataprof1/200/200" alt="Instructor" class="teacher-avatar">
+                        </div>
+                        <div class="teacher-content">
+                            <div class="teacher-role">Lead Instructor & Data Engineer</div>
+                            <h5 style="margin: 5px 0; font-size: 1.3rem;">Alex Johnson</h5>
+                            
+                            <div style="margin: 15px 0;">
+                                <span class="stat-badge"><i class="material-icons tiny" style="margin-right:5px;">work</i>Data Engineer</span>
+                                <span class="stat-badge"><i class="material-icons tiny" style="margin-right:5px;">schedule</i>7 Yrs Exp</span>
+                            </div>
+
+                            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 25px;">
+                                Expert in backend architecture, ETL pipelines, and automation. Bringing 7 years of real-world Python experience from the corporate sector to the classroom.
+                            </p>
+
+                            <div class="social-icons">
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CURRICULUM -->
+    <section id="curriculum" class="section-padding">
+        <div class="container">
+            <div class="center-align" data-aos="fade-up">
+                <h4 class="section-title">8-Week Roadmap</h4>
+                <p class="section-subtitle">A structured path from beginner to job-ready developer.</p>
+            </div>
+            <br>
+            <ul class="collapsible popout" data-aos="fade-up">
+                <!-- Week 1 -->
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">filter_1</i>Week 1: Setup & Basics</div>
+                    <div class="collapsible-body">
+                        <span class="grey-text">Focus: Getting comfortable with the environment.</span>
+                        <ul class="collection">
+                            <li class="collection-item">Day 1: Intro & Installation (VS Code)</li>
+                            <li class="collection-item">Day 2: Variables & Data Types</li>
+                            <li class="collection-item">Day 3: Operators & Calculations</li>
+                            <li class="collection-item">Day 4: Type Casting & I/O</li>
+                            <li class="collection-item">Day 5: String Manipulation</li>
+                            <li class="collection-item"><span class="week-tag">WEEKEND</span> User Info Form Project & Setup Lab</li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- Week 2 -->
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">filter_2</i>Week 2: Control Flow (Logic)</div>
+                    <div class="collapsible-body">
+                        <span class="grey-text">Focus: Making decisions and loops.</span>
+                        <ul class="collection">
+                            <li class="collection-item">Day 1: Conditional Statements (If-Elif-Else)</li>
+                            <li class="collection-item">Day 2: Nested Conditions</li>
+                            <li class="collection-item">Day 3: While Loops</li>
+                            <li class="collection-item">Day 4: For Loops & Range</li>
+                            <li class="collection-item">Day 5: Pattern Printing & Nested Loops</li>
+                            <li class="collection-item"><span class="week-tag">WEEKEND</span> Mini Project: Number Guessing Game</li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- Week 3 -->
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">filter_3</i>Week 3: Data Structures</div>
+                    <div class="collapsible-body">
+                        <span class="grey-text">Focus: Storing multiple items efficiently.</span>
+                        <ul class="collection">
+                            <li class="collection-item">Day 1: Lists Basics & Methods</li>
+                            <li class="collection-item">Day 2: Advanced Lists (Sort, Reverse)</li>
+                            <li class="collection-item">Day 3: List Comprehensions</li>
+                            <li class="collection-item">Day 4: Tuples & Sets</li>
+                            <li class="collection-item">Day 5: Algorithms on Lists</li>
+                            <li class="collection-item"><span class="week-tag">WEEKEND</span> Project: Student Grade Manager</li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- Week 4 -->
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">filter_4</i>Week 4: Dictionaries & Functions</div>
+                    <div class="collapsible-body">
+                        <span class="grey-text">Focus: Key-Value pairs and Modular Code.</span>
+                        <ul class="collection">
+                            <li class="collection-item">Day 1: Dictionaries Intro</li>
+                            <li class="collection-item">Day 2: Dictionary Methods</li>
+                            <li class="collection-item">Day 3: User Defined Functions</li>
+                            <li class="collection-item">Day 4: Advanced Functions (*args, **kwargs)</li>
+                            <li class="collection-item">Day 5: Modules & Libraries</li>
+                            <li class="collection-item"><span class="week-tag">WEEKEND</span> Project: Contact Book (Functions)</li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- Week 5 -->
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">filter_5</i>Week 5: Files, Errors & OOP</div>
+                    <div class="collapsible-body">
+                        <span class="grey-text">Focus: Saving data and Object Oriented Programming.</span>
+                        <ul class="collection">
+                            <li class="collection-item">Day 1: File Handling (Read/Write)</li>
+                            <li class="collection-item">Day 2: Exception Handling (Try-Except)</li>
+                            <li class="collection-item">Day 3: Classes & Objects</li>
+                            <li class="collection-item">Day 4: Inheritance & Polymorphism</li>
+                            <li class="collection-item">Day 5: OOP Real-world Examples</li>
+                            <li class="collection-item"><span class="week-tag">WEEKEND</span> Project: Banking System (OOP)</li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- Week 6-8 -->
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">layers</i>Weeks 6-8: Advanced & Final Project</div>
+                    <div class="collapsible-body">
+                        <ul class="collection">
+                            <li class="collection-item">Week 6: Libraries, API Integration, Pandas, SQLite.</li>
+                            <li class="collection-item">Week 7: Data Analysis Project & Employee DB System.</li>
+                            <li class="collection-item">Week 8: Final Capstone Project + Git/GitHub Training.</li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section-padding">
+        <div class="container">
+            <div class="center-align" data-aos="fade-up">
+                <h4 class="section-title">Simple Pricing</h4>
+                <p class="section-subtitle">Invest in your skills today.</p>
+            </div>
+            <div class="row" style="margin-top: 40px;">
+                <!-- Launch Batch -->
+                <div class="col s12 m4" data-aos="fade-right">
+                    <div class="glass-panel price-card">
+                        <h5 style="color: var(--text-secondary); font-weight:500;">Launch Batch</h5>
+                        <div class="price-amount">₹4,999</div>
+                        <ul class="collection" style="border:none;">
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);">8 Weeks Intensive</li>
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);">5 Online + 2 In-Person Days</li>
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);">4 Mini Projects</li>
+                            <li class="collection-item">Certificate of Completion</li>
+                        </ul>
+                        <a href="#contact" class="btn-large waves-effect waves-light" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 12px; width: 100%;">Book Seat</a>
+                    </div>
+                </div>
+
+                <!-- Standard Batch (Popular) -->
+                <div class="col s12 m4" data-aos="fade-up">
+                    <div class="glass-panel price-card popular">
+                        <div class="badge-popular">BEST VALUE</div>
+                        <h5 style="color: var(--accent-primary);">Pro Batch</h5>
+                        <div class="price-amount">₹6,999</div>
+                        <ul class="collection" style="border:none;">
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);"><strong>Everything in Launch</strong></li>
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);"><i class="material-icons tiny" style="color: var(--accent-primary)">check</i> 1:1 Code Review</li>
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);"><i class="material-icons tiny" style="color: var(--accent-primary)">check</i> GitHub Portfolio Setup</li>
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);"><i class="material-icons tiny" style="color: var(--accent-primary)">check</i> Resume Building Help</li>
+                            <li class="collection-item"><i class="material-icons tiny" style="color: var(--accent-primary)">check</i> Interview Questions (DSA)</li>
+                        </ul>
+                        <a href="#contact" class="btn-large waves-effect waves-light btn-sleek" style="width: 100%;">Book Seat</a>
+                    </div>
+                </div>
+
+                <!-- Regular Batch -->
+                <div class="col s12 m4" data-aos="fade-left">
+                    <div class="glass-panel price-card">
+                        <h5 style="color: var(--text-secondary); font-weight:500;">Group Offer</h5>
+                        <div class="price-amount">₹4,499 <span style="font-size: 1rem; font-weight: 400; color: var(--text-secondary);">/ person</span></div>
+                        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">Group of 3+ students</p>
+                        <ul class="collection" style="border:none;">
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);">Same Pro Batch Features</li>
+                            <li class="collection-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);">Learn with Friends</li>
+                            <li class="collection-item">Group Projects</li>
+                        </ul>
+                        <a href="#contact" class="btn-large waves-effect waves-light" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 12px; width: 100%;">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT FORM -->
+    <section id="contact" class="section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m5" data-aos="fade-right">
+                    <h4 style="color: white;">Ready to Code?</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 30px;">Fill out form to reserve your spot for the next batch starting soon in Ahmednagar. Limited seats available.</p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <i class="material-icons left" style="color: var(--accent-primary);">location_on</i>
+                        <span class="grey-text text-lighten-2" style="margin-left: 10px; line-height: 24px;">Ahmednagar, Maharashtra</span>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <i class="material-icons left" style="color: var(--accent-primary);">email</i>
+                        <span class="grey-text text-lighten-2" style="margin-left: 10px; line-height: 24px;">learn@pymaster.com</span>
+                    </div>
+                    <div>
+                        <i class="material-icons left" style="color: var(--accent-primary);">phone</i>
+                        <span class="grey-text text-lighten-2" style="margin-left: 10px; line-height: 24px;">+91 98765 43210</span>
+                    </div>
+                </div>
+                <div class="col s12 m7" data-aos="fade-left">
+                    <div class="glass-panel" style="padding: 40px;">
+                        <span class="card-title" style="color: white; font-weight: 700; font-size: 1.5rem; display:block; margin-bottom:20px;">Enquiry Form</span>
+                        <div class="row">
+                            <form class="col s12 input-sleek" id="contactForm">
+                                <div class="row">
+                                    <div class="input-field col s12 m6">
+                                        <i class="material-icons prefix">account_circle</i>
+                                        <input id="icon_prefix" type="text" class="validate">
+                                        <label for="icon_prefix">Full Name</label>
+                                    </div>
+                                    <div class="input-field col s12 m6">
+                                        <i class="material-icons prefix">phone</i>
+                                        <input id="icon_telephone" type="tel" class="validate">
+                                        <label for="icon_telephone">Phone Number</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">email</i>
+                                        <input id="email" type="email" class="validate">
+                                        <label for="email">Email</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">message</i>
+                                        <textarea id="message" class="materialize-textarea"></textarea>
+                                        <label for="message">Message</label>
+                                    </div>
+                                </div>
+                                <button class="btn waves-effect waves-light btn-sleek right" type="submit" name="action">
+                                    Submit
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">PyMaster Academy</h5>
+                    <p class="grey-text text-lighten-4" style="opacity: 0.7;">Empowering college students in Ahmednagar with coding skills for the modern world.</p>
+                </div>
+                <div class="col l4 offset-l2 s12">
+                    <h5 class="white-text">Links</h5>
+                    <ul>
+                        <li><a class="grey-text text-lighten-3" href="#curriculum" style="color: var(--text-secondary) !important;">Curriculum</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#pricing" style="color: var(--text-secondary) !important;">Fees</a></li>
+                        <li><a class="grey-text text-lighten-3" href="#contact" style="color: var(--text-secondary) !important;">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright" style="background: rgba(0,0,0,0.2);">
+            <div class="container center-align">
+                © 2023 PyMaster Academy. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Whatsapp Float -->
+    <a href="https://wa.me/919876543210" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Init Sidenav
+            var sidenav = document.querySelectorAll('.sidenav');
+            M.Sidenav.init(sidenav);
+
+            // Init Collapsible
+            var collapsible = document.querySelectorAll('.collapsible');
+            M.Collapsible.init(collapsible);
+
+            // Init ScrollSpy
+            var scrollSpy = document.querySelectorAll('.scrollspy');
+            M.ScrollSpy.init(scrollSpy, { scrollOffset: 70 });
+        });
+
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50,
+            easing: 'ease-out-cubic'
+        });
+
+        // --- SMOOTH SCROLL & NAV HANDLING ---
+        $(document).ready(function() {
+            $('a[href^="#"]').click(function(e) {
+                e.preventDefault();
+                var target = $(this).attr('href');
+                
+                if ($(target).length) {
+                    $('html, body').animate({
+                        scrollTop: $(target).offset().top - 70
+                    }, 800);
+
+                    if ($(this).closest('.sidenav').length > 0) {
+                        $('.sidenav').sidenav('close');
+                    }
+                }
+            });
+        });
+
+        // Back To Top Button Logic
+        var mybutton = document.getElementById("back-to-top");
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // Form Submission - Custom Toast
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            M.toast({
+                html: '<span><i class="material-icons left">check_circle</i>Thanks! We will contact you soon.</span>',
+                classes: 'rounded',
+                displayLength: 4000
+            });
+            
+            this.reset();
+        });
+    </script>
+</body>
+</html>
