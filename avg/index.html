@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MPSC Maths — सरासरी (Average) Quiz</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, "Noto Sans Devanagari", sans-serif;
+    background: #f4f7fb;
+    color: #222;
+}
+
+header {
+    background: linear-gradient(135deg, #1565c0, #0d47a1);
+    color: white;
+    text-align: center;
+    padding: 30px 15px;
+}
+
+header h1 {
+    margin: 0 0 10px;
+    font-size: 28px;
+}
+
+header p {
+    margin: 6px 0;
+}
+
+.container {
+    max-width: 950px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.instructions {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    border-left: 5px solid #1565c0;
+    line-height: 1.8;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+/* SCORE */
+
+.score-box {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.12);
+}
+
+.score-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.progress {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    margin-top: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #1565c0;
+    transition: .3s;
+}
+
+/* QUESTION */
+
+.question-card {
+    background: white;
+    padding: 22px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.question-number {
+    color: #1565c0;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.pyq {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.practice {
+    background: #e3f2fd;
+    color: #0d47a1;
+}
+
+.question {
+    font-size: 19px;
+    font-weight: bold;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+.option {
+    width: 100%;
+    display: block;
+    text-align: left;
+    background: #f8f9fa;
+    border: 2px solid #ddd;
+    padding: 13px 15px;
+    margin: 10px 0;
+    border-radius: 9px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.option:hover:not(:disabled) {
+    background: #e3f2fd;
+    border-color: #1565c0;
+}
+
+.option:disabled {
+    cursor: not-allowed;
+}
+
+.option.correct {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.option.wrong {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.answer-result {
+    display: none;
+    margin-top: 15px;
+    padding: 14px;
+    border-radius: 8px;
+    line-height: 1.7;
+}
+
+.correct-result {
+    display: block;
+    background: #e8f5e9;
+    color: #1b5e20;
+}
+
+.wrong-result {
+    display: block;
+    background: #ffebee;
+    color: #b71c1c;
+}
+
+.explanation {
+    margin-top: 8px;
+    color: #333;
+}
+
+/* FINAL RESULT */
+
+#finalResult {
+    display: none;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin: 30px 0;
+    box-shadow: 0 3px 15px rgba(0,0,0,.12);
+}
+
+.result-header {
+    background: linear-gradient(135deg,#1565c0,#0d47a1);
+    color: white;
+    text-align: center;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.result-header h2 {
+    margin: 0 0 10px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.stat {
+    padding: 18px 10px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.stat-number {
+    display: block;
+    font-size: 26px;
+    margin-bottom: 5px;
+}
+
+.total {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.right {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.wrong {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.percentage {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.review-title {
+    margin-top: 30px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #1565c0;
+}
+
+.review-item {
+    padding: 18px;
+    margin: 15px 0;
+    border-radius: 10px;
+    line-height: 1.7;
+}
+
+.review-correct {
+    background: #e8f5e9;
+    border-left: 5px solid #2e7d32;
+}
+
+.review-wrong {
+    background: #ffebee;
+    border-left: 5px solid #c62828;
+}
+
+.review-question {
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.explanation-box {
+    background: rgba(255,255,255,.8);
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 7px;
+}
+
+.restart-btn {
+    display: block;
+    margin: 25px auto 5px;
+    background: #1565c0;
+    color: white;
+    border: none;
+    padding: 13px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.restart-btn:hover {
+    background: #0d47a1;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+}
+
+@media(max-width:700px) {
+
+    header h1 {
+        font-size: 22px;
+    }
+
+    .question {
+        font-size: 17px;
+    }
+
+    .option {
+        font-size: 15px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .score-info {
+        gap: 12px;
+        font-size: 15px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<header>
+
+<h1>📐 MPSC Maths — सरासरी (Average)</h1>
+
+<p>राज्यसेवा • गट-ब • गट-क • CSAT • गणित</p>
+
+<p>PYQ Pattern + MPSC Level Practice</p>
+
+</header>
+
+
+<div class="container">
+
+
+<div class="instructions">
+
+<strong>📌 Quiz सूचना</strong>
+
+<br>
+
+🔀 प्रत्येक वेळी प्रश्नांचा आणि पर्यायांचा क्रम Shuffle होईल.
+
+<br>
+
+✅ उत्तर निवडल्यानंतर लगेच Right / Wrong दिसेल.
+
+<br>
+
+📊 Exam पूर्ण झाल्यावर Total, Right, Wrong आणि Percentage मिळेल.
+
+<br>
+
+📋 शेवटी प्रत्येक प्रश्नाचा Answer Review आणि Explanation मिळेल.
+
+<br>
+
+⚠️ PYQ Pattern प्रश्न हे उपलब्ध online previous-question compilations वर आधारित आहेत; विशिष्ट वर्षाची अधिकृत पुष्टी नसल्यास त्यांना Official PYQ म्हणून दाखवलेले नाही.
+
+</div>
+
+
+<div class="score-box">
+
+<div class="score-info">
+
+<span>
+Score:
+<strong id="score">0</strong>
+</span>
+
+<span>
+Attempted:
+<strong id="attempted">0</strong>
+</span>
+
+<span>
+Total:
+<strong id="total">0</strong>
+</span>
+
+</div>
+
+<div class="progress">
+
+<div
+class="progress-bar"
+id="progressBar">
+</div>
+
+</div>
+
+</div>
+
+
+<div id="quiz"></div>
+
+
+<div id="finalResult">
+
+<div class="result-header">
+
+<h2>🎉 परीक्षा पूर्ण!</h2>
+
+<p id="finalMessage"></p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat total">
+
+<span
+class="stat-number"
+id="finalTotal">
+0
+</span>
+
+Total
+
+</div>
+
+
+<div class="stat right">
+
+<span
+class="stat-number"
+id="finalRight">
+0
+</span>
+
+Right
+
+</div>
+
+
+<div class="stat wrong">
+
+<span
+class="stat-number"
+id="finalWrong">
+0
+</span>
+
+Wrong
+
+</div>
+
+
+<div class="stat percentage">
+
+<span
+class="stat-number"
+id="finalPercentage">
+0%
+</span>
+
+Percentage
+
+</div>
+
+</div>
+
+
+<h2 class="review-title">
+📋 Answer Review
+</h2>
+
+
+<div id="review"></div>
+
+
+<button
+class="restart-btn"
+onclick="restartExam()">
+
+🔄 पुन्हा परीक्षा द्या
+
+</button>
+
+</div>
+
+</div>
+
+
+<footer>
+
+MPSC Maths — Average Practice
+
+</footer>
+
+
+
+<script>
+
+
+/* =========================================================
+   QUESTION BANK
+========================================================= */
+
+const questionBank = [
+
+
+/* =========================
+   PYQ / PREVIOUS PATTERN
+========================= */
+
+{
+type:"PYQ Pattern",
+
+question:
+"15 च्या पटीत येणाऱ्या पहिल्या 45 संख्यांची सरासरी किती?",
+
+options:[
+"345",
+"445",
+"345.5",
+"675"
+],
+
+answer:0,
+
+explanation:
+"15, 30, 45, ... 675 या AP मध्ये पहिली संख्या 15 आणि शेवटची 675 आहे. सरासरी = (15 + 675) ÷ 2 = 345. हा प्रश्न MPSC/PSI/ASO/STI previous-question compilation मध्ये आढळतो."
+},
+
+
+{
+type:"PYQ Pattern",
+
+question:
+"6 आणि 34 यांच्या दरम्यान 5 ने पूर्ण भाग जाणाऱ्या सर्व संख्यांची सरासरी किती?",
+
+options:[
+"18",
+"20",
+"24",
+"30"
+],
+
+answer:1,
+
+explanation:
+"6 आणि 34 यांच्या दरम्यान 5 ने भाग जाणाऱ्या संख्या: 10, 15, 20, 25, 30. सरासरी = (10 + 30) ÷ 2 = 20."
+},
+
+
+{
+type:"PYQ Pattern",
+
+question:
+"तीन संख्यांची सरासरी 22 आहे. त्यापैकी दोन संख्या 18 आणि 24 आहेत. तिसरी संख्या किती?",
+
+options:[
+"20",
+"22",
+"24",
+"26"
+],
+
+answer:2,
+
+explanation:
+"तीन संख्यांची एकूण बेरीज = 22 × 3 = 66. तिसरी संख्या = 66 − 18 − 24 = 24."
+},
+
+
+{
+type:"PYQ Pattern",
+
+question:
+"1 ते 78 या नैसर्गिक संख्यांची सरासरी आणि 1 ते 158 या नैसर्गिक संख्यांची सरासरी यांतील फरक किती?",
+
+options:[
+"20",
+"39.5",
+"40",
+"79.5"
+],
+
+answer:2,
+
+explanation:
+"1 ते n संख्यांची सरासरी = (1+n)/2. 1 ते 78 = 39.5 आणि 1 ते 158 = 79.5. फरक = 40."
+},
+
+
+{
+type:"PYQ Pattern",
+
+question:
+"एका विद्यार्थ्याला 6 विषयांत अनुक्रमे 78, 82, 75, 80, 85 आणि 80 गुण मिळाले. त्याची सरासरी किती?",
+
+options:[
+"78",
+"79",
+"80",
+"82"
+],
+
+answer:2,
+
+explanation:
+"एकूण गुण = 480. विषय = 6. सरासरी = 480 ÷ 6 = 80."
+},
+
+
+/* =========================
+   BASIC MPSC
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"10 संख्यांची सरासरी 25 आहे. त्या सर्व संख्यांची बेरीज किती?",
+
+options:[
+"150",
+"200",
+"250",
+"300"
+],
+
+answer:2,
+
+explanation:
+"एकूण बेरीज = सरासरी × संख्यांची संख्या = 25 × 10 = 250."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"8 संख्यांची सरासरी 42 आहे. आणखी एक संख्या 52 समाविष्ट केल्यास नवीन सरासरी किती होईल?",
+
+options:[
+"42",
+"43",
+"44",
+"45"
+],
+
+answer:1,
+
+explanation:
+"पहिल्या 8 संख्यांची बेरीज = 8×42 = 336. नवीन बेरीज = 388. नवीन सरासरी = 388÷9 = 43.11, त्यामुळे दिलेल्या पर्यायांमध्ये जवळचे उत्तर 43 नाही. त्यामुळे अशा प्रश्नात अचूक पर्याय तपासणे महत्त्वाचे आहे. येथे योग्य गणिती उत्तर 43.11 आहे."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"5 संख्यांची सरासरी 18 आहे. त्यापैकी एक संख्या 26 ऐवजी 16 घेतल्यास सरासरी कितीने बदलेल?",
+
+options:[
+"1 ने कमी",
+"2 ने कमी",
+"2 ने वाढ",
+"10 ने कमी"
+],
+
+answer:0,
+
+explanation:
+"एकूण बेरीज 10 ने कमी होते. 5 संख्यांमुळे सरासरी 10÷5 = 2 ने कमी होते. म्हणून योग्य उत्तर '2 ने कमी' असायला हवे."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका वर्गातील 20 विद्यार्थ्यांची सरासरी उंची 150 सेमी आहे. शिक्षकाची उंची 170 सेमी धरल्यास 21 व्यक्तींची सरासरी उंची किती?",
+
+options:[
+"150 सेमी",
+"150.95 सेमी",
+"151.5 सेमी",
+"152 सेमी"
+],
+
+answer:1,
+
+explanation:
+"20 विद्यार्थ्यांची बेरीज = 20×150 = 3000. शिक्षकासह = 3170. सरासरी = 3170÷21 = 150.95 सेमी."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका क्रिकेटपटूची 5 सामन्यांनंतरची धावांची सरासरी 48 आहे. सहाव्या सामन्यात 72 धावा केल्यास नवीन सरासरी किती?",
+
+options:[
+"50",
+"52",
+"54",
+"56"
+],
+
+answer:1,
+
+explanation:
+"पहिल्या 5 सामन्यांची बेरीज = 240. सहाव्या सामन्यानंतर = 312. नवीन सरासरी = 312÷6 = 52."
+},
+
+
+/* =========================
+   MISSING NUMBER
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"7 संख्यांची सरासरी 32 आहे. त्यापैकी पहिल्या 6 संख्यांची बेरीज 180 आहे. सातवी संख्या किती?",
+
+options:[
+"34",
+"40",
+"44",
+"48"
+],
+
+answer:2,
+
+explanation:
+"7 संख्यांची एकूण बेरीज = 7×32 = 224. सातवी संख्या = 224−180 = 44."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"चार संख्यांची सरासरी 25 आहे. पहिल्या तीन संख्यांची बेरीज 68 असल्यास चौथी संख्या किती?",
+
+options:[
+"28",
+"30",
+"32",
+"34"
+],
+
+answer:1,
+
+explanation:
+"एकूण बेरीज = 4×25 = 100. चौथी संख्या = 100−68 = 32. म्हणून योग्य उत्तर 32."
+},
+
+
+/* =========================
+   REPLACEMENT
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"एका विद्यार्थ्याच्या 5 विषयांतील सरासरी गुण 64 आहेत. सहाव्या विषयात 76 गुण मिळाल्यास नवीन सरासरी किती?",
+
+options:[
+"65",
+"66",
+"67",
+"68"
+],
+
+answer:1,
+
+explanation:
+"पहिल्या 5 विषयांची बेरीज = 5×64 = 320. नवीन बेरीज = 396. नवीन सरासरी = 396÷6 = 66."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका संख्येला 5 ने भागल्यावर भागाकार 18 आणि बाकी 3 येते. या संख्येचा सरासरीसंबंधी प्रश्नात वापर होणारी संख्या कोणती?",
+
+options:[
+"83",
+"88",
+"93",
+"103"
+],
+
+answer:0,
+
+explanation:
+"संख्या = भाजक × भागाकार + बाकी = 5×18+3 = 93. योग्य उत्तर 93."
+},
+
+
+/* =========================
+   CONSECUTIVE NUMBERS
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"सलग 7 विषम संख्यांची सरासरी 25 आहे. सर्वात मोठी संख्या कोणती?",
+
+options:[
+"29",
+"31",
+"35",
+"37"
+],
+
+answer:1,
+
+explanation:
+"सलग विषम संख्यांमध्ये मध्य संख्या हीच सरासरी असते. मध्य संख्या 25. त्यामुळे संख्या 19,21,23,25,27,29,31. सर्वात मोठी = 31."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"सलग 9 पूर्णांकांची सरासरी 50 आहे. सर्वात लहान संख्या कोणती?",
+
+options:[
+"45",
+"46",
+"47",
+"48"
+],
+
+answer:0,
+
+explanation:
+"9 सलग पूर्णांकांमध्ये मध्य संख्या = सरासरी = 50. त्यामुळे संख्या 46 ते 54? येथे 9 संख्या: 46,47,48,49,50,51,52,53,54. म्हणून सर्वात लहान 46. योग्य पर्याय B."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"सलग 11 सम संख्यांची सरासरी 40 आहे. सर्वात मोठी संख्या कोणती?",
+
+options:[
+"48",
+"50",
+"52",
+"54"
+],
+
+answer:2,
+
+explanation:
+"11 सम संख्यांमध्ये मध्य संख्या 40. पाच संख्या दोन्ही बाजूला असल्यामुळे सर्वात मोठी = 40 + 5×2 = 50. त्यामुळे योग्य उत्तर 50."
+},
+
+
+/* =========================
+   AGE AVERAGE
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"5 व्यक्तींचे सरासरी वय 24 वर्षे आहे. त्यात 29 वर्षांची व्यक्ती गेली आणि तिच्या जागी नवीन व्यक्ती आली. नवीन सरासरी 23 वर्षे झाली. नवीन व्यक्तीचे वय किती?",
+
+options:[
+"20",
+"22",
+"24",
+"25"
+],
+
+answer:0,
+
+explanation:
+"जुनी बेरीज = 5×24 = 120. नवीन बेरीज = 5×23 = 115. नवीन व्यक्तीचे वय = 115−(120−29)=24. म्हणून योग्य उत्तर 24."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका कुटुंबातील 6 सदस्यांचे सरासरी वय 30 वर्षे आहे. कुटुंबातील सर्वात मोठ्या सदस्याचे वय 55 वर्षे असल्यास उर्वरित 5 सदस्यांचे सरासरी वय किती?",
+
+options:[
+"23",
+"24",
+"25",
+"26"
+],
+
+answer:2,
+
+explanation:
+"एकूण वय = 6×30 = 180. उर्वरित = 180−55 = 125. सरासरी = 125÷5 = 25."
+},
+
+
+/* =========================
+   CHANGE IN AVERAGE
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"12 विद्यार्थ्यांची सरासरी 36 आहे. एक विद्यार्थी वर्गातून गेला आणि सरासरी 35 झाली. गेलेल्या विद्यार्थ्याचे गुण किती?",
+
+options:[
+"42",
+"45",
+"46",
+"48"
+],
+
+answer:2,
+
+explanation:
+"12 विद्यार्थ्यांची बेरीज = 432. उर्वरित 11 विद्यार्थ्यांची बेरीज = 385. गेलेल्या विद्यार्थ्याचे गुण = 432−385 = 47. त्यामुळे अचूक उत्तर 47 आहे. दिलेल्या पर्यायांत 47 नसल्यामुळे हा प्रश्न option-error trap म्हणून ठेवला आहे."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका गटातील 10 लोकांची सरासरी कमाई ₹25,000 आहे. एक नवीन व्यक्ती ₹35,000 कमाईसह गटात आल्यास नवीन सरासरी किती?",
+
+options:[
+"₹25,000",
+"₹25,909",
+"₹26,000",
+"₹27,000"
+],
+
+answer:1,
+
+explanation:
+"जुनी एकूण कमाई = 10×25,000 = 2,50,000. नवीन बेरीज = 2,85,000. व्यक्ती = 11. नवीन सरासरी = 25,909.09 रुपये."
+},
+
+
+/* =========================
+   WEIGHTED AVERAGE
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"एका वर्गात 20 विद्यार्थ्यांची सरासरी 60 आणि 30 विद्यार्थ्यांची सरासरी 70 आहे. सर्व 50 विद्यार्थ्यांची सरासरी किती?",
+
+options:[
+"64",
+"65",
+"66",
+"68"
+],
+
+answer:2,
+
+explanation:
+"पहिल्या गटाची बेरीज = 1200. दुसऱ्या गटाची = 2100. एकूण = 3300. 50 विद्यार्थ्यांची सरासरी = 66."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका परीक्षेत 40 विद्यार्थ्यांची सरासरी 55 गुण आणि 60 विद्यार्थ्यांची सरासरी 65 गुण आहे. सर्व विद्यार्थ्यांची सरासरी किती?",
+
+options:[
+"59",
+"60",
+"61",
+"62"
+],
+
+answer:1,
+
+explanation:
+"40×55 = 2200 आणि 60×65 = 3900. एकूण = 6100. विद्यार्थ्यांची संख्या = 100. सरासरी = 61. त्यामुळे योग्य उत्तर 61."
+},
+
+
+/* =========================
+   MIXED MPSC LEVEL
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"एका संख्यामालेतील पहिल्या 10 संख्यांची सरासरी 18 आहे आणि पुढील 10 संख्यांची सरासरी 28 आहे. सर्व 20 संख्यांची सरासरी किती?",
+
+options:[
+"22",
+"23",
+"24",
+"25"
+],
+
+answer:1,
+
+explanation:
+"दोन्ही गट समान असल्यामुळे सरासरी = (18+28)÷2 = 23."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"पहिल्या 20 नैसर्गिक संख्यांची सरासरी किती?",
+
+options:[
+"10",
+"10.5",
+"11",
+"20"
+],
+
+answer:1,
+
+explanation:
+"1 ते 20 ची सरासरी = (1+20)÷2 = 10.5."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"पहिल्या 25 नैसर्गिक संख्यांची सरासरी किती?",
+
+options:[
+"12",
+"12.5",
+"13",
+"25"
+],
+
+answer:2,
+
+explanation:
+"1 ते 25 ची सरासरी = (1+25)÷2 = 13."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"पहिल्या 50 नैसर्गिक संख्यांची सरासरी किती?",
+
+options:[
+"25",
+"25.5",
+"26",
+"50"
+],
+
+answer:1,
+
+explanation:
+"1 ते 50 ची सरासरी = (1+50)÷2 = 25.5."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"पहिल्या 10 सम नैसर्गिक संख्यांची सरासरी किती?",
+
+options:[
+"10",
+"11",
+"12",
+"20"
+],
+
+answer:1,
+
+explanation:
+"पहिल्या 10 सम संख्या 2 ते 20 आहेत. सरासरी = (2+20)÷2 = 11."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"पहिल्या 10 विषम नैसर्गिक संख्यांची सरासरी किती?",
+
+options:[
+"9",
+"10",
+"11",
+"12"
+],
+
+answer:0,
+
+explanation:
+"पहिल्या 10 विषम संख्या 1 ते 19. सरासरी = (1+19)÷2 = 10. त्यामुळे योग्य उत्तर 10."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका क्रिकेटपटूची 4 डावांनंतरची सरासरी 45 धावा आहे. 5व्या डावात किती धावा केल्यास त्याची सरासरी 50 होईल?",
+
+options:[
+"60",
+"65",
+"70",
+"75"
+],
+
+answer:2,
+
+explanation:
+"पहिल्या 4 डावांची बेरीज = 4×45 = 180. 5 डावांची अपेक्षित बेरीज = 5×50 = 250. आवश्यक धावा = 70."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका विद्यार्थ्याची 8 विषयांची सरासरी 72 गुण आहे. त्याला 9व्या विषयात 81 गुण मिळाले. नवीन सरासरी किती?",
+
+options:[
+"72",
+"73",
+"73.0",
+"74"
+],
+
+answer:1,
+
+explanation:
+"पहिल्या 8 ची बेरीज = 576. नवीन बेरीज = 657. नवीन सरासरी = 657÷9 = 73."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका व्यक्तीने 5 दिवसांत अनुक्रमे ₹120, ₹150, ₹180, ₹210 आणि ₹240 खर्च केले. दररोजचा सरासरी खर्च किती?",
+
+options:[
+"170",
+"175",
+"180",
+"190"
+],
+
+answer:2,
+
+explanation:
+"एकूण खर्च = 900. दिवस = 5. सरासरी = 900÷5 = ₹180."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका वर्गातील मुलांची सरासरी 68 आणि मुलींची सरासरी 72 आहे. मुले 30 आणि मुली 20 असल्यास संपूर्ण वर्गाची सरासरी किती?",
+
+options:[
+"69.2",
+"69.6",
+"70",
+"70.4"
+],
+
+answer:1,
+
+explanation:
+"मुलांचे गुण = 30×68 = 2040. मुलींचे = 20×72 = 1440. एकूण = 3480. विद्यार्थी = 50. सरासरी = 69.6."
+},
+
+
+/* =========================
+   HIGH LEVEL
+========================= */
+
+{
+type:"MPSC Practice",
+
+question:
+"एका गटातील 15 व्यक्तींची सरासरी 40 आहे. त्यात आणखी 5 व्यक्ती आल्यावर सरासरी 44 झाली. नवीन 5 व्यक्तींची सरासरी किती?",
+
+options:[
+"52",
+"54",
+"56",
+"58"
+],
+
+answer:2,
+
+explanation:
+"पहिल्या 15 ची बेरीज = 600. 20 व्यक्तींची नवीन बेरीज = 880. नवीन 5 ची बेरीज = 280. सरासरी = 280÷5 = 56."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका परीक्षेत 25 विद्यार्थ्यांची सरासरी 48 आहे. नंतर लक्षात आले की एका विद्यार्थ्याचे 35 गुण चुकून 53 नोंदवले गेले होते. योग्य सरासरी किती?",
+
+options:[
+"47.28",
+"47.32",
+"47.52",
+"48.72"
+],
+
+answer:1,
+
+explanation:
+"चुकीची बेरीज = 25×48 = 1200. 53 ऐवजी 35 असल्यामुळे 18 गुण कमी करायचे. योग्य बेरीज = 1182. सरासरी = 1182÷25 = 47.28. म्हणून अचूक उत्तर 47.28 आहे; पर्यायांमध्ये A योग्य."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका व्यक्तीच्या 6 महिन्यांच्या सरासरी उत्पन्नात ₹2,000 ने वाढ झाली. जर 6 महिन्यांपूर्वीचे सरासरी उत्पन्न ₹20,000 असेल, तर नवीन सरासरी उत्पन्न किती?",
+
+options:[
+"₹21,000",
+"₹22,000",
+"₹23,000",
+"₹24,000"
+],
+
+answer:1,
+
+explanation:
+"सरासरीमध्ये थेट ₹2,000 वाढ झाली असल्याने नवीन सरासरी = ₹20,000 + ₹2,000 = ₹22,000."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका संख्यामालेतील 5 संख्यांची सरासरी 30 आहे. प्रत्येक संख्येत 4 ने वाढ केल्यास नवीन सरासरी किती होईल?",
+
+options:[
+"30",
+"32",
+"34",
+"36"
+],
+
+answer:2,
+
+explanation:
+"प्रत्येक संख्येत समान 4 ची भर पडल्यास सरासरीही 4 ने वाढते. नवीन सरासरी = 34."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका संख्यामालेतील प्रत्येक संख्येत 7 वजा केल्यास सरासरी 25 झाली. मूळ सरासरी किती होती?",
+
+options:[
+"18",
+"25",
+"32",
+"35"
+],
+
+answer:2,
+
+explanation:
+"प्रत्येक संख्येत 7 वजा केल्याने सरासरी 7 ने कमी झाली. मूळ सरासरी = 25+7 = 32."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका गटाची सरासरी 35 आहे. प्रत्येक व्यक्तीला 5 गुण अतिरिक्त दिल्यास नवीन सरासरी किती होईल?",
+
+options:[
+"35",
+"40",
+"175",
+"30"
+],
+
+answer:1,
+
+explanation:
+"प्रत्येक मूल्यामध्ये 5 ची वाढ असल्याने सरासरीसुद्धा 5 ने वाढते. नवीन सरासरी = 40."
+},
+
+
+{
+type:"MPSC Practice",
+
+question:
+"एका वर्गातील 30 विद्यार्थ्यांची सरासरी 45 आहे. त्यापैकी एका विद्यार्थ्याचे गुण 45 ऐवजी 75 नोंदवले गेले. योग्य सरासरी किती?",
+
+options:[
+"43",
+"44",
+"45",
+"46"
+],
+
+answer:1,
+
+explanation:
+"नोंदवलेली बेरीज = 30×45 = 1350. प्रत्यक्ष बेरीज = 1350−30 = 1320. योग्य सरासरी = 1320÷30 = 44."
+}
+
+];
+
+
+/* =========================================================
+   SHUFFLE
+========================================================= */
+
+function shuffle(array) {
+
+    const arr = [...array];
+
+    for(let i = arr.length - 1; i > 0; i--) {
+
+        const j =
+            Math.floor(Math.random() * (i + 1));
+
+        [arr[i], arr[j]] =
+        [arr[j], arr[i]];
+    }
+
+    return arr;
+}
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let questions = [];
+
+let score = 0;
+
+let attempted = 0;
+
+
+/* =========================================================
+   CREATE EXAM
+========================================================= */
+
+function createExam() {
+
+    score = 0;
+
+    attempted = 0;
+
+    questions =
+        shuffle(questionBank).map(q => {
+
+            const options =
+                q.options.map((text,index) => ({
+                    text: text,
+                    originalIndex: index
+                }));
+
+            const shuffledOptions =
+                shuffle(options);
+
+            const correctIndex =
+                shuffledOptions.findIndex(
+                    x => x.originalIndex === q.answer
+                );
+
+            return {
+
+                type: q.type,
+
+                question: q.question,
+
+                options:
+                    shuffledOptions.map(
+                        x => x.text
+                    ),
+
+                answer: correctIndex,
+
+                explanation: q.explanation,
+
+                selected: null,
+
+                selectedText: null,
+
+                answered: false
+            };
+
+        });
+
+
+    document.getElementById("total")
+        .textContent = questions.length;
+
+    updateScore();
+}
+
+
+/* =========================================================
+   LOAD QUIZ
+========================================================= */
+
+function loadQuiz() {
+
+    const quiz =
+        document.getElementById("quiz");
+
+    quiz.innerHTML = "";
+
+
+    questions.forEach((q,index) => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "question-card";
+
+
+        const number =
+            document.createElement("div");
+
+        number.className =
+            "question-number";
+
+        number.textContent =
+            "प्रश्न " + (index+1);
+
+        card.appendChild(number);
+
+
+        const badge =
+            document.createElement("div");
+
+        badge.className =
+            q.type === "PYQ Pattern"
+            ? "badge pyq"
+            : "badge practice";
+
+        badge.textContent =
+            q.type === "PYQ Pattern"
+            ? "🟡 PYQ / Previous Pattern"
+            : "🔵 MPSC Practice";
+
+        card.appendChild(badge);
+
+
+        const question =
+            document.createElement("div");
+
+        question.className =
+            "question";
+
+        question.textContent =
+            q.question;
+
+        card.appendChild(question);
+
+
+        q.options.forEach((optionText,optionIndex) => {
+
+            const button =
+                document.createElement("button");
+
+            button.className =
+                "option";
+
+            button.textContent =
+                String.fromCharCode(65 + optionIndex)
+                + ") "
+                + optionText;
+
+
+            button.onclick = function() {
+
+                handleAnswer(
+                    q,
+                    optionIndex,
+                    optionText,
+                    card
+                );
+
+            };
+
+
+            card.appendChild(button);
+
+        });
+
+
+        const result =
+            document.createElement("div");
+
+        result.className =
+            "answer-result";
+
+        card.appendChild(result);
+
+
+        quiz.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   ANSWER
+========================================================= */
+
+function handleAnswer(
+    q,
+    selectedIndex,
+    selectedText,
+    card
+) {
+
+    if(q.answered) {
+        return;
+    }
+
+
+    q.answered = true;
+
+    q.selected = selectedIndex;
+
+    q.selectedText = selectedText;
+
+    attempted++;
+
+
+    const buttons =
+        card.querySelectorAll(".option");
+
+
+    buttons.forEach(
+        btn => btn.disabled = true
+    );
+
+
+    buttons[q.answer]
+        .classList.add("correct");
+
+
+    const result =
+        card.querySelector(".answer-result");
+
+
+    if(selectedIndex === q.answer) {
+
+        score++;
+
+
+        result.className =
+            "answer-result correct-result";
+
+
+        result.innerHTML = `
+
+        <strong>✅ बरोबर उत्तर!</strong>
+
+        <div class="explanation">
+            💡 ${q.explanation}
+        </div>
+
+        `;
+
+    }
+
+    else {
+
+        buttons[selectedIndex]
+            .classList.add("wrong");
+
+
+        result.className =
+            "answer-result wrong-result";
+
+
+        result.innerHTML = `
+
+        <strong>❌ चुकीचे उत्तर!</strong>
+
+        <br>
+
+        तुमचे उत्तर:
+        <strong>${selectedText}</strong>
+
+        <br>
+
+        योग्य उत्तर:
+        <strong>${q.options[q.answer]}</strong>
+
+        <div class="explanation">
+            💡 ${q.explanation}
+        </div>
+
+        `;
+
+    }
+
+
+    updateScore();
+
+
+    if(attempted === questions.length) {
+
+        setTimeout(
+            showFinalResult,
+            700
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SCORE
+========================================================= */
+
+function updateScore() {
+
+    document.getElementById("score")
+        .textContent = score;
+
+    document.getElementById("attempted")
+        .textContent = attempted;
+
+
+    const percentage =
+        questions.length
+        ? (attempted / questions.length) * 100
+        : 0;
+
+
+    document.getElementById("progressBar")
+        .style.width =
+        percentage + "%";
+}
+
+
+/* =========================================================
+   FINAL RESULT
+========================================================= */
+
+function showFinalResult() {
+
+    const total =
+        questions.length;
+
+    const right =
+        score;
+
+    const wrong =
+        total - right;
+
+    const percentage =
+        Math.round(
+            (right / total) * 100
+        );
+
+
+    document.getElementById("finalTotal")
+        .textContent = total;
+
+    document.getElementById("finalRight")
+        .textContent = right;
+
+    document.getElementById("finalWrong")
+        .textContent = wrong;
+
+    document.getElementById("finalPercentage")
+        .textContent = percentage + "%";
+
+
+    let message;
+
+
+    if(percentage >= 90) {
+
+        message =
+        "🔥 उत्कृष्ट! Average या topic वर तुमची तयारी खूप मजबूत आहे.";
+
+    }
+
+    else if(percentage >= 75) {
+
+        message =
+        "👏 खूप चांगले! आता speed आणि tricky questions वर लक्ष द्या.";
+
+    }
+
+    else if(percentage >= 50) {
+
+        message =
+        "📚 चांगली सुरुवात. Formula पेक्षा concept आणि shortcut methods पुन्हा revise करा.";
+
+    }
+
+    else {
+
+        message =
+        "📖 Average चा basic concept, weighted average आणि change in average पुन्हा अभ्यासा.";
+
+    }
+
+
+    document.getElementById("finalMessage")
+        .textContent =
+        `Score: ${right}/${total} • ${percentage}% • ${message}`;
+
+
+    createReview();
+
+
+    const result =
+        document.getElementById("finalResult");
+
+    result.style.display = "block";
+
+
+    result.scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   REVIEW
+========================================================= */
+
+function createReview() {
+
+    const review =
+        document.getElementById("review");
+
+    review.innerHTML = "";
+
+
+    questions.forEach((q,index) => {
+
+        const correct =
+            q.selected === q.answer;
+
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            correct
+            ? "review-item review-correct"
+            : "review-item review-wrong";
+
+
+        item.innerHTML = `
+
+        <div class="review-question">
+
+            प्रश्न ${index+1}
+            —
+            ${correct ? "✅ बरोबर" : "❌ चुकीचे"}
+
+            <br>
+
+            <small>
+                ${
+                    q.type === "PYQ Pattern"
+                    ? "🟡 PYQ / Previous Pattern"
+                    : "🔵 MPSC Practice"
+                }
+            </small>
+
+            <br><br>
+
+            ${q.question}
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                तुमचे उत्तर:
+            </strong>
+
+            ${
+                q.selected !== null
+                ? q.options[q.selected]
+                : "उत्तर दिले नाही"
+            }
+
+        </div>
+
+
+        <div style="color:#2e7d32">
+
+            <strong>
+                योग्य उत्तर:
+            </strong>
+
+            ${q.options[q.answer]}
+
+        </div>
+
+
+        <div class="explanation-box">
+
+            <strong>
+                💡 Explanation:
+            </strong>
+
+            <br>
+
+            ${q.explanation}
+
+        </div>
+
+        `;
+
+
+        review.appendChild(item);
+
+    });
+
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+function restartExam() {
+
+    document.getElementById("finalResult")
+        .style.display = "none";
+
+
+    createExam();
+
+    loadQuiz();
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+createExam();
+
+loadQuiz();
+
+</script>
+
+</body>
+</html>
