@@ -1,0 +1,674 @@
+<!DOCTYPE html> <html lang="mr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>MPSC राष्ट्रीय उत्पन्न Quiz</title> <style> * { box-sizing: border-box; }
+body {
+    margin: 0;
+    font-family: Arial, "Noto Sans Devanagari", sans-serif;
+    background: #f4f7fb;
+    color: #222;
+}
+
+header {
+    background: linear-gradient(135deg, #1565c0, #0d47a1);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0 0 10px;
+    font-size: 28px;
+}
+
+header p {
+    margin: 5px;
+    opacity: 0.9;
+}
+
+.container {
+    max-width: 850px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.score-box {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.question-card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.question-number {
+    color: #1565c0;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.question {
+    font-size: 19px;
+    font-weight: bold;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #f8f9fa;
+    border: 2px solid #ddd;
+    padding: 13px 16px;
+    margin: 10px 0;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.option:hover {
+    background: #e3f2fd;
+    border-color: #1565c0;
+}
+
+.option.correct {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.option.wrong {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.option:disabled {
+    cursor: not-allowed;
+}
+
+.result {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    display: none;
+    line-height: 1.6;
+}
+
+.correct-result {
+    background: #e8f5e9;
+    color: #1b5e20;
+}
+
+.wrong-result {
+    background: #ffebee;
+    color: #b71c1c;
+}
+
+.explanation {
+    margin-top: 8px;
+    color: #333;
+}
+
+.final-result {
+    display: none;
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.final-result h2 {
+    margin-top: 0;
+}
+
+.restart {
+    background: white;
+    color: #e65100;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.progress {
+    height: 8px;
+    background: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #43a047;
+    width: 0%;
+    transition: 0.3s;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 22px;
+    }
+
+    .question {
+        font-size: 17px;
+    }
+
+    .option {
+        font-size: 15px;
+    }
+}
+
+</style> </head> <body> <header> <h1>🇮🇳 MPSC — राष्ट्रीय उत्पन्न Quiz</h1> <p>Indian Economy | National Income</p> <p>राज्यसेवा / संयुक्त गट-ब तयारी</p> </header> <div class="container">
+<div class="score-box">
+    Score: <span id="score">0</span> / <span id="total">0</span>
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+</div>
+
+<div id="quiz"></div>
+
+<div class="final-result" id="finalResult">
+    <h2>🎉 Quiz पूर्ण!</h2>
+    <p id="finalScore"></p>
+    <p id="finalMessage"></p>
+    <button class="restart" onclick="restartQuiz()">
+        🔄 पुन्हा Quiz सुरू करा
+    </button>
+</div>
+
+</div> <footer> MPSC Preparation • National Income </footer> <script>
+
+const questions = [
+
+{
+question: "‘राष्ट्रीय उत्पन्न’ म्हणजे सामान्यतः काय?",
+options: [
+"देशातील सर्व व्यक्तींचे वैयक्तिक उत्पन्न",
+"एका वर्षात देशाच्या सामान्य रहिवाशांनी निर्माण केलेल्या अंतिम वस्तू व सेवांचे निव्वळ घटक उत्पन्न",
+"सरकारला मिळणारे एकूण कर उत्पन्न",
+"देशातील एकूण उत्पादनाचे बाजारमूल्य"
+],
+answer: 1,
+explanation: "राष्ट्रीय उत्पन्न हे देशाच्या सामान्य रहिवाशांनी एका वर्षात निर्माण केलेल्या निव्वळ घटक उत्पन्नाशी संबंधित आहे."
+},
+
+{
+question: "GDP चे पूर्ण रूप कोणते?",
+options: [
+"Gross Development Product",
+"Gross Domestic Product",
+"General Domestic Product",
+"Gross Demand Product"
+],
+answer: 1,
+explanation: "GDP = Gross Domestic Product."
+},
+
+{
+question: "GDP आणि GNP यांतील मुख्य फरक कोणता?",
+options: [
+"GDP मध्ये फक्त शेतीचा समावेश होतो",
+"GNP मध्ये परदेशातून मिळणारे निव्वळ घटक उत्पन्न विचारात घेतले जाते",
+"GDP मध्ये सरकारचा समावेश होत नाही",
+"GNP मध्ये उत्पादनाचा समावेश होत नाही"
+],
+answer: 1,
+explanation: "GNP = GDP + NFIA. येथे NFIA म्हणजे परदेशातून मिळणारे निव्वळ घटक उत्पन्न."
+},
+
+{
+question: "GNP मधून घसारा (Depreciation) वजा केल्यास काय मिळते?",
+options: [
+"GDP",
+"NDP",
+"NNP",
+"Personal Income"
+],
+answer: 2,
+explanation: "NNP = GNP − Depreciation."
+},
+
+{
+question: "NDP चे योग्य सूत्र कोणते?",
+options: [
+"GDP + घसारा",
+"GDP − घसारा",
+"GDP + निव्वळ निर्यात",
+"GDP − कर"
+],
+answer: 1,
+explanation: "NDP = GDP − Depreciation."
+},
+
+{
+question: "राष्ट्रीय उत्पन्न मोजण्याच्या प्रमुख पद्धती कोणत्या?",
+options: [
+"फक्त उत्पादन पद्धती",
+"उत्पादन आणि उत्पन्न पद्धती",
+"उत्पन्न आणि खर्च पद्धती",
+"उत्पादन, उत्पन्न आणि खर्च — तिन्ही"
+],
+answer: 3,
+explanation: "राष्ट्रीय उत्पन्न मोजण्यासाठी Output, Income आणि Expenditure या तीन प्रमुख पद्धती आहेत."
+},
+
+{
+question: "खर्च पद्धतीनुसार GDP चे योग्य समीकरण कोणते?",
+options: [
+"C + I + G + (X − M)",
+"C + S + T",
+"W + R + I + P",
+"C − I + G"
+],
+answer: 0,
+explanation: "GDP = C + I + G + (X − M)."
+},
+
+{
+question: "राष्ट्रीय उत्पन्न मोजताना ‘अंतिम वस्तू’ विचारात घेण्याचे प्रमुख कारण काय?",
+options: [
+"महागाई टाळण्यासाठी",
+"दुहेरी गणना टाळण्यासाठी",
+"कर वाढवण्यासाठी",
+"निर्यात वाढवण्यासाठी"
+],
+answer: 1,
+explanation: "अंतिम वस्तूंचे मूल्य घेतल्यामुळे Intermediate Goods ची पुनर्गणना टाळता येते."
+},
+
+{
+question: "‘Value Added’ म्हणजे काय?",
+options: [
+"उत्पादनाची एकूण किंमत",
+"उत्पादनाचे मूल्य − मध्यवर्ती उपभोगाचे मूल्य",
+"उत्पादनाचे मूल्य + कर",
+"उत्पादनाचे मूल्य − वेतन"
+],
+answer: 1,
+explanation: "Value Added = Output Value − Intermediate Consumption."
+},
+
+{
+question: "जर GDP = ₹500 कोटी आणि NFIA = ₹20 कोटी असेल, तर GNP किती?",
+options: [
+"₹480 कोटी",
+"₹500 कोटी",
+"₹520 कोटी",
+"₹1,000 कोटी"
+],
+answer: 2,
+explanation: "GNP = GDP + NFIA = 500 + 20 = ₹520 कोटी."
+},
+
+{
+question: "GDP = ₹1,000 कोटी आणि घसारा = ₹100 कोटी असल्यास NDP किती?",
+options: [
+"₹900 कोटी",
+"₹1,100 कोटी",
+"₹100 कोटी",
+"₹1,000 कोटी"
+],
+answer: 0,
+explanation: "NDP = GDP − Depreciation = 1000 − 100 = ₹900 कोटी."
+},
+
+{
+question: "खालीलपैकी कोणता व्यवहार GDP मध्ये समाविष्ट केला जात नाही?",
+options: [
+"नवीन कारचे उत्पादन",
+"नवीन घराचे बांधकाम",
+"वापरलेल्या कारची पुनर्विक्री",
+"नवीन यंत्रसामग्रीचे उत्पादन"
+],
+answer: 2,
+explanation: "वापरलेल्या वस्तूचे उत्पादन त्या वस्तूच्या मूळ उत्पादनाच्या वर्षी GDP मध्ये मोजले गेलेले असते."
+},
+
+{
+question: "Transfer Payments राष्ट्रीय उत्पन्नात थेट का समाविष्ट केली जात नाहीत?",
+options: [
+"ती बेकायदेशीर आहेत",
+"त्यांच्या बदल्यात चालू उत्पादनाची वस्तू किंवा सेवा मिळत नाही",
+"त्यांच्यावर नेहमी कर असतो",
+"ती फक्त सरकार देते"
+],
+answer: 1,
+explanation: "Transfer Payment च्या बदल्यात सध्याच्या उत्पादनासाठी कोणतीही वस्तू किंवा सेवा दिली जात नाही."
+},
+
+{
+question: "नाममात्र GDP आणि वास्तविक GDP यांतील मुख्य फरक कशामुळे निर्माण होतो?",
+options: [
+"लोकसंख्या",
+"किंमत पातळीतील बदल",
+"बेरोजगारी",
+"निर्यात"
+],
+answer: 1,
+explanation: "Nominal GDP मध्ये चालू किंमतींचा प्रभाव असतो, तर Real GDP मध्ये किंमत बदलांचा प्रभाव नियंत्रित केला जातो."
+},
+
+{
+question: "वास्तविक GDP आर्थिक वाढ मोजण्यासाठी अधिक उपयुक्त का असतो?",
+options: [
+"तो फक्त निर्यात मोजतो",
+"तो फक्त सरकारी उत्पादन मोजतो",
+"किंमत बदलांचा प्रभाव नियंत्रित करून वास्तविक उत्पादनातील बदल दाखवतो",
+"तो लोकसंख्या मोजतो"
+],
+answer: 2,
+explanation: "Real GDP मध्ये किंमत पातळीतील बदलांचा प्रभाव वेगळा केल्यामुळे वास्तविक उत्पादनवाढ अधिक स्पष्ट होते."
+},
+
+{
+question: "भारताच्या GDP च्या नवीन मालिकेचे आधार वर्ष कोणते आहे?",
+options: [
+"2004-05",
+"2011-12",
+"2020-21",
+"2022-23"
+],
+answer: 3,
+explanation: "2026 मध्ये भारताच्या GDP साठी नवीन मालिका जाहीर करण्यात आली असून तिचे आधार वर्ष 2022-23 आहे."
+},
+
+{
+question: "भारताच्या राष्ट्रीय उत्पन्नाच्या अधिकृत आकडेवारीशी संबंधित प्रमुख सांख्यिकीय संस्था कोणती?",
+options: [
+"RBI",
+"NSO",
+"SEBI",
+"NITI आयोग"
+],
+answer: 1,
+explanation: "NSO म्हणजे National Statistical Office. हे MoSPI अंतर्गत कार्य करते."
+},
+
+{
+question: "NSO कोणत्या मंत्रालयाच्या अंतर्गत कार्य करते?",
+options: [
+"वित्त मंत्रालय",
+"गृह मंत्रालय",
+"सांख्यिकी व कार्यक्रम अंमलबजावणी मंत्रालय (MoSPI)",
+"वाणिज्य मंत्रालय"
+],
+answer: 2,
+explanation: "NSO हे Ministry of Statistics and Programme Implementation (MoSPI) अंतर्गत कार्य करते."
+},
+
+{
+question: "खालीलपैकी योग्य संबंध कोणता?",
+options: [
+"GNP = GDP − NFIA",
+"GNP = GDP + NFIA",
+"GNP = NDP − Depreciation",
+"GDP = GNP + NFIA"
+],
+answer: 1,
+explanation: "GNP = GDP + NFIA."
+},
+
+{
+question: "खालीलपैकी कोणते GDP मध्ये सामान्यतः समाविष्ट केले जात नाही?",
+options: [
+"नवीन वस्तूंचे उत्पादन",
+"नवीन सेवांचे उत्पादन",
+"Transfer Payments",
+"नवीन यंत्रसामग्रीचे उत्पादन"
+],
+answer: 2,
+explanation: "Transfer Payments च्या बदल्यात चालू उत्पादन होत नसल्याने त्यांचा GDP मध्ये थेट समावेश केला जात नाही."
+},
+
+{
+question: "GDP मधून घसारा वजा केल्यास काय मिळते?",
+options: [
+"GNP",
+"NDP",
+"NNP",
+"Personal Income"
+],
+answer: 1,
+explanation: "NDP = GDP − Depreciation."
+},
+
+{
+question: "खालीलपैकी कोणते राष्ट्रीय उत्पन्न मोजण्याची पद्धत नाही?",
+options: [
+"उत्पादन पद्धती",
+"उत्पन्न पद्धती",
+"खर्च पद्धती",
+"लोकसंख्या पद्धती"
+],
+answer: 3,
+explanation: "राष्ट्रीय उत्पन्नाच्या प्रमुख पद्धती Output, Income आणि Expenditure आहेत."
+}
+
+];
+
+let score = 0;
+let answered = 0;
+
+document.getElementById("total").textContent = questions.length;
+
+function loadQuiz() {
+
+const quiz = document.getElementById("quiz");
+
+quiz.innerHTML = "";
+
+questions.forEach((q, index) => {
+
+    const card = document.createElement("div");
+    card.className = "question-card";
+
+    const number = document.createElement("div");
+    number.className = "question-number";
+    number.textContent = "प्रश्न " + (index + 1);
+
+    const question = document.createElement("div");
+    question.className = "question";
+    question.textContent = q.question;
+
+    card.appendChild(number);
+    card.appendChild(question);
+
+    q.options.forEach((option, optionIndex) => {
+
+        const button = document.createElement("button");
+
+        button.className = "option";
+
+        button.textContent =
+            String.fromCharCode(65 + optionIndex) + ") " + option;
+
+        button.onclick = function() {
+
+            if (card.dataset.answered === "true") {
+                return;
+            }
+
+            card.dataset.answered = "true";
+            answered++;
+
+            const allOptions =
+                card.querySelectorAll(".option");
+
+            allOptions.forEach((btn, i) => {
+
+                btn.disabled = true;
+
+                if (i === q.answer) {
+                    btn.classList.add("correct");
+                }
+
+            });
+
+            const result = card.querySelector(".result");
+
+            if (optionIndex === q.answer) {
+
+                score++;
+
+                result.className =
+                    "result correct-result";
+
+                result.innerHTML =
+                    "✅ <strong>बरोबर उत्तर!</strong>" +
+                    "<div class='explanation'>" +
+                    q.explanation +
+                    "</div>";
+
+            } else {
+
+                button.classList.add("wrong");
+
+                result.className =
+                    "result wrong-result";
+
+                result.innerHTML =
+                    "❌ <strong>चुकीचे उत्तर!</strong>" +
+                    "<div class='explanation'>" +
+                    "योग्य उत्तर: <strong>" +
+                    String.fromCharCode(65 + q.answer) +
+                    ") " +
+                    q.options[q.answer] +
+                    "</strong><br><br>" +
+                    q.explanation +
+                    "</div>";
+            }
+
+            result.style.display = "block";
+
+            updateScore();
+
+            if (answered === questions.length) {
+                showFinalResult();
+            }
+
+        };
+
+        card.appendChild(button);
+
+    });
+
+    const result = document.createElement("div");
+
+    result.className = "result";
+
+    card.appendChild(result);
+
+    quiz.appendChild(card);
+
+});
+
+
+}
+
+function updateScore() {
+
+document.getElementById("score").textContent = score;
+
+const percentage =
+    (answered / questions.length) * 100;
+
+document.getElementById("progressBar").style.width =
+    percentage + "%";
+
+
+}
+
+function showFinalResult() {
+
+const finalResult =
+    document.getElementById("finalResult");
+
+const finalScore =
+    document.getElementById("finalScore");
+
+const finalMessage =
+    document.getElementById("finalMessage");
+
+const percentage =
+    Math.round((score / questions.length) * 100);
+
+finalScore.textContent =
+    "तुमचा Score: " +
+    score +
+    " / " +
+    questions.length +
+    " (" +
+    percentage +
+    "%)";
+
+if (percentage >= 80) {
+
+    finalMessage.textContent =
+        "🔥 उत्कृष्ट! MPSC साठी तुमची तयारी चांगली आहे.";
+
+} else if (percentage >= 60) {
+
+    finalMessage.textContent =
+        "👍 चांगली कामगिरी! काही संकल्पना पुन्हा revise करा.";
+
+} else {
+
+    finalMessage.textContent =
+        "📚 राष्ट्रीय उत्पन्नाचा topic पुन्हा एकदा revise करा.";
+
+}
+
+finalResult.style.display = "block";
+
+finalResult.scrollIntoView({
+    behavior: "smooth"
+});
+
+
+}
+
+function restartQuiz() {
+
+score = 0;
+answered = 0;
+
+document.getElementById("finalResult").style.display =
+    "none";
+
+updateScore();
+
+loadQuiz();
+
+window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+});
+
+
+}
+
+loadQuiz();
+
+</script> </body> </html>
