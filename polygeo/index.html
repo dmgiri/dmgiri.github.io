@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MPSC महाराष्ट्राचा राजकीय भूगोल</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,"Noto Sans Devanagari",sans-serif;
+    background:#f4f6fb;
+    color:#222;
+}
+
+header{
+    background:linear-gradient(135deg,#0d47a1,#1976d2);
+    color:white;
+    padding:30px 15px;
+    text-align:center;
+}
+
+header h1{
+    margin:0 0 8px;
+    font-size:28px;
+}
+
+header p{
+    margin:5px;
+}
+
+.container{
+    max-width:1050px;
+    margin:auto;
+    padding:20px 15px 60px;
+}
+
+.info{
+    background:white;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    margin-bottom:20px;
+    line-height:1.8;
+}
+
+.info strong{
+    color:#0d47a1;
+}
+
+.legend{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+.badge{
+    padding:5px 9px;
+    border-radius:7px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.pyq{
+    background:#fff3cd;
+    color:#795500;
+}
+
+.high{
+    background:#e3f2fd;
+    color:#0d47a1;
+}
+
+.tricky{
+    background:#fce4ec;
+    color:#ad1457;
+}
+
+.current{
+    background:#e8f5e9;
+    color:#1b5e20;
+}
+
+.concept{
+    background:#f3e5f5;
+    color:#6a1b9a;
+}
+
+.scorebar{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:white;
+    padding:13px;
+    border-radius:12px;
+    box-shadow:0 3px 12px rgba(0,0,0,.15);
+    margin-bottom:20px;
+}
+
+.scoreline{
+    display:flex;
+    justify-content:space-around;
+    flex-wrap:wrap;
+    gap:10px;
+    font-weight:bold;
+}
+
+.progress{
+    height:9px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:10px;
+}
+
+.progress-fill{
+    width:0%;
+    height:100%;
+    background:#1976d2;
+    transition:.3s;
+}
+
+.question-card{
+    background:white;
+    padding:22px;
+    border-radius:14px;
+    margin-bottom:18px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.qtop{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.qno{
+    color:#0d47a1;
+    font-weight:bold;
+}
+
+.question{
+    font-size:19px;
+    font-weight:bold;
+    line-height:1.7;
+    margin:15px 0;
+}
+
+.option{
+    display:block;
+    width:100%;
+    padding:13px;
+    margin:8px 0;
+    text-align:left;
+    border:2px solid #ddd;
+    background:#fafafa;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.option:hover:not(:disabled){
+    background:#e3f2fd;
+    border-color:#1976d2;
+}
+
+.option:disabled{
+    cursor:not-allowed;
+}
+
+.option.correct{
+    background:#d4edda;
+    border-color:#28a745;
+    color:#155724;
+}
+
+.option.wrong{
+    background:#f8d7da;
+    border-color:#dc3545;
+    color:#721c24;
+}
+
+.answer{
+    display:none;
+    margin-top:15px;
+    padding:14px;
+    border-radius:9px;
+    line-height:1.7;
+}
+
+.answer.ok{
+    display:block;
+    background:#e8f5e9;
+}
+
+.answer.no{
+    display:block;
+    background:#ffebee;
+}
+
+#result{
+    display:none;
+    background:white;
+    padding:22px;
+    border-radius:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.12);
+}
+
+.result-head{
+    background:linear-gradient(135deg,#0d47a1,#1976d2);
+    color:white;
+    text-align:center;
+    padding:25px;
+    border-radius:12px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    margin:20px 0;
+}
+
+.stat{
+    text-align:center;
+    padding:15px 8px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.stat b{
+    display:block;
+    font-size:25px;
+    margin-bottom:5px;
+}
+
+.blue{background:#e3f2fd;color:#1565c0;}
+.green{background:#e8f5e9;color:#2e7d32;}
+.red{background:#ffebee;color:#c62828;}
+.orange{background:#fff3e0;color:#ef6c00;}
+.purple{background:#f3e5f5;color:#6a1b9a;}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#0d47a1;
+    color:white;
+}
+
+.review{
+    padding:15px;
+    margin:12px 0;
+    border-radius:10px;
+    line-height:1.7;
+}
+
+.review.ok{
+    background:#e8f5e9;
+    border-left:5px solid #2e7d32;
+}
+
+.review.no{
+    background:#ffebee;
+    border-left:5px solid #c62828;
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:0;
+    padding:13px 22px;
+    border-radius:8px;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.restart{
+    background:#1976d2;
+}
+
+.top{
+    background:#455a64;
+}
+
+footer{
+    text-align:center;
+    padding:25px;
+    color:#666;
+}
+
+@media(max-width:700px){
+
+    header h1{
+        font-size:22px;
+    }
+
+    .question{
+        font-size:17px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .stat:last-child{
+        grid-column:1/-1;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🏛️ MPSC — महाराष्ट्राचा राजकीय भूगोल</h1>
+
+<p>High Probability Question Bank</p>
+
+<p>PYQ + Most Expected + Tricky + Current Facts</p>
+
+</header>
+
+
+<div class="container">
+
+<div class="info">
+
+<strong>🎯 MPSC High-Probability Focus</strong>
+
+<br>
+
+या test मध्ये महाराष्ट्राची प्रशासकीय रचना,
+जिल्हे, महसूल विभाग, राज्यांच्या सीमा,
+सीमावर्ती जिल्हे, कोकण-देश-खानदेश-मराठवाडा-विदर्भ,
+जिल्हानिर्मिती, जिल्हा मुख्यालये आणि
+नकाशावर आधारित प्रश्न यांना जास्त weightage दिले आहे.
+
+<br><br>
+
+<strong>महत्त्वाचे:</strong>
+
+2023 MPSC Group-B मध्ये महाराष्ट्रातील
+इतर राज्यांशी सीमा असलेल्या जिल्ह्यांवर थेट प्रश्न विचारला गेला होता.
+म्हणून district-border questions येथे विशेषतः ठेवले आहेत.
+
+<div class="legend">
+
+<span class="badge pyq">🔴 PYQ</span>
+<span class="badge high">⭐ HIGH PROBABILITY</span>
+<span class="badge tricky">⚠️ TRICKY</span>
+<span class="badge current">🆕 CURRENT</span>
+<span class="badge concept">🧠 CONCEPT</span>
+
+</div>
+
+</div>
+
+
+<div class="scorebar">
+
+<div class="scoreline">
+
+<span>Score: <b id="score">0</b></span>
+
+<span>Attempted: <b id="attempted">0</b></span>
+
+<span>Remaining: <b id="remaining">55</b></span>
+
+<span>Total: <b id="total">55</b></span>
+
+</div>
+
+<div class="progress">
+<div class="progress-fill" id="progress"></div>
+</div>
+
+</div>
+
+
+<div id="quiz"></div>
+
+
+<div id="result">
+
+<div class="result-head">
+
+<h2>🎉 परीक्षा पूर्ण!</h2>
+
+<p id="resultMessage"></p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat blue">
+<b id="rTotal">0</b>
+Total
+</div>
+
+<div class="stat green">
+<b id="rCorrect">0</b>
+Right
+</div>
+
+<div class="stat red">
+<b id="rWrong">0</b>
+Wrong
+</div>
+
+<div class="stat orange">
+<b id="rUnattempted">0</b>
+Unattempted
+</div>
+
+<div class="stat purple">
+<b id="rAccuracy">0%</b>
+Accuracy
+</div>
+
+</div>
+
+
+<h2>📊 Topic-wise Analysis</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Topic</th>
+<th>Total</th>
+<th>Right</th>
+<th>Wrong</th>
+<th>Accuracy</th>
+</tr>
+
+</thead>
+
+<tbody id="topicTable"></tbody>
+
+</table>
+
+
+<h2 style="margin-top:30px;">
+📋 Answer Review
+</h2>
+
+<div id="review"></div>
+
+
+<div class="buttons">
+
+<button class="btn restart" onclick="restartExam()">
+🔄 पुन्हा Test द्या
+</button>
+
+<button class="btn top"
+onclick="window.scrollTo({top:0,behavior:'smooth'})">
+⬆️ वर जा
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<footer>
+
+MPSC Maharashtra Geography • राजकीय भूगोल
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   HELPER
+========================================================= */
+
+function shuffle(array){
+
+    const arr=[...array];
+
+    for(let i=arr.length-1;i>0;i--){
+
+        const j=Math.floor(
+            Math.random()*(i+1)
+        );
+
+        [arr[i],arr[j]]=
+        [arr[j],arr[i]];
+    }
+
+    return arr;
+}
+
+
+function Q(
+    type,
+    topic,
+    question,
+    options,
+    answer,
+    explanation,
+    source=""
+){
+
+    return {
+        type,
+        topic,
+        question,
+        options,
+        answer,
+        explanation,
+        source,
+        answered:false,
+        selected:null
+    };
+
+}
+
+
+/* =========================================================
+   QUESTION BANK
+========================================================= */
+
+const bank=[
+
+
+/* ---------------------------------------------------------
+   ADMINISTRATIVE STRUCTURE
+--------------------------------------------------------- */
+
+Q(
+"CURRENT",
+"प्रशासकीय रचना",
+"महाराष्ट्रात सध्या किती जिल्हे आहेत?",
+[
+"34",
+"35",
+"36",
+"38"
+],
+2,
+"महाराष्ट्रात सध्या 36 जिल्हे आहेत."
+),
+
+
+Q(
+"HIGH",
+"प्रशासकीय रचना",
+"महाराष्ट्रात एकूण किती महसूल विभाग आहेत?",
+[
+"4",
+"5",
+"6",
+"7"
+],
+2,
+"महाराष्ट्रात 6 महसूल विभाग आहेत."
+),
+
+
+Q(
+"HIGH",
+"प्रशासकीय रचना",
+"खालीलपैकी कोणता महाराष्ट्राचा महसूल विभाग नाही?",
+[
+"कोकण",
+"नाशिक",
+"पुणे",
+"सोलापूर"
+],
+3,
+"सोलापूर हा स्वतंत्र महसूल विभाग नाही; तो पुणे विभागात येतो."
+),
+
+
+Q(
+"HIGH",
+"प्रशासकीय रचना",
+"खालीलपैकी कोणते जिल्हे कोकण महसूल विभागात येतात?",
+[
+"मुंबई शहर, मुंबई उपनगर, ठाणे, पालघर, रायगड, रत्नागिरी, सिंधुदुर्ग",
+"नाशिक, धुळे, नंदुरबार, जळगाव, अहिल्यानगर",
+"पुणे, सातारा, सांगली, सोलापूर, कोल्हापूर",
+"नागपूर, वर्धा, भंडारा, गोंदिया"
+],
+0,
+"कोकण विभागात मुंबई शहर, मुंबई उपनगर, ठाणे, पालघर, रायगड, रत्नागिरी आणि सिंधुदुर्ग हे जिल्हे येतात."
+),
+
+
+Q(
+"HIGH",
+"प्रशासकीय रचना",
+"अमरावती आणि नागपूर हे विभाग एकत्रितपणे कोणत्या प्रदेशाशी संबंधित आहेत?",
+[
+"मराठवाडा",
+"विदर्भ",
+"खानदेश",
+"कोकण"
+],
+1,
+"अमरावती आणि नागपूर हे दोन्ही महसूल विभाग विदर्भ प्रदेशाशी संबंधित आहेत."
+),
+
+
+Q(
+"HIGH",
+"प्रशासकीय रचना",
+"नाशिक महसूल विभागात खालीलपैकी कोणता जिल्हा येतो?",
+[
+"नाशिक",
+"पुणे",
+"नागपूर",
+"लातूर"
+],
+0,
+"नाशिक हा नाशिक महसूल विभागातील जिल्हा आहे."
+),
+
+
+Q(
+"HIGH",
+"प्रशासकीय रचना",
+"पुणे महसूल विभागात खालीलपैकी कोणता जिल्हा येतो?",
+[
+"सातारा",
+"नाशिक",
+"धुळे",
+"अकोला"
+],
+0,
+"सातारा हा पुणे महसूल विभागातील जिल्हा आहे."
+),
+
+
+Q(
+"HIGH",
+"प्रशासकीय रचना",
+"छत्रपती संभाजीनगर महसूल विभागाचा संबंध मुख्यतः कोणत्या प्रदेशाशी आहे?",
+[
+"विदर्भ",
+"मराठवाडा",
+"कोकण",
+"खानदेश"
+],
+1,
+"छत्रपती संभाजीनगर महसूल विभाग हा मराठवाडा प्रदेशाशी संबंधित आहे."
+),
+
+
+Q(
+"HIGH",
+"प्रशासकीय रचना",
+"लातूर महसूल विभागात खालीलपैकी कोणता जिल्हा येतो?",
+[
+"लातूर",
+"पुणे",
+"नाशिक",
+"नागपूर"
+],
+0,
+"लातूर हा लातूर महसूल विभागातील जिल्हा आहे."
+),
+
+
+/* ---------------------------------------------------------
+   DISTRICT BORDERS
+--------------------------------------------------------- */
+
+
+Q(
+"PYQ",
+"सीमावर्ती जिल्हे",
+"MPSC Group-B 2023 मध्ये विचारलेल्या प्रश्नानुसार महाराष्ट्रातील किती जिल्ह्यांना इतर राज्यांशी सीमा आहे?",
+[
+"8",
+"12",
+"20",
+"15"
+],
+2,
+"2023 Group-B प्रश्नपत्रिकेच्या उपलब्ध explanation नुसार महाराष्ट्रातील 20 जिल्ह्यांना इतर राज्यांशी सीमा आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"महाराष्ट्राला एकूण किती राज्यांची सीमा लागते?",
+[
+"5",
+"6",
+"7",
+"8"
+],
+1,
+"महाराष्ट्राला गुजरात, मध्य प्रदेश, छत्तीसगड, तेलंगणा, कर्नाटक आणि गोवा या 6 राज्यांची सीमा लागते."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"खालीलपैकी कोणते राज्य महाराष्ट्राच्या सीमेला लागून नाही?",
+[
+"गुजरात",
+"मध्य प्रदेश",
+"ओडिशा",
+"कर्नाटक"
+],
+2,
+"ओडिशाची महाराष्ट्राशी राज्यसीमा नाही."
+),
+
+
+Q(
+"TRICKY",
+"सीमावर्ती जिल्हे",
+"महाराष्ट्राच्या पश्चिमेस कोणता भौगोलिक घटक राज्याची सीमा निश्चित करतो?",
+[
+"अरबी समुद्र",
+"बंगालचा उपसागर",
+"नर्मदा नदी",
+"ताप्ती नदी"
+],
+0,
+"महाराष्ट्राच्या पश्चिमेस अरबी समुद्र आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"महाराष्ट्राच्या उत्तर-पश्चिम भागात कोणते राज्य आहे?",
+[
+"गुजरात",
+"कर्नाटक",
+"गोवा",
+"तेलंगणा"
+],
+0,
+"गुजरात महाराष्ट्राच्या उत्तर-पश्चिम दिशेला आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"महाराष्ट्राच्या दक्षिण-पश्चिम दिशेला कोणते राज्य आहे?",
+[
+"गोवा",
+"मध्य प्रदेश",
+"छत्तीसगड",
+"गुजरात"
+],
+0,
+"गोवा महाराष्ट्राच्या दक्षिण-पश्चिम दिशेला आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"महाराष्ट्राच्या दक्षिणेस मुख्यतः कोणते राज्य आहे?",
+[
+"कर्नाटक",
+"गुजरात",
+"मध्य प्रदेश",
+"छत्तीसगड"
+],
+0,
+"कर्नाटक महाराष्ट्राच्या दक्षिणेस आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"महाराष्ट्राच्या आग्नेय दिशेला कोणते राज्य आहे?",
+[
+"तेलंगणा",
+"गुजरात",
+"गोवा",
+"राजस्थान"
+],
+0,
+"तेलंगणा महाराष्ट्राच्या आग्नेय दिशेला आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"महाराष्ट्राच्या पूर्वेकडे कोणते राज्य आहे?",
+[
+"गुजरात",
+"छत्तीसगड",
+"गोवा",
+"राजस्थान"
+],
+1,
+"छत्तीसगड महाराष्ट्राच्या पूर्वेकडील सीमेजवळ आहे."
+),
+
+
+/* ---------------------------------------------------------
+   REGIONS
+--------------------------------------------------------- */
+
+
+Q(
+"HIGH",
+"प्रादेशिक भूगोल",
+"महाराष्ट्रातील 'खानदेश' या पारंपरिक प्रदेशाशी खालीलपैकी कोणते जिल्हे संबंधित आहेत?",
+[
+"धुळे, जळगाव, नंदुरबार",
+"पुणे, सातारा, सांगली",
+"नागपूर, वर्धा, गोंदिया",
+"लातूर, नांदेड, धाराशिव"
+],
+0,
+"धुळे, जळगाव आणि नंदुरबार हे पारंपरिक खानदेशाशी संबंधित जिल्हे आहेत."
+),
+
+
+Q(
+"HIGH",
+"प्रादेशिक भूगोल",
+"अमरावती आणि नागपूर विभाग कोणत्या व्यापक प्रदेशात येतात?",
+[
+"मराठवाडा",
+"विदर्भ",
+"कोकण",
+"पश्चिम महाराष्ट्र"
+],
+1,
+"अमरावती आणि नागपूर विभाग मिळून विदर्भ प्रदेशाशी संबंधित आहेत."
+),
+
+
+Q(
+"HIGH",
+"प्रादेशिक भूगोल",
+"छत्रपती संभाजीनगर व लातूर विभाग मिळून कोणत्या प्रदेशाचा मोठा भाग बनतो?",
+[
+"कोकण",
+"मराठवाडा",
+"विदर्भ",
+"खानदेश"
+],
+1,
+"छत्रपती संभाजीनगर व लातूर हे मराठवाड्याशी संबंधित महसूल विभाग आहेत."
+),
+
+
+Q(
+"HIGH",
+"प्रादेशिक भूगोल",
+"अरबी समुद्र आणि सह्याद्री पर्वतरांग यांच्यामधील अरुंद प्रदेशाला काय म्हणतात?",
+[
+"कोकण",
+"विदर्भ",
+"मराठवाडा",
+"देश"
+],
+0,
+"अरबी समुद्र आणि सह्याद्री यांच्यामधील किनारी पट्टा म्हणजे कोकण."
+),
+
+
+Q(
+"TRICKY",
+"प्रादेशिक भूगोल",
+"कोकण प्रदेशाची दक्षिण सीमा कोणत्या नदीशी संबंधित मानली जाते?",
+[
+"तेरेखोल",
+"गोदावरी",
+"भीमा",
+"वर्धा"
+],
+0,
+"कोकणची पारंपरिक दक्षिण सीमा तेरेखोल नदीकडे मानली जाते."
+),
+
+
+Q(
+"HIGH",
+"प्रादेशिक भूगोल",
+"कोकण प्रदेशाची उत्तरेकडील सीमा कोणत्या नदीशी संबंधित आहे?",
+[
+"दामणगंगा",
+"कृष्णा",
+"तापी",
+"पैनगंगा"
+],
+0,
+"कोकणाचा उत्तरेकडील विस्तार दामणगंगा नदीपर्यंत मानला जातो."
+),
+
+
+/* ---------------------------------------------------------
+   DISTRICT HQ
+--------------------------------------------------------- */
+
+
+Q(
+"HIGH",
+"जिल्हे व मुख्यालये",
+"पालघर जिल्ह्याचे मुख्यालय कोणते?",
+[
+"पालघर",
+"वसई",
+"ठाणे",
+"डहाणू"
+],
+0,
+"पालघर जिल्ह्याचे प्रशासकीय मुख्यालय पालघर आहे."
+),
+
+
+Q(
+"HIGH",
+"जिल्हे व मुख्यालये",
+"गडचिरोली जिल्ह्याचे मुख्यालय कोणते?",
+[
+"गडचिरोली",
+"चंद्रपूर",
+"आलापल्ली",
+"अहेरी"
+],
+0,
+"गडचिरोली हे जिल्ह्याचे मुख्यालय आहे."
+),
+
+
+Q(
+"HIGH",
+"जिल्हे व मुख्यालये",
+"नंदुरबार जिल्ह्याचे मुख्यालय कोणते?",
+[
+"नंदुरबार",
+"शहादा",
+"तळोदा",
+"धुळे"
+],
+0,
+"नंदुरबार हे जिल्ह्याचे मुख्यालय आहे."
+),
+
+
+Q(
+"TRICKY",
+"जिल्हे व मुख्यालये",
+"खालीलपैकी कोणते जिल्हा-मुख्यालयाचे चुकीचे संयोजन आहे?",
+[
+"रत्नागिरी — रत्नागिरी",
+"सिंधुदुर्ग — ओरोस",
+"रायगड — अलिबाग",
+"पालघर — वसई"
+],
+3,
+"पालघर जिल्ह्याचे मुख्यालय पालघर आहे; वसई नाही."
+),
+
+
+/* ---------------------------------------------------------
+   NEW DISTRICTS / ADMINISTRATIVE
+--------------------------------------------------------- */
+
+
+Q(
+"CURRENT",
+"जिल्हानिर्मिती",
+"महाराष्ट्रातील सर्वात नवीन जिल्ह्यांपैकी एक म्हणून पालघर जिल्ह्याची निर्मिती कोणत्या जिल्ह्यातून विभाजन करून झाली?",
+[
+"ठाणे",
+"रायगड",
+"नाशिक",
+"मुंबई उपनगर"
+],
+0,
+"पालघर जिल्ह्याची निर्मिती ठाणे जिल्ह्याचे विभाजन करून झाली."
+),
+
+
+Q(
+"HIGH",
+"जिल्हानिर्मिती",
+"पालघर जिल्ह्याची निर्मिती कोणत्या वर्षी झाली?",
+[
+"2009",
+"2011",
+"2014",
+"2016"
+],
+2,
+"पालघर जिल्हा 1 ऑगस्ट 2014 रोजी अस्तित्वात आला."
+),
+
+
+Q(
+"HIGH",
+"जिल्हानिर्मिती",
+"पालघर जिल्हा निर्मितीनंतर महाराष्ट्रातील जिल्ह्यांची संख्या किती झाली?",
+[
+"34",
+"35",
+"36",
+"37"
+],
+2,
+"पालघरच्या निर्मितीनंतर महाराष्ट्रातील जिल्ह्यांची संख्या 36 झाली."
+),
+
+
+/* ---------------------------------------------------------
+   CAPITAL / ADMIN
+--------------------------------------------------------- */
+
+
+Q(
+"HIGH",
+"राजधानी",
+"महाराष्ट्राची राजधानी कोणती?",
+[
+"पुणे",
+"मुंबई",
+"नागपूर",
+"नाशिक"
+],
+1,
+"मुंबई ही महाराष्ट्राची राजधानी आहे."
+),
+
+
+Q(
+"HIGH",
+"राजधानी",
+"महाराष्ट्राची उपराजधानी कोणती?",
+[
+"नागपूर",
+"पुणे",
+"नाशिक",
+"छत्रपती संभाजीनगर"
+],
+0,
+"नागपूर ही महाराष्ट्राची उपराजधानी आहे."
+),
+
+
+Q(
+"HIGH",
+"राजधानी",
+"महाराष्ट्राच्या विधिमंडळाचे हिवाळी अधिवेशन सामान्यतः कुठे होते?",
+[
+"मुंबई",
+"नागपूर",
+"पुणे",
+"नाशिक"
+],
+1,
+"नागपूर येथे महाराष्ट्र विधिमंडळाचे हिवाळी अधिवेशन भरते."
+),
+
+
+Q(
+"TRICKY",
+"राजधानी",
+"महाराष्ट्राची राजधानी आणि उपराजधानी यांची योग्य जोडी कोणती?",
+[
+"मुंबई — नागपूर",
+"नागपूर — मुंबई",
+"पुणे — नागपूर",
+"मुंबई — पुणे"
+],
+0,
+"मुंबई राजधानी आणि नागपूर उपराजधानी आहे."
+),
+
+
+/* ---------------------------------------------------------
+   MUNICIPAL / POLITICAL GEOGRAPHY
+--------------------------------------------------------- */
+
+
+Q(
+"HIGH",
+"नागरी राजकीय भूगोल",
+"महाराष्ट्रातील सर्वात मोठे महानगर क्षेत्र कोणत्या दोन प्रमुख शहरांशी विशेषतः संबंधित आहे?",
+[
+"मुंबई — नवी मुंबई",
+"नागपूर — अमरावती",
+"पुणे — सातारा",
+"नाशिक — धुळे"
+],
+0,
+"मुंबई महानगर क्षेत्र आणि नवी मुंबईचा urban agglomeration संदर्भ MPSC-oriented geography मध्ये महत्त्वाचा आहे."
+),
+
+
+Q(
+"CURRENT",
+"नागरी राजकीय भूगोल",
+"2026 च्या MPSC Geography trend analysis मध्ये Mumbai-Navi Mumbai संदर्भ कोणत्या संकल्पनेशी जोडला गेला?",
+[
+"Urban Agglomeration",
+"सागरी प्रवाह",
+"पठार निर्मिती",
+"हिमानी अपरदन"
+],
+0,
+"2026 च्या उपलब्ध MPSC Geography analysis मध्ये Mumbai-Navi Mumbai संदर्भ Urban Agglomeration शी जोडला गेला."
+),
+
+
+/* ---------------------------------------------------------
+   BORDER DISTRICT CONCEPT
+--------------------------------------------------------- */
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"खालीलपैकी कोणता महाराष्ट्रातील सीमावर्ती जिल्हा आहे?",
+[
+"नंदुरबार",
+"पुणे",
+"सोलापूर",
+"सातारा"
+],
+0,
+"नंदुरबारची गुजरात व मध्य प्रदेशाशी सीमा आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"खालीलपैकी कोणता जिल्हा कर्नाटकाच्या सीमेला लागून आहे?",
+[
+"कोल्हापूर",
+"नाशिक",
+"धुळे",
+"पालघर"
+],
+0,
+"कोल्हापूरची कर्नाटक राज्याशी सीमा आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"खालीलपैकी कोणता जिल्हा गोव्याला लागून आहे?",
+[
+"सिंधुदुर्ग",
+"रत्नागिरी",
+"रायगड",
+"पालघर"
+],
+0,
+"सिंधुदुर्ग जिल्ह्याची गोव्याशी सीमा आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"खालीलपैकी कोणता जिल्हा गुजरातला लागून आहे?",
+[
+"नंदुरबार",
+"सोलापूर",
+"लातूर",
+"हिंगोली"
+],
+0,
+"नंदुरबारची गुजरातशी सीमा आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"खालीलपैकी कोणता जिल्हा तेलंगणाच्या सीमेला लागून आहे?",
+[
+"नांदेड",
+"रत्नागिरी",
+"ठाणे",
+"सातारा"
+],
+0,
+"नांदेडची तेलंगणाशी सीमा आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"खालीलपैकी कोणता जिल्हा छत्तीसगडच्या सीमेला लागून आहे?",
+[
+"गडचिरोली",
+"पालघर",
+"कोल्हापूर",
+"धुळे"
+],
+0,
+"गडचिरोलीची छत्तीसगडशी सीमा आहे."
+),
+
+
+Q(
+"HIGH",
+"सीमावर्ती जिल्हे",
+"खालीलपैकी कोणता जिल्हा मध्य प्रदेशाशी सीमा सामायिक करतो?",
+[
+"बुलढाणा",
+"सिंधुदुर्ग",
+"रत्नागिरी",
+"कोल्हापूर"
+],
+0,
+"बुलढाणा जिल्ह्याची मध्य प्रदेशाशी सीमा आहे."
+),
+
+
+/* ---------------------------------------------------------
+   STATEMENT QUESTIONS
+--------------------------------------------------------- */
+
+
+Q(
+"TRICKY",
+"Statement",
+"खालील विधाने विचारात घ्या: 1) महाराष्ट्राला सहा राज्यांची सीमा लागते. 2) महाराष्ट्राच्या पश्चिमेस अरबी समुद्र आहे. योग्य पर्याय निवडा.",
+[
+"फक्त 1 बरोबर",
+"फक्त 2 बरोबर",
+"1 आणि 2 दोन्ही बरोबर",
+"दोन्ही चुकीची"
+],
+2,
+"दोन्ही विधाने बरोबर आहेत."
+),
+
+
+Q(
+"TRICKY",
+"Statement",
+"विधान 1: महाराष्ट्रात 36 जिल्हे आहेत. विधान 2: महाराष्ट्रात 6 महसूल विभाग आहेत. योग्य पर्याय कोणता?",
+[
+"फक्त विधान 1",
+"फक्त विधान 2",
+"दोन्ही",
+"दोन्ही चुकीची"
+],
+2,
+"दोन्ही विधाने सध्याच्या प्रशासकीय रचनेनुसार बरोबर आहेत."
+),
+
+
+Q(
+"TRICKY",
+"Statement",
+"विधान 1: नागपूर महाराष्ट्राची राजधानी आहे. विधान 2: नागपूर उपराजधानी आहे. योग्य पर्याय निवडा.",
+[
+"फक्त विधान 1",
+"फक्त विधान 2",
+"दोन्ही",
+"दोन्ही चुकीची"
+],
+1,
+"मुंबई राजधानी असून नागपूर उपराजधानी आहे."
+),
+
+
+Q(
+"TRICKY",
+"Statement",
+"खालीलपैकी कोणती विधाने योग्य आहेत? 1) अमरावती विदर्भात आहे. 2) नागपूर विदर्भात आहे. 3) लातूर विदर्भात आहे.",
+[
+"फक्त 1",
+"1 आणि 2",
+"2 आणि 3",
+"1, 2 आणि 3"
+],
+1,
+"अमरावती आणि नागपूर विदर्भात येतात; लातूर मराठवाड्यात आहे."
+),
+
+
+/* ---------------------------------------------------------
+   MATCHING
+--------------------------------------------------------- */
+
+
+Q(
+"HIGH",
+"Matching",
+"योग्य जोडी निवडा: महसूल विभाग — प्रमुख प्रदेश",
+[
+"नागपूर — विदर्भ",
+"लातूर — कोकण",
+"नाशिक — मराठवाडा",
+"कोकण — विदर्भ"
+],
+0,
+"नागपूर महसूल विभाग विदर्भाशी संबंधित आहे."
+),
+
+
+Q(
+"HIGH",
+"Matching",
+"योग्य जोडी निवडा:",
+[
+"पालघर — कोकण",
+"गडचिरोली — कोकण",
+"नांदेड — खानदेश",
+"धुळे — विदर्भ"
+],
+0,
+"पालघर हा कोकण महसूल विभागात आहे."
+),
+
+
+Q(
+"TRICKY",
+"Matching",
+"खालीलपैकी चुकीची जोडी कोणती?",
+[
+"नंदुरबार — खानदेश",
+"नागपूर — विदर्भ",
+"लातूर — मराठवाडा",
+"रत्नागिरी — विदर्भ"
+],
+3,
+"रत्नागिरी हा कोकण प्रदेशात आहे."
+),
+
+
+/* ---------------------------------------------------------
+   HIGH PROBABILITY MIX
+--------------------------------------------------------- */
+
+
+Q(
+"HIGH",
+"राजकीय भूगोल",
+"महाराष्ट्राचा राजकीय भूगोल अभ्यासताना खालीलपैकी कोणता घटक सर्वाधिक थेट प्रशासकीय भूगोलाशी संबंधित आहे?",
+[
+"जिल्हे व महसूल विभाग",
+"मान्सूनचे प्रकार",
+"मातीचे प्रकार",
+"खडकांचे प्रकार"
+],
+0,
+"जिल्हे, तालुके, महसूल विभाग आणि प्रशासकीय सीमा हे राजकीय/प्रशासकीय भूगोलाचे महत्त्वाचे घटक आहेत."
+),
+
+
+Q(
+"HIGH",
+"राजकीय भूगोल",
+"महाराष्ट्रातील विदर्भ प्रदेशाशी संबंधित योग्य पर्याय कोणता?",
+[
+"अमरावती व नागपूर विभाग",
+"कोकण व पुणे विभाग",
+"लातूर व छत्रपती संभाजीनगर विभाग",
+"नाशिक व पुणे विभाग"
+],
+0,
+"अमरावती आणि नागपूर विभाग विदर्भाशी संबंधित आहेत."
+),
+
+
+Q(
+"HIGH",
+"राजकीय भूगोल",
+"महाराष्ट्रातील मराठवाड्याशी संबंधित महसूल विभागांचा योग्य संच कोणता?",
+[
+"छत्रपती संभाजीनगर व लातूर",
+"नाशिक व पुणे",
+"कोकण व नाशिक",
+"अमरावती व नागपूर"
+],
+0,
+"छत्रपती संभाजीनगर आणि लातूर हे मराठवाड्याशी संबंधित महसूल विभाग आहेत."
+),
+
+
+Q(
+"HIGH",
+"राजकीय भूगोल",
+"महाराष्ट्रातील खानदेशाचा सर्वाधिक योग्य संबंध कोणत्या जिल्ह्यांशी आहे?",
+[
+"धुळे-जळगाव-नंदुरबार",
+"नाशिक-पुणे-सातारा",
+"नागपूर-वर्धा-भंडारा",
+"लातूर-नांदेड-परभणी"
+],
+0,
+"धुळे, जळगाव आणि नंदुरबार हे खानदेशाशी संबंधित प्रमुख जिल्हे आहेत."
+),
+
+
+Q(
+"TRICKY",
+"राजकीय भूगोल",
+"खालीलपैकी कोणता जिल्हा कोकण महसूल विभागात असूनही मुंबई शहर/उपनगर नाही?",
+[
+"रत्नागिरी",
+"पुणे",
+"नाशिक",
+"अकोला"
+],
+0,
+"रत्नागिरी हा कोकण महसूल विभागातील जिल्हा आहे."
+),
+
+
+Q(
+"HIGH",
+"राजकीय भूगोल",
+"महाराष्ट्राच्या सहा सीमावर्ती राज्यांमध्ये खालीलपैकी कोणते राज्य समाविष्ट नाही?",
+[
+"गोवा",
+"तेलंगणा",
+"ओडिशा",
+"छत्तीसगड"
+],
+2,
+"ओडिशा महाराष्ट्राच्या सीमेला लागून नाही."
+),
+
+
+Q(
+"HIGH",
+"राजकीय भूगोल",
+"महाराष्ट्रातील कोणता भाग पश्चिम किनारपट्टीशी सर्वाधिक संबंधित आहे?",
+[
+"कोकण",
+"विदर्भ",
+"मराठवाडा",
+"खानदेश"
+],
+0,
+"कोकण हा महाराष्ट्राचा पश्चिम किनारी प्रदेश आहे."
+),
+
+
+Q(
+"CURRENT",
+"प्रशासकीय रचना",
+"सध्याच्या महाराष्ट्राच्या प्रशासकीय रचनेनुसार जिल्ह्यांची संख्या 36 आणि महसूल विभागांची संख्या किती आहे?",
+[
+"4",
+"5",
+"6",
+"8"
+],
+2,
+"महाराष्ट्रात 36 जिल्हे आणि 6 महसूल विभाग आहेत."
+),
+
+
+/* ---------------------------------------------------------
+   DISTRICT LEVEL TRAPS
+--------------------------------------------------------- */
+
+
+Q(
+"TRICKY",
+"जिल्हे",
+"खालीलपैकी कोणता जिल्हा विदर्भात नाही?",
+[
+"वर्धा",
+"भंडारा",
+"यवतमाळ",
+"सातारा"
+],
+3,
+"सातारा हा पश्चिम महाराष्ट्र/पुणे विभागाशी संबंधित जिल्हा आहे; विदर्भात नाही."
+),
+
+
+Q(
+"TRICKY",
+"जिल्हे",
+"खालीलपैकी कोणता जिल्हा मराठवाड्यात नाही?",
+[
+"नांदेड",
+"परभणी",
+"हिंगोली",
+"धुळे"
+],
+3,
+"धुळे हा खानदेश/नाशिक विभागाशी संबंधित आहे."
+),
+
+
+Q(
+"TRICKY",
+"जिल्हे",
+"खालीलपैकी कोणता जिल्हा कोकणात नाही?",
+[
+"रायगड",
+"रत्नागिरी",
+"सिंधुदुर्ग",
+"जळगाव"
+],
+3,
+"जळगाव हा खानदेश/नाशिक विभागाशी संबंधित आहे."
+),
+
+
+Q(
+"TRICKY",
+"जिल्हे",
+"खालीलपैकी कोणता जिल्हा खानदेशाशी संबंधित नाही?",
+[
+"धुळे",
+"जळगाव",
+"नंदुरबार",
+"रत्नागिरी"
+],
+3,
+"रत्नागिरी कोकणात आहे."
+),
+
+
+/* ---------------------------------------------------------
+   MPSC STYLE
+--------------------------------------------------------- */
+
+
+Q(
+"HIGH",
+"MPSC Pattern",
+"खालीलपैकी कोणता पर्याय महाराष्ट्राच्या राजकीय भूगोलाच्या दृष्टीने सर्वाधिक योग्य आहे?",
+[
+"राज्य — विभाग — जिल्हा — तालुका",
+"राज्य — तालुका — विभाग — जिल्हा",
+"जिल्हा — राज्य — विभाग — तालुका",
+"विभाग — राज्य — तालुका — जिल्हा"
+],
+0,
+"प्रशासकीय रचनेत राज्याच्या खाली महसूल विभाग, त्याखाली जिल्हे आणि पुढे तालुके अशी रचना समजणे उपयुक्त आहे."
+),
+
+
+Q(
+"HIGH",
+"MPSC Pattern",
+"महाराष्ट्रातील जिल्ह्यांच्या सीमांचा अभ्यास करताना कोणता प्रश्न MPSC मध्ये अधिक शक्य आहे?",
+[
+"कोणत्या जिल्ह्याला कोणत्या राज्याची सीमा लागते?",
+"फक्त जिल्ह्याचे क्षेत्रफळ",
+"फक्त लोकसंख्या",
+"फक्त पर्जन्यमान"
+],
+0,
+"PYQ trend मध्ये district-border type questions प्रत्यक्ष विचारले गेले आहेत."
+),
+
+
+Q(
+"TRICKY",
+"MPSC Pattern",
+"खालीलपैकी कोणता पर्याय 'प्रदेश' आणि 'महसूल विभाग' यांचा गोंधळ निर्माण करू शकतो?",
+[
+"विदर्भ — अमरावती व नागपूर विभाग",
+"मराठवाडा — छत्रपती संभाजीनगर व लातूर विभाग",
+"खानदेश — स्वतंत्र महसूल विभाग",
+"कोकण — कोकण महसूल विभागाशी संबंधित"
+],
+2,
+"खानदेश हा पारंपरिक भौगोलिक प्रदेश आहे; स्वतंत्र महसूल विभाग नाही."
+),
+
+
+Q(
+"HIGH",
+"MPSC Pattern",
+"महाराष्ट्राच्या राजकीय भूगोलात 'सीमावर्ती जिल्हे' हा topic महत्त्वाचा का आहे?",
+[
+"MPSC मध्ये अशा प्रकारचे प्रश्न प्रत्यक्ष विचारले गेले आहेत",
+"कारण सर्व जिल्हे सीमावर्ती आहेत",
+"कारण याचा हवामानाशी संबंध नाही",
+"कारण महाराष्ट्राला राज्यसीमा नाही"
+],
+0,
+"MPSC Group-B 2023 मध्ये महाराष्ट्रातील इतर राज्यांशी सीमा असलेल्या जिल्ह्यांवर प्रश्न विचारला गेला होता."
+)
+
+];
+
+
+/* =========================================================
+   PREPARE QUESTIONS
+========================================================= */
+
+let questions=[];
+let score=0;
+let attempted=0;
+
+function prepare(){
+
+    /*
+       Each attempt gets:
+       1. Question order shuffled
+       2. Option order shuffled
+    */
+
+    questions=shuffle(bank).map(q=>{
+
+        const optionObjects=
+            q.options.map((text,index)=>({
+                text,
+                index
+            }));
+
+        const shuffledOptions=
+            shuffle(optionObjects);
+
+        const newAnswer=
+            shuffledOptions.findIndex(
+                x=>x.index===q.answer
+            );
+
+        return {
+            ...q,
+
+            options:
+                shuffledOptions.map(
+                    x=>x.text
+                ),
+
+            answer:newAnswer,
+
+            answered:false,
+            selected:null
+        };
+
+    });
+
+    score=0;
+    attempted=0;
+
+    document.getElementById("result")
+        .style.display="none";
+
+    updateScore();
+}
+
+
+/* =========================================================
+   RENDER QUIZ
+========================================================= */
+
+function render(){
+
+    const quiz=
+        document.getElementById("quiz");
+
+    quiz.innerHTML="";
+
+
+    questions.forEach((q,index)=>{
+
+        const card=
+            document.createElement("div");
+
+        card.className="question-card";
+
+
+        let badgeClass="high";
+
+        if(q.type==="PYQ")
+            badgeClass="pyq";
+
+        if(q.type==="TRICKY")
+            badgeClass="tricky";
+
+        if(q.type==="CURRENT")
+            badgeClass="current";
+
+        if(q.type==="CONCEPT")
+            badgeClass="concept";
+
+
+        card.innerHTML=`
+
+        <div class="qtop">
+
+            <span class="qno">
+                प्रश्न ${index+1} / ${questions.length}
+            </span>
+
+            <span class="badge ${badgeClass}">
+                ${q.type}
+            </span>
+
+        </div>
+
+        <div class="question">
+            ${q.question}
+        </div>
+
+        <div class="options"></div>
+
+        <div class="answer"></div>
+
+        `;
+
+
+        const optionsDiv=
+            card.querySelector(".options");
+
+
+        q.options.forEach((option,i)=>{
+
+            const button=
+                document.createElement("button");
+
+            button.className="option";
+
+            button.textContent=
+                `${String.fromCharCode(65+i)}) ${option}`;
+
+
+            button.onclick=()=>{
+
+                answerQuestion(
+                    q,
+                    i,
+                    button,
+                    card
+                );
+
+            };
+
+
+            optionsDiv.appendChild(button);
+
+        });
+
+
+        quiz.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   ANSWER QUESTION
+========================================================= */
+
+function answerQuestion(
+    q,
+    selected,
+    clicked,
+    card
+){
+
+    if(q.answered)
+        return;
+
+
+    q.answered=true;
+    q.selected=selected;
+
+    attempted++;
+
+
+    const buttons=
+        card.querySelectorAll(".option");
+
+
+    buttons.forEach(
+        b=>b.disabled=true
+    );
+
+
+    buttons[q.answer]
+        .classList.add("correct");
+
+
+    const answerBox=
+        card.querySelector(".answer");
+
+
+    if(selected===q.answer){
+
+        score++;
+
+
+        answerBox.className=
+            "answer ok";
+
+
+        answerBox.innerHTML=`
+
+        <strong>✅ बरोबर उत्तर!</strong>
+
+        <br><br>
+
+        <strong>योग्य उत्तर:</strong>
+        ${q.options[q.answer]}
+
+        <br><br>
+
+        💡 ${q.explanation}
+
+        `;
+
+    }
+
+    else{
+
+        clicked.classList.add("wrong");
+
+
+        answerBox.className=
+            "answer no";
+
+
+        answerBox.innerHTML=`
+
+        <strong>❌ चुकीचे उत्तर!</strong>
+
+        <br><br>
+
+        <strong>तुमचे उत्तर:</strong>
+        ${q.options[selected]}
+
+        <br>
+
+        <strong>योग्य उत्तर:</strong>
+        ${q.options[q.answer]}
+
+        <br><br>
+
+        💡 ${q.explanation}
+
+        ${
+            q.source
+            ?
+            `<br><br>
+             📚 Source: ${q.source}`
+            :
+            ""
+        }
+
+        `;
+
+    }
+
+
+    updateScore();
+
+
+    if(attempted===questions.length){
+
+        setTimeout(
+            showResult,
+            500
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SCORE UPDATE
+========================================================= */
+
+function updateScore(){
+
+    document.getElementById("score")
+        .textContent=score;
+
+    document.getElementById("attempted")
+        .textContent=attempted;
+
+    document.getElementById("remaining")
+        .textContent=
+        questions.length-attempted;
+
+    document.getElementById("total")
+        .textContent=
+        questions.length;
+
+    document.getElementById("progress")
+        .style.width=
+        `${(attempted/questions.length)*100}%`;
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+function showResult(){
+
+    const correct=score;
+
+
+    const wrong=
+        questions.filter(
+            q=>
+                q.answered &&
+                q.selected!==q.answer
+        ).length;
+
+
+    const unattempted=
+        questions.filter(
+            q=>!q.answered
+        ).length;
+
+
+    const accuracy=
+        attempted
+        ?
+        ((correct/attempted)*100)
+        .toFixed(2)
+        :
+        "0.00";
+
+
+    document.getElementById("rTotal")
+        .textContent=
+        questions.length;
+
+    document.getElementById("rCorrect")
+        .textContent=
+        correct;
+
+    document.getElementById("rWrong")
+        .textContent=
+        wrong;
+
+    document.getElementById("rUnattempted")
+        .textContent=
+        unattempted;
+
+    document.getElementById("rAccuracy")
+        .textContent=
+        accuracy+"%";
+
+
+    let message;
+
+
+    if(accuracy>=90){
+
+        message=
+        "🔥 Excellent! महाराष्ट्राच्या राजकीय भूगोलावर तुमची खूप चांगली पकड आहे.";
+
+    }
+    else if(accuracy>=75){
+
+        message=
+        "👏 Very Good! आता सीमावर्ती जिल्हे आणि प्रशासनिक facts revise करा.";
+
+    }
+    else if(accuracy>=60){
+
+        message=
+        "👍 चांगली तयारी आहे. जिल्हे, विभाग आणि प्रदेश यांचे mapping पुन्हा करा.";
+
+    }
+    else{
+
+        message=
+        "📚 जिल्हे + महसूल विभाग + सीमावर्ती जिल्हे हे topics पुन्हा व्यवस्थित अभ्यासा.";
+
+    }
+
+
+    document.getElementById("resultMessage")
+        .textContent=
+        `Accuracy: ${accuracy}% — ${message}`;
+
+
+    createTopicAnalysis();
+
+    createReview();
+
+
+    const result=
+        document.getElementById("result");
+
+    result.style.display="block";
+
+
+    result.scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   TOPIC ANALYSIS
+========================================================= */
+
+function createTopicAnalysis(){
+
+    const topics={};
+
+
+    questions.forEach(q=>{
+
+        if(!topics[q.topic]){
+
+            topics[q.topic]={
+                total:0,
+                right:0,
+                wrong:0
+            };
+
+        }
+
+
+        topics[q.topic].total++;
+
+
+        if(q.answered){
+
+            if(q.selected===q.answer)
+                topics[q.topic].right++;
+
+            else
+                topics[q.topic].wrong++;
+
+        }
+
+    });
+
+
+    const table=
+        document.getElementById("topicTable");
+
+    table.innerHTML="";
+
+
+    Object.entries(topics)
+    .forEach(([topic,data])=>{
+
+        const att=
+            data.right+
+            data.wrong;
+
+
+        const accuracy=
+            att
+            ?
+            ((data.right/att)*100)
+                .toFixed(1)
+            :
+            "0.0";
+
+
+        const row=
+            document.createElement("tr");
+
+
+        row.innerHTML=`
+
+        <td>${topic}</td>
+
+        <td>${data.total}</td>
+
+        <td>${data.right}</td>
+
+        <td>${data.wrong}</td>
+
+        <td>${accuracy}%</td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+/* =========================================================
+   REVIEW
+========================================================= */
+
+function createReview(){
+
+    const review=
+        document.getElementById("review");
+
+    review.innerHTML="";
+
+
+    questions.forEach((q,index)=>{
+
+        if(!q.answered)
+            return;
+
+
+        const correct=
+            q.selected===q.answer;
+
+
+        const div=
+            document.createElement("div");
+
+
+        div.className=
+            "review "+
+            (correct?"ok":"no");
+
+
+        div.innerHTML=`
+
+        <strong>
+            प्रश्न ${index+1}
+            ${correct?"✅":"❌"}
+        </strong>
+
+        <br><br>
+
+        ${q.question}
+
+        <br><br>
+
+        <strong>तुमचे उत्तर:</strong>
+        ${q.options[q.selected]}
+
+        <br>
+
+        <strong>योग्य उत्तर:</strong>
+        ${q.options[q.answer]}
+
+        <br><br>
+
+        <strong>💡 Explanation:</strong>
+
+        <br>
+
+        ${q.explanation}
+
+        `;
+
+
+        review.appendChild(div);
+
+    });
+
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+function restartExam(){
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+    prepare();
+
+    render();
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+prepare();
+
+render();
+
+</script>
+
+</body>
+</html>
