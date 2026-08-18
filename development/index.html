@@ -1,1 +1,1737 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>MPSC — विकासाचे निर्देशक Quiz</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans Devanagari", sans-serif;
+      background: #f4f7fb;
+      color: #222;
+    }
+
+    header {
+      background: linear-gradient(135deg, #00695c, #004d40);
+      color: white;
+      text-align: center;
+      padding: 30px 15px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 5px 0;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .instructions {
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      border-left: 5px solid #00695c;
+      margin-bottom: 20px;
+      line-height: 1.8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    /* Score */
+
+    .score-box {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+    }
+
+    .score-info {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .progress {
+      width: 100%;
+      height: 8px;
+      background: #ddd;
+      border-radius: 10px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #00897b;
+      transition: width 0.3s ease;
+    }
+
+    /* Question */
+
+    .question-card {
+      background: white;
+      padding: 22px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .question-number {
+      color: #00695c;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .pyq {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .practice {
+      background: #e0f2f1;
+      color: #00695c;
+    }
+
+    .question {
+      font-size: 19px;
+      font-weight: bold;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .option {
+      width: 100%;
+      display: block;
+      text-align: left;
+      background: #f8f9fa;
+      border: 2px solid #ddd;
+      padding: 13px 15px;
+      margin: 10px 0;
+      border-radius: 9px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .option:hover:not(:disabled) {
+      background: #e0f2f1;
+      border-color: #00695c;
+    }
+
+    .option:disabled {
+      cursor: not-allowed;
+    }
+
+    .option.correct {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+
+    .option.wrong {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+
+    .answer-result {
+      display: none;
+      margin-top: 15px;
+      padding: 14px;
+      border-radius: 8px;
+      line-height: 1.7;
+    }
+
+    .answer-result.correct-result {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+    }
+
+    .answer-result.wrong-result {
+      display: block;
+      background: #ffebee;
+      color: #b71c1c;
+    }
+
+    .explanation {
+      color: #333;
+      margin-top: 8px;
+    }
+
+    /* Final Result */
+
+    #finalResult {
+      display: none;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      margin: 30px 0;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.12);
+    }
+
+    .result-header {
+      background: linear-gradient(135deg, #00897b, #00695c);
+      color: white;
+      text-align: center;
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    .result-header h2 {
+      margin: 0 0 10px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .stat {
+      padding: 18px 10px;
+      text-align: center;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+
+    .total {
+      background: #e0f2f1;
+      color: #00695c;
+    }
+
+    .right {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .wrong {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .percentage {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .review-title {
+      margin-top: 30px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #00695c;
+    }
+
+    .review-item {
+      padding: 18px;
+      margin: 15px 0;
+      border-radius: 10px;
+      line-height: 1.7;
+    }
+
+    .review-correct {
+      background: #e8f5e9;
+      border-left: 5px solid #2e7d32;
+    }
+
+    .review-wrong {
+      background: #ffebee;
+      border-left: 5px solid #c62828;
+    }
+
+    .review-question {
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .your-answer {
+      margin: 6px 0;
+    }
+
+    .correct-answer {
+      margin: 6px 0;
+      color: #2e7d32;
+    }
+
+    .explanation-box {
+      background: rgba(255,255,255,0.8);
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 7px;
+    }
+
+    .restart-btn {
+      display: block;
+      margin: 25px auto 5px;
+      background: #00695c;
+      color: white;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .restart-btn:hover {
+      background: #004d40;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+
+    @media (max-width: 700px) {
+      header h1 {
+        font-size: 22px;
+      }
+
+      .question {
+        font-size: 17px;
+      }
+
+      .option {
+        font-size: 15px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .score-info {
+        gap: 12px;
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <h1>📊 MPSC — विकासाचे निर्देशक Quiz</h1>
+
+  <p>
+    HDI • PQLI • GDP • PCI • गरीबी • साक्षरता • आरोग्य
+  </p>
+
+  <p>
+    राज्यसेवा • संयुक्त गट-ब • MPSC Practice
+  </p>
+
+</header>
+
+
+<div class="container">
+
+  <div class="instructions">
+
+    <strong>📌 सूचना</strong>
+
+    <br>
+
+    🔀 प्रत्येक attempt मध्ये प्रश्न आणि options shuffle होतील.
+
+    <br>
+
+    ✅ उत्तर निवडल्यानंतर लगेच योग्य/चुकीचे उत्तर दिसेल.
+
+    <br>
+
+    📊 परीक्षा पूर्ण झाल्यावर Right, Wrong आणि Percentage मिळेल.
+
+    <br>
+
+    📋 शेवटी प्रत्येक प्रश्नाचे Answer Review आणि Explanation मिळेल.
+
+    <br>
+
+    🔄 पुन्हा परीक्षा दिल्यास प्रश्नांचा आणि options चा क्रम बदलेल.
+
+  </div>
+
+
+  <!-- SCORE -->
+
+  <div class="score-box">
+
+    <div class="score-info">
+
+      <span>
+        Score:
+        <strong id="score">0</strong>
+      </span>
+
+      <span>
+        Attempted:
+        <strong id="attempted">0</strong>
+      </span>
+
+      <span>
+        Total:
+        <strong id="total">0</strong>
+      </span>
+
+    </div>
+
+    <div class="progress">
+
+      <div
+        class="progress-bar"
+        id="progressBar">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- QUIZ -->
+
+  <div id="quiz"></div>
+
+
+  <!-- FINAL RESULT -->
+
+  <div id="finalResult">
+
+    <div class="result-header">
+
+      <h2>🎉 परीक्षा पूर्ण!</h2>
+
+      <p id="finalMessage"></p>
+
+    </div>
+
+
+    <div class="stats">
+
+      <div class="stat total">
+
+        <span
+          class="stat-number"
+          id="finalTotal">
+          0
+        </span>
+
+        Total
+
+      </div>
+
+
+      <div class="stat right">
+
+        <span
+          class="stat-number"
+          id="finalRight">
+          0
+        </span>
+
+        Right
+
+      </div>
+
+
+      <div class="stat wrong">
+
+        <span
+          class="stat-number"
+          id="finalWrong">
+          0
+        </span>
+
+        Wrong
+
+      </div>
+
+
+      <div class="stat percentage">
+
+        <span
+          class="stat-number"
+          id="finalPercentage">
+          0%
+        </span>
+
+        Percentage
+
+      </div>
+
+    </div>
+
+
+    <h2 class="review-title">
+      📋 Answer Review
+    </h2>
+
+
+    <div id="review"></div>
+
+
+    <button
+      class="restart-btn"
+      onclick="restartExam()">
+
+      🔄 पुन्हा परीक्षा द्या
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<footer>
+
+  MPSC Development Indicators Quiz
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   QUESTION BANK
+========================================================= */
+
+const questionBank = [
+
+  {
+    type: "PYQ",
+    year: "MPSC Pattern",
+    question: "मानवी विकासाची संकल्पना मोजण्यासाठी सर्वाधिक प्रसिद्ध निर्देशांक कोणता?",
+    options: [
+      "GDP",
+      "HDI",
+      "CPI",
+      "WPI"
+    ],
+    answer: 1,
+    explanation:
+      "HDI म्हणजे Human Development Index. तो मानवी विकासाचे तुलनात्मक मापन करण्यासाठी वापरला जातो."
+  },
+
+
+  {
+    type: "PYQ",
+    year: "MPSC Pattern",
+    question: "मानवी विकास निर्देशांक (HDI) मध्ये खालीलपैकी कोणते परिमाण समाविष्ट आहे?",
+    options: [
+      "आरोग्य",
+      "शिक्षण",
+      "उत्पन्न",
+      "वरील सर्व"
+    ],
+    answer: 3,
+    explanation:
+      "HDI मध्ये दीर्घ आणि निरोगी जीवन, ज्ञान/शिक्षण आणि सभ्य जीवनमानासाठी आवश्यक उत्पन्न ही तीन प्रमुख dimensions आहेत."
+  },
+
+
+  {
+    type: "PYQ",
+    year: "MPSC Pattern",
+    question: "HDI मध्ये आरोग्याचे मापन मुख्यतः कोणत्या निर्देशकाद्वारे केले जाते?",
+    options: [
+      "साक्षरता दर",
+      "जन्मावेळी अपेक्षित आयुर्मान",
+      "प्रति व्यक्ती उत्पन्न",
+      "बालमृत्यू दर"
+    ],
+    answer: 1,
+    explanation:
+      "HDI मध्ये Health dimension साठी Life expectancy at birth वापरले जाते."
+  },
+
+
+  {
+    type: "PYQ",
+    year: "MPSC Pattern",
+    question: "HDI मधील शिक्षणाच्या परिमाणात कोणते निर्देशक वापरले जातात?",
+    options: [
+      "Mean Years of Schooling आणि Expected Years of Schooling",
+      "फक्त साक्षरता दर",
+      "फक्त प्राथमिक शिक्षण",
+      "फक्त उच्च शिक्षण"
+    ],
+    answer: 0,
+    explanation:
+      "आधुनिक HDI मध्ये Mean Years of Schooling आणि Expected Years of Schooling हे दोन education indicators वापरले जातात."
+  },
+
+
+  {
+    type: "PYQ",
+    year: "MPSC Pattern",
+    question: "PQLI चा पूर्ण अर्थ काय आहे?",
+    options: [
+      "Physical Quality of Life Index",
+      "Public Quality of Life Index",
+      "People Quality Level Index",
+      "Physical Quantitative Life Index"
+    ],
+    answer: 0,
+    explanation:
+      "PQLI = Physical Quality of Life Index."
+  },
+
+
+  {
+    type: "PYQ",
+    year: "MPSC Pattern",
+    question: "PQLI मध्ये खालीलपैकी कोणते निर्देशक समाविष्ट केले जातात?",
+    options: [
+      "शिशुमृत्यू दर",
+      "एक वर्षाचे आयुर्मान",
+      "साक्षरता",
+      "वरील सर्व"
+    ],
+    answer: 3,
+    explanation:
+      "PQLI मध्ये Infant Mortality, Life Expectancy at age one आणि Literacy हे प्रमुख निर्देशक आहेत."
+  },
+
+
+  {
+    type: "Practice",
+    question: "प्रति व्यक्ती उत्पन्न (Per Capita Income) कसे मोजले जाते?",
+    options: [
+      "राष्ट्रीय उत्पन्न ÷ लोकसंख्या",
+      "लोकसंख्या ÷ राष्ट्रीय उत्पन्न",
+      "GDP × लोकसंख्या",
+      "राष्ट्रीय उत्पन्न − लोकसंख्या"
+    ],
+    answer: 0,
+    explanation:
+      "Per Capita Income = National Income ÷ Population."
+  },
+
+
+  {
+    type: "Practice",
+    question: "आर्थिक विकास आणि आर्थिक वृद्धी यांतील योग्य फरक कोणता?",
+    options: [
+      "दोन्ही पूर्णपणे समान आहेत.",
+      "वृद्धी मुख्यतः उत्पादन/उत्पन्नातील वाढ दर्शवते, तर विकासात गुणात्मक बदलांचाही समावेश होतो.",
+      "विकास म्हणजे फक्त GDP वाढ.",
+      "वृद्धी म्हणजे फक्त शिक्षणातील सुधारणा."
+    ],
+    answer: 1,
+    explanation:
+      "Economic Growth ही प्रामुख्याने quantitative संकल्पना आहे; Development मध्ये आरोग्य, शिक्षण, जीवनमान, समानता इत्यादी qualitative बाबीही येतात."
+  },
+
+
+  {
+    type: "Practice",
+    question: "खालीलपैकी कोणता निर्देशक आरोग्याच्या स्थितीचे महत्त्वपूर्ण मापन मानला जातो?",
+    options: [
+      "शिशुमृत्यू दर",
+      "निर्यात दर",
+      "कर दर",
+      "राजकोषीय तूट"
+    ],
+    answer: 0,
+    explanation:
+      "Infant Mortality Rate हा आरोग्यव्यवस्थेची आणि सामाजिक परिस्थितीची महत्त्वाची माहिती देतो."
+  },
+
+
+  {
+    type: "Practice",
+    question: "शिशुमृत्यू दर म्हणजे काय?",
+    options: [
+      "एका वर्षात मृत्यू पावलेल्या सर्व व्यक्तींचे प्रमाण",
+      "एका वर्षात जन्मलेल्या 1,000 जिवंत बालकांमागे एका वर्षाच्या आत मृत्यू पावलेल्या बालकांची संख्या",
+      "एकूण लोकसंख्येतील बालकांचे प्रमाण",
+      "जन्मदर आणि मृत्यूदर यांतील फरक"
+    ],
+    answer: 1,
+    explanation:
+      "IMR साधारणपणे 1,000 live births मागे एक वर्षाच्या आत मृत्यू पावलेल्या बालकांची संख्या दर्शवतो."
+  },
+
+
+  {
+    type: "Practice",
+    question: "साक्षरता दर हा प्रामुख्याने कोणत्या विकासाच्या परिमाणाशी संबंधित आहे?",
+    options: [
+      "शिक्षण",
+      "आरोग्य",
+      "उत्पादन",
+      "परकीय व्यापार"
+    ],
+    answer: 0,
+    explanation:
+      "Literacy Rate हा शिक्षणाच्या स्थितीचा मूलभूत निर्देशक आहे."
+  },
+
+
+  {
+    type: "Practice",
+    question: "मानवी विकासाच्या दृष्टिकोनातून केवळ GDP वर अवलंबून राहण्याची प्रमुख मर्यादा कोणती?",
+    options: [
+      "GDP मध्ये उत्पादन मोजले जात नाही.",
+      "GDP उत्पन्नाचे वितरण आणि जीवनाच्या गुणवत्तेतील अनेक बाबी पूर्णपणे दर्शवत नाही.",
+      "GDP कधीही मोजता येत नाही.",
+      "GDP मध्ये सेवा क्षेत्राचा समावेश नसतो."
+    ],
+    answer: 1,
+    explanation:
+      "GDP उत्पादनाचे आर्थिक मूल्य दर्शवते; परंतु विषमता, आरोग्य, शिक्षण, जीवनाची गुणवत्ता इत्यादी अनेक बाबी त्यातून थेट समजत नाहीत."
+  },
+
+
+  {
+    type: "Practice",
+    question: "HDI मध्ये उत्पन्नाचे परिमाण कोणत्या संकल्पनेवर आधारित आहे?",
+    options: [
+      "Gross exports",
+      "GNI per capita",
+      "Total tax revenue",
+      "Government expenditure"
+    ],
+    answer: 1,
+    explanation:
+      "HDI मध्ये standard of living dimension साठी GNI per capita वापरला जातो."
+  },
+
+
+  {
+    type: "Practice",
+    question: "जर एखाद्या देशाचा HDI वाढत असेल तर सामान्यतः त्याचा अर्थ काय?",
+    options: [
+      "फक्त GDP वाढला आहे.",
+      "मानवी विकासाच्या आरोग्य, शिक्षण आणि जीवनमानाशी संबंधित बाबींमध्ये सुधारणा झाली आहे.",
+      "फक्त निर्यात वाढली आहे.",
+      "फक्त लोकसंख्या वाढली आहे."
+    ],
+    answer: 1,
+    explanation:
+      "HDI तीन प्रमुख dimensions च्या कामगिरीचे संयुक्त चित्र देतो."
+  },
+
+
+  {
+    type: "Practice",
+    question: "Gender Inequality Index (GII) मुख्यतः कशाशी संबंधित आहे?",
+    options: [
+      "लिंगाधारित विषमता",
+      "प्रादेशिक विषमता",
+      "उत्पादनक्षमता",
+      "महागाई"
+    ],
+    answer: 0,
+    explanation:
+      "GII हा महिलां आणि पुरुषांमधील असमानता मोजण्यासाठी वापरला जातो."
+  },
+
+
+  {
+    type: "Practice",
+    question: "Multidimensional Poverty Index (MPI) चे वैशिष्ट्य कोणते?",
+    options: [
+      "तो फक्त उत्पन्न मोजतो.",
+      "तो गरीबीच्या विविध dimensions जसे आरोग्य, शिक्षण आणि जीवनमान विचारात घेतो.",
+      "तो फक्त GDP मोजतो.",
+      "तो फक्त बेरोजगारी मोजतो."
+    ],
+    answer: 1,
+    explanation:
+      "MPI हा multidimensional poverty मोजतो आणि आरोग्य, शिक्षण व living standards मधील deprivation विचारात घेतो."
+  },
+
+
+  {
+    type: "Practice",
+    question: "गरीबीचे Headcount Ratio काय दर्शवते?",
+    options: [
+      "गरीबीरेषेखालील लोकसंख्येचे प्रमाण",
+      "देशाचे एकूण उत्पन्न",
+      "GDP मधील उद्योगाचा वाटा",
+      "एकूण बेरोजगारांची संख्या"
+    ],
+    answer: 0,
+    explanation:
+      "Headcount Ratio म्हणजे poverty line खाली असलेल्या लोकसंख्येचा एकूण लोकसंख्येतील वाटा."
+  },
+
+
+  {
+    type: "Practice",
+    question: "Lorenz Curve चा उपयोग कशासाठी केला जातो?",
+    options: [
+      "उत्पन्न वितरणातील विषमता दाखवण्यासाठी",
+      "महागाई मोजण्यासाठी",
+      "GDP मोजण्यासाठी",
+      "लोकसंख्या वाढ मोजण्यासाठी"
+    ],
+    answer: 0,
+    explanation:
+      "Lorenz Curve income/wealth distribution मधील inequality चे graphical representation देते."
+  },
+
+
+  {
+    type: "Practice",
+    question: "Gini Coefficient कशाचे मापन करण्यासाठी वापरला जातो?",
+    options: [
+      "उत्पन्नातील विषमता",
+      "साक्षरता",
+      "आयुर्मान",
+      "GDP वाढ"
+    ],
+    answer: 0,
+    explanation:
+      "Gini coefficient income inequality मोजण्यासाठी प्रसिद्ध आहे."
+  },
+
+
+  {
+    type: "Practice",
+    question: "Gini coefficient चे मूल्य 0 असल्यास त्याचा अर्थ काय?",
+    options: [
+      "पूर्ण विषमता",
+      "पूर्ण समानता",
+      "पूर्ण बेरोजगारी",
+      "शून्य GDP"
+    ],
+    answer: 1,
+    explanation:
+      "Gini coefficient 0 म्हणजे पूर्ण equality; 1 च्या जवळचे मूल्य अत्यंत inequality दर्शवते."
+  },
+
+
+  {
+    type: "Practice",
+    question: "मानवी विकासाचा दृष्टिकोन प्रामुख्याने कोणाशी संबंधित आहे?",
+    options: [
+      "Amartya Sen",
+      "Adam Smith",
+      "David Ricardo",
+      "J. M. Keynes"
+    ],
+    answer: 0,
+    explanation:
+      "Amartya Sen यांच्या capability approach ने human development च्या विचाराला महत्त्वपूर्ण बौद्धिक आधार दिला."
+  },
+
+
+  {
+    type: "Practice",
+    question: "Capability Approach मध्ये विकासाचा मुख्य भर कशावर आहे?",
+    options: [
+      "फक्त पैशाच्या उत्पन्नावर",
+      "व्यक्तींना उपलब्ध असलेल्या capabilities आणि freedoms वर",
+      "फक्त GDP वर",
+      "फक्त सरकारी खर्चावर"
+    ],
+    answer: 1,
+    explanation:
+      "Capability approach मध्ये लोकांना काय करता येते आणि काय बनता येते, म्हणजेच त्यांच्या substantive freedoms/capabilities यावर भर असतो."
+  },
+
+
+  {
+    type: "Practice",
+    question: "सामाजिक निर्देशकांमध्ये खालीलपैकी कोणाचा समावेश होतो?",
+    options: [
+      "साक्षरता",
+      "आयुर्मान",
+      "शिशुमृत्यू दर",
+      "वरील सर्व"
+    ],
+    answer: 3,
+    explanation:
+      "साक्षरता, आयुर्मान आणि शिशुमृत्यू दर हे विकासाचे महत्त्वाचे सामाजिक निर्देशक आहेत."
+  },
+
+
+  {
+    type: "Practice",
+    question: "जर एखाद्या देशाचे प्रति व्यक्ती उत्पन्न जास्त असेल तर खालीलपैकी कोणता निष्कर्ष आपोआप काढता येत नाही?",
+    options: [
+      "त्या देशाची सरासरी आर्थिक क्षमता तुलनेने जास्त असू शकते.",
+      "त्या देशात उत्पन्नाचे समान वितरण आहे.",
+      "देशाचे average income तुलनेने जास्त आहे.",
+      "जीवनमानाबाबत काही माहिती मिळू शकते."
+    ],
+    answer: 1,
+    explanation:
+      "Per capita income सरासरी उत्पन्न दर्शवते; उत्पन्नाचे वितरण समान आहे असे त्यावरून आपोआप सिद्ध होत नाही."
+  },
+
+
+  {
+    type: "Practice",
+    question: "आयुर्मान वाढणे सामान्यतः कोणत्या बाबीचे सकारात्मक लक्षण आहे?",
+    options: [
+      "आरोग्य व जीवनमानातील सुधारणा",
+      "महागाई वाढ",
+      "राजकोषीय तूट",
+      "निर्यात घट"
+    ],
+    answer: 0,
+    explanation:
+      "Life expectancy वाढणे हे आरोग्यसेवा, पोषण आणि जीवनमानातील सुधारणांचे संभाव्य लक्षण आहे."
+  },
+
+
+  {
+    type: "Practice",
+    question: "सतत विकास (Sustainable Development) मध्ये कोणत्या बाबींचा समतोल साधण्याचा प्रयत्न केला जातो?",
+    options: [
+      "आर्थिक विकास",
+      "सामाजिक विकास",
+      "पर्यावरण संरक्षण",
+      "वरील सर्व"
+    ],
+    answer: 3,
+    explanation:
+      "Sustainable development मध्ये economic, social आणि environmental dimensions यांचा समतोल महत्त्वाचा आहे."
+  },
+
+
+  {
+    type: "Practice",
+    question: "खालीलपैकी कोणता निर्देशक जीवनमानाशी अधिक थेट संबंधित आहे?",
+    options: [
+      "प्रति व्यक्ती उत्पन्न",
+      "परकीय चलन साठा",
+      "राजकोषीय तूट",
+      "व्यापार तूट"
+    ],
+    answer: 0,
+    explanation:
+      "Per capita income हा average material standard of living चा एक महत्त्वाचा आर्थिक निर्देशक आहे."
+  },
+
+
+  {
+    type: "Practice",
+    question: "Human Development Report कोण प्रकाशित करते?",
+    options: [
+      "World Bank",
+      "UNDP",
+      "IMF",
+      "WTO"
+    ],
+    answer: 1,
+    explanation:
+      "Human Development Report हा United Nations Development Programme (UNDP) कडून प्रकाशित केला जातो."
+  },
+
+
+  {
+    type: "Practice",
+    question: "HDI मध्ये देशांचे स्थान ठरवताना कोणती बाब योग्य आहे?",
+    options: [
+      "फक्त GDP पाहिला जातो.",
+      "आरोग्य, शिक्षण आणि जीवनमान या dimensions चे संयुक्त मापन केले जाते.",
+      "फक्त लोकसंख्या पाहिली जाते.",
+      "फक्त निर्यात पाहिली जाते."
+    ],
+    answer: 1,
+    explanation:
+      "HDI हा multidimensional index आहे; तो health, education आणि standard of living या तीन dimensions वर आधारित आहे."
+  },
+
+
+  {
+    type: "Practice",
+    question: "Development चे अधिक व्यापक मापन करण्यासाठी कोणता दृष्टिकोन अधिक योग्य आहे?",
+    options: [
+      "फक्त GDP",
+      "फक्त Per Capita Income",
+      "आर्थिक, सामाजिक आणि मानवी निर्देशकांचा संयुक्त विचार",
+      "फक्त निर्यात"
+    ],
+    answer: 2,
+    explanation:
+      "विकास ही बहुआयामी संकल्पना असल्याने आर्थिक तसेच सामाजिक आणि मानवी निर्देशकांचा एकत्र विचार करणे अधिक योग्य आहे."
+  }
+
+];
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let questions = [];
+let score = 0;
+let attempted = 0;
+
+
+/* =========================================================
+   SHUFFLE FUNCTION
+========================================================= */
+
+function shuffle(array) {
+
+  const result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+
+    const j =
+      Math.floor(Math.random() * (i + 1));
+
+    [
+      result[i],
+      result[j]
+    ] =
+    [
+      result[j],
+      result[i]
+    ];
+  }
+
+  return result;
+}
+
+
+/* =========================================================
+   CREATE EXAM
+========================================================= */
+
+function createExam() {
+
+  score = 0;
+
+  attempted = 0;
+
+
+  /*
+    Shuffle questions
+  */
+
+  const shuffledQuestions =
+    shuffle(questionBank);
+
+
+  /*
+    Shuffle options
+  */
+
+  questions =
+    shuffledQuestions.map(question => {
+
+      const optionObjects =
+        question.options.map(
+          (text, index) => ({
+
+            text: text,
+
+            originalIndex: index
+
+          })
+        );
+
+
+      const shuffledOptions =
+        shuffle(optionObjects);
+
+
+      /*
+        Find new position of correct answer
+      */
+
+      const newCorrectIndex =
+        shuffledOptions.findIndex(
+          option =>
+            option.originalIndex ===
+            question.answer
+        );
+
+
+      return {
+
+        type: question.type,
+
+        year: question.year,
+
+        question: question.question,
+
+        options:
+          shuffledOptions.map(
+            option => option.text
+          ),
+
+        answer: newCorrectIndex,
+
+        explanation:
+          question.explanation,
+
+        selected: null,
+
+        selectedText: null,
+
+        answered: false
+
+      };
+
+    });
+
+
+  document.getElementById("total")
+    .textContent =
+      questions.length;
+
+
+  updateScore();
+
+}
+
+
+/* =========================================================
+   LOAD QUIZ
+========================================================= */
+
+function loadQuiz() {
+
+  const quiz =
+    document.getElementById("quiz");
+
+  quiz.innerHTML = "";
+
+
+  questions.forEach(
+    (question, questionIndex) => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "question-card";
+
+
+      /*
+        Question number
+      */
+
+      const number =
+        document.createElement("div");
+
+      number.className =
+        "question-number";
+
+      number.textContent =
+        "प्रश्न " +
+        (questionIndex + 1);
+
+      card.appendChild(number);
+
+
+      /*
+        Badge
+      */
+
+      const badge =
+        document.createElement("div");
+
+      badge.className =
+        question.type === "PYQ"
+          ? "badge pyq"
+          : "badge practice";
+
+
+      badge.textContent =
+        question.type === "PYQ"
+          ? "🟡 PYQ — " +
+            question.year
+          : "🔵 MPSC Practice";
+
+
+      card.appendChild(badge);
+
+
+      /*
+        Question
+      */
+
+      const questionText =
+        document.createElement("div");
+
+      questionText.className =
+        "question";
+
+      questionText.textContent =
+        question.question;
+
+      card.appendChild(questionText);
+
+
+      /*
+        Options
+      */
+
+      question.options.forEach(
+        (optionText, optionIndex) => {
+
+          const button =
+            document.createElement("button");
+
+          button.className =
+            "option";
+
+          button.textContent =
+            String.fromCharCode(
+              65 + optionIndex
+            ) +
+            ") " +
+            optionText;
+
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              handleAnswer(
+                question,
+                questionIndex,
+                optionIndex,
+                optionText,
+                card
+              );
+
+            }
+          );
+
+
+          card.appendChild(button);
+
+        }
+      );
+
+
+      /*
+        Result area
+      */
+
+      const result =
+        document.createElement("div");
+
+      result.className =
+        "answer-result";
+
+      card.appendChild(result);
+
+
+      quiz.appendChild(card);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   HANDLE ANSWER
+========================================================= */
+
+function handleAnswer(
+  question,
+  questionIndex,
+  selectedIndex,
+  selectedText,
+  card
+) {
+
+  /*
+    Prevent multiple answers
+  */
+
+  if (question.answered) {
+    return;
+  }
+
+
+  question.answered = true;
+
+  question.selected =
+    selectedIndex;
+
+  question.selectedText =
+    selectedText;
+
+
+  attempted++;
+
+
+  const buttons =
+    card.querySelectorAll(".option");
+
+
+  /*
+    Disable options
+  */
+
+  buttons.forEach(
+    button => {
+      button.disabled = true;
+    }
+  );
+
+
+  /*
+    Highlight correct answer
+  */
+
+  buttons[
+    question.answer
+  ].classList.add("correct");
+
+
+  const result =
+    card.querySelector(
+      ".answer-result"
+    );
+
+
+  /*
+    Correct answer
+  */
+
+  if (
+    selectedIndex ===
+    question.answer
+  ) {
+
+    score++;
+
+
+    result.className =
+      "answer-result correct-result";
+
+
+    result.innerHTML = `
+
+      <strong>
+        ✅ बरोबर उत्तर!
+      </strong>
+
+      <div class="explanation">
+
+        💡 ${question.explanation}
+
+      </div>
+
+    `;
+
+  }
+
+
+  /*
+    Wrong answer
+  */
+
+  else {
+
+    buttons[
+      selectedIndex
+    ].classList.add("wrong");
+
+
+    result.className =
+      "answer-result wrong-result";
+
+
+    result.innerHTML = `
+
+      <strong>
+        ❌ चुकीचे उत्तर!
+      </strong>
+
+      <br>
+
+      तुमचे उत्तर:
+      <strong>
+        ${selectedText}
+      </strong>
+
+      <br>
+
+      योग्य उत्तर:
+      <strong>
+        ${question.options[question.answer]}
+      </strong>
+
+      <div class="explanation">
+
+        💡 ${question.explanation}
+
+      </div>
+
+    `;
+
+  }
+
+
+  updateScore();
+
+
+  /*
+    Exam completed
+  */
+
+  if (
+    attempted ===
+    questions.length
+  ) {
+
+    setTimeout(
+      showFinalResult,
+      700
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   UPDATE SCORE
+========================================================= */
+
+function updateScore() {
+
+  document.getElementById("score")
+    .textContent =
+      score;
+
+
+  document.getElementById("attempted")
+    .textContent =
+      attempted;
+
+
+  const percentage =
+    questions.length > 0
+      ? (
+          attempted /
+          questions.length
+        ) * 100
+      : 0;
+
+
+  document.getElementById("progressBar")
+    .style.width =
+      percentage + "%";
+
+}
+
+
+/* =========================================================
+   FINAL RESULT
+========================================================= */
+
+function showFinalResult() {
+
+  const total =
+    questions.length;
+
+
+  const right =
+    score;
+
+
+  const wrong =
+    total - right;
+
+
+  const percentage =
+    Math.round(
+      (right / total) * 100
+    );
+
+
+  document.getElementById(
+    "finalTotal"
+  ).textContent =
+    total;
+
+
+  document.getElementById(
+    "finalRight"
+  ).textContent =
+    right;
+
+
+  document.getElementById(
+    "finalWrong"
+  ).textContent =
+    wrong;
+
+
+  document.getElementById(
+    "finalPercentage"
+  ).textContent =
+    percentage + "%";
+
+
+  let message;
+
+
+  if (percentage >= 85) {
+
+    message =
+      "🔥 उत्कृष्ट! विकासाचे निर्देशक या topic वर तुमची तयारी खूप चांगली आहे.";
+
+  }
+
+  else if (percentage >= 70) {
+
+    message =
+      "👍 चांगली कामगिरी! काही concepts पुन्हा revise करा.";
+
+  }
+
+  else if (percentage >= 50) {
+
+    message =
+      "📚 ठीक आहे. HDI, PQLI, Gini, MPI आणि मानवी विकासाच्या संकल्पना पुन्हा revise करा.";
+
+  }
+
+  else {
+
+    message =
+      "📖 हा topic पुन्हा अभ्यासा आणि quiz पुन्हा attempt करा.";
+
+  }
+
+
+  document.getElementById(
+    "finalMessage"
+  ).textContent =
+    `Score: ${right}/${total} • ${percentage}% • ${message}`;
+
+
+  createReview();
+
+
+  const finalResult =
+    document.getElementById(
+      "finalResult"
+    );
+
+
+  finalResult.style.display =
+    "block";
+
+
+  finalResult.scrollIntoView({
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =========================================================
+   ANSWER REVIEW
+========================================================= */
+
+function createReview() {
+
+  const review =
+    document.getElementById(
+      "review"
+    );
+
+
+  review.innerHTML = "";
+
+
+  questions.forEach(
+    (question, index) => {
+
+      const isCorrect =
+        question.selected ===
+        question.answer;
+
+
+      const item =
+        document.createElement("div");
+
+
+      item.className =
+        isCorrect
+          ? "review-item review-correct"
+          : "review-item review-wrong";
+
+
+      const status =
+        isCorrect
+          ? "✅ बरोबर"
+          : "❌ चुकीचे";
+
+
+      const badge =
+        question.type === "PYQ"
+          ? "🟡 PYQ — " +
+            question.year
+          : "🔵 MPSC Practice";
+
+
+      item.innerHTML = `
+
+        <div class="review-question">
+
+          प्रश्न ${index + 1}
+          — ${status}
+
+          <br>
+
+          <small>
+            ${badge}
+          </small>
+
+          <br><br>
+
+          ${question.question}
+
+        </div>
+
+
+        <div class="your-answer">
+
+          <strong>
+            तुमचे उत्तर:
+          </strong>
+
+          ${
+            question.selected !== null
+              ?
+                String.fromCharCode(
+                  65 +
+                  question.selected
+                ) +
+                ") " +
+                question.selectedText
+              :
+                "उत्तर दिले नाही"
+          }
+
+        </div>
+
+
+        <div class="correct-answer">
+
+          <strong>
+            योग्य उत्तर:
+          </strong>
+
+          ${
+            String.fromCharCode(
+              65 +
+              question.answer
+            ) +
+            ") " +
+            question.options[
+              question.answer
+            ]
+          }
+
+        </div>
+
+
+        <div class="explanation-box">
+
+          <strong>
+            💡 Explanation:
+          </strong>
+
+          <br>
+
+          ${question.explanation}
+
+        </div>
+
+      `;
+
+
+      review.appendChild(item);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+function restartExam() {
+
+  document.getElementById(
+    "finalResult"
+  ).style.display =
+    "none";
+
+
+  createExam();
+
+  loadQuiz();
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+createExam();
+
+loadQuiz();
+
+</script>
+
+</body>
+</html>
