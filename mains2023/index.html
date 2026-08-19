@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <title>MPSC Group C Mains 2023 — Paper 1</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg-1:#07111f;
+      --bg-2:#172554;
+      --glass:rgba(255,255,255,.10);
+      --glass-strong:rgba(255,255,255,.16);
+      --line:rgba(255,255,255,.17);
+      --text:#f8fafc;
+      --muted:#b8c4d8;
+      --blue:#6ee7ff;
+      --violet:#a78bfa;
+      --green:#4ade80;
+      --red:#fb7185;
+      --amber:#fbbf24;
+      --shadow:0 24px 70px rgba(0,0,0,.34);
+    }
+
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Devanagari",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(34,211,238,.24), transparent 31rem),
+        radial-gradient(circle at 92% 22%, rgba(139,92,246,.26), transparent 32rem),
+        radial-gradient(circle at 55% 95%, rgba(59,130,246,.18), transparent 35rem),
+        linear-gradient(145deg,var(--bg-1),var(--bg-2));
+      background-attachment:fixed;
+      overflow-x:hidden;
+    }
+
+    body::before, body::after {
+      content:"";
+      position:fixed;
+      z-index:-1;
+      border-radius:999px;
+      filter:blur(2px);
+      opacity:.65;
+      animation:float 11s ease-in-out infinite;
+    }
+    body::before { width:220px;height:220px;left:-65px;top:40%;background:rgba(103,232,249,.14); }
+    body::after { width:280px;height:280px;right:-120px;bottom:-30px;background:rgba(196,181,253,.13);animation-delay:-5s; }
+    @keyframes float { 50% { transform:translate3d(16px,-18px,0) scale(1.05); } }
+
+    button { font:inherit; }
+    .glass {
+      background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.07));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.13);
+      backdrop-filter:blur(24px) saturate(150%);
+      -webkit-backdrop-filter:blur(24px) saturate(150%);
+    }
+
+    .topbar {
+      position:sticky;
+      top:0;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:12px max(16px,calc((100vw - 1180px)/2));
+      border-width:0 0 1px;
+      border-radius:0;
+    }
+    .brand { min-width:0;flex:1; }
+    .brand strong { display:block;font-size:clamp(.94rem,2.8vw,1.12rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .brand span { color:var(--muted);font-size:.76rem; }
+    .timer {
+      display:flex;
+      align-items:center;
+      gap:7px;
+      padding:8px 11px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(5,12,26,.32);
+      font-weight:800;
+      font-variant-numeric:tabular-nums;
+    }
+    .timer.warning { color:#fde68a;border-color:rgba(251,191,36,.45); }
+    .timer.danger { color:#fecdd3;border-color:rgba(251,113,133,.55);animation:pulse 1.2s infinite; }
+    @keyframes pulse { 50% { opacity:.7; } }
+
+    .layout {
+      width:min(1180px,100%);
+      margin:0 auto;
+      padding:22px 16px 116px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 300px;
+      gap:20px;
+    }
+    main { min-width:0; }
+
+    .progress-shell {
+      padding:14px 16px;
+      border-radius:20px;
+      margin-bottom:16px;
+    }
+    .progress-labels { display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-size:.84rem;margin-bottom:9px; }
+    .progress-track { height:8px;background:rgba(255,255,255,.10);border-radius:999px;overflow:hidden; }
+    .progress-fill { height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:inherit;transition:width .3s ease; }
+
+    .question-card { border-radius:28px;padding:clamp(20px,4vw,34px);min-height:520px; }
+    .q-head { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px; }
+    .q-number {
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 13px;border-radius:999px;
+      background:rgba(110,231,255,.11);border:1px solid rgba(110,231,255,.25);
+      color:#cffafe;font-weight:800;font-size:.88rem;
+    }
+    .mark-btn {
+      border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted);
+      border-radius:999px;padding:9px 13px;cursor:pointer;transition:.18s ease;
+    }
+    .mark-btn.active { color:#fff7cc;background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.5); }
+
+    .passage {
+      margin:0 0 20px;
+      border:1px solid var(--line);
+      background:rgba(2,6,23,.25);
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .passage summary { cursor:pointer;padding:14px 16px;font-weight:800;color:#dbeafe; }
+    .passage div { max-height:270px;overflow:auto;padding:0 16px 16px;color:#d5deec;white-space:pre-line;line-height:1.65;font-size:.94rem; }
+
+    .question-text { margin:0 0 24px;font-size:clamp(1.08rem,3.2vw,1.38rem);line-height:1.65;white-space:pre-line;font-weight:700; }
+    .options { display:grid;gap:12px; }
+    .option {
+      width:100%;display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:12px;
+      text-align:left;color:var(--text);padding:14px 16px;border-radius:18px;
+      border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.065);
+      cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      line-height:1.45;
+    }
+    .option:hover { transform:translateY(-1px);border-color:rgba(110,231,255,.48);background:rgba(110,231,255,.09); }
+    .option:focus-visible,.btn:focus-visible,.mark-btn:focus-visible,.nav-dot:focus-visible { outline:3px solid rgba(110,231,255,.55);outline-offset:2px; }
+    .letter { width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.10);font-weight:900; }
+    .option.selected { border-color:rgba(110,231,255,.7);background:rgba(14,165,233,.13); }
+    .option.correct { border-color:rgba(74,222,128,.75);background:rgba(34,197,94,.14); }
+    .option.wrong { border-color:rgba(251,113,133,.78);background:rgba(244,63,94,.14); }
+    .state-icon { min-width:24px;text-align:center;font-weight:900;font-size:1.1rem; }
+    .correct .state-icon { color:var(--green); }
+    .wrong .state-icon { color:var(--red); }
+
+    .feedback {
+      display:none;margin-top:16px;padding:13px 15px;border-radius:16px;line-height:1.45;font-weight:700;
+    }
+    .feedback.show { display:block; }
+    .feedback.good { color:#dcfce7;background:rgba(34,197,94,.12);border:1px solid rgba(74,222,128,.35); }
+    .feedback.bad { color:#ffe4e6;background:rgba(244,63,94,.12);border:1px solid rgba(251,113,133,.35); }
+    .feedback.cancelled { color:#fef3c7;background:rgba(245,158,11,.12);border:1px solid rgba(251,191,36,.35); }
+
+    .controls { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px; }
+    .btn {
+      border:1px solid var(--line);border-radius:16px;padding:13px 16px;color:var(--text);font-weight:850;
+      background:rgba(255,255,255,.08);cursor:pointer;transition:.18s ease;
+    }
+    .btn:hover { transform:translateY(-1px);background:rgba(255,255,255,.13); }
+    .btn.primary { border-color:transparent;background:linear-gradient(135deg,#0891b2,#7c3aed);box-shadow:0 12px 30px rgba(8,145,178,.22); }
+    .btn.danger { background:rgba(244,63,94,.14);border-color:rgba(251,113,133,.38); }
+    .btn:disabled { opacity:.4;cursor:not-allowed;transform:none; }
+
+    aside { position:sticky;top:86px;align-self:start;border-radius:24px;padding:18px;max-height:calc(100vh - 108px);overflow:auto; }
+    .aside-head { display:flex;justify-content:space-between;align-items:center;margin-bottom:14px; }
+    .aside-head strong { font-size:1rem; }
+    .stats-row { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px; }
+    .mini-stat { padding:10px 6px;border-radius:14px;background:rgba(255,255,255,.06);text-align:center;border:1px solid rgba(255,255,255,.09); }
+    .mini-stat b { display:block;font-size:1.05rem; }
+    .mini-stat span { color:var(--muted);font-size:.66rem; }
+    .navigator { display:grid;grid-template-columns:repeat(5,1fr);gap:8px; }
+    .nav-dot {
+      aspect-ratio:1;border:1px solid rgba(255,255,255,.13);border-radius:11px;background:rgba(255,255,255,.055);
+      color:var(--muted);font-weight:800;cursor:pointer;
+    }
+    .nav-dot.current { border-color:var(--blue);color:white;box-shadow:0 0 0 2px rgba(110,231,255,.14); }
+    .nav-dot.answered { color:#d1fae5;background:rgba(34,197,94,.16);border-color:rgba(74,222,128,.34); }
+    .nav-dot.wrong-answer { color:#ffe4e6;background:rgba(244,63,94,.15);border-color:rgba(251,113,133,.34); }
+    .nav-dot.review { box-shadow:inset 0 -4px 0 var(--amber); }
+    .nav-dot.cancelled { color:#fef3c7;background:rgba(245,158,11,.12); }
+    .legend { display:flex;flex-wrap:wrap;gap:9px;margin:14px 0;color:var(--muted);font-size:.72rem; }
+    .legend i { width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px; }
+    .submit-wide { width:100%;margin-top:4px; }
+
+    .mobile-dock {
+      display:none;position:fixed;z-index:18;bottom:0;left:0;right:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+      background:rgba(5,11,24,.74);border-top:1px solid var(--line);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    }
+    .dock-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:680px;margin:auto; }
+
+    dialog {
+      width:min(540px,calc(100% - 28px));border:1px solid var(--line);border-radius:26px;padding:0;color:var(--text);
+      background:linear-gradient(145deg,rgba(14,26,49,.96),rgba(28,22,61,.96));box-shadow:0 30px 100px rgba(0,0,0,.55);
+    }
+    dialog::backdrop { background:rgba(1,5,15,.72);backdrop-filter:blur(7px); }
+    .modal-body { padding:24px; }
+    .modal-body h2 { margin:0 0 6px;font-size:1.55rem; }
+    .modal-body > p { color:var(--muted);margin:0 0 20px; }
+    .result-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0; }
+    .result { padding:15px;border:1px solid var(--line);background:rgba(255,255,255,.07);border-radius:17px; }
+    .result b { display:block;font-size:1.45rem; }
+    .result span { color:var(--muted);font-size:.78rem; }
+    .score-card { text-align:center;padding:18px;border-radius:20px;background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(124,58,237,.22));border:1px solid rgba(110,231,255,.25); }
+    .score-card strong { display:block;font-size:2.25rem; }
+    .modal-actions { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px; }
+
+    .start-screen { position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:18px;background:linear-gradient(145deg,#07111f,#172554); }
+    .start-screen.hidden { display:none; }
+    .start-card { width:min(560px,100%);padding:clamp(24px,6vw,42px);border-radius:30px;text-align:center; }
+    .start-badge { width:70px;height:70px;margin:0 auto 20px;display:grid;place-items:center;border-radius:22px;background:linear-gradient(135deg,#06b6d4,#7c3aed);font-size:1.5rem;font-weight:950;box-shadow:0 16px 40px rgba(34,211,238,.22); }
+    .start-card h1 { margin:0 0 10px;font-size:clamp(1.55rem,6vw,2.35rem); }
+    .start-card p { color:var(--muted);line-height:1.6;margin:0 auto 22px;max-width:46ch; }
+    .exam-meta { display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:22px 0; }
+    .exam-meta div { padding:13px 5px;border-radius:15px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1); }
+    .exam-meta b { display:block; }
+    .exam-meta span { color:var(--muted);font-size:.72rem; }
+    .start-card .btn { width:100%; }
+    .source-note { margin-top:12px!important;font-size:.75rem; }
+
+    @media (max-width:850px) {
+      .layout { grid-template-columns:1fr;padding-top:15px; }
+      aside { display:none; }
+      .mobile-dock { display:block; }
+      .question-card { min-height:auto;border-radius:23px; }
+      .topbar { padding-left:14px;padding-right:14px; }
+    }
+    @media (max-width:480px) {
+      .brand span { display:none; }
+      .timer { padding:7px 9px;font-size:.85rem; }
+      .question-card { padding:18px 15px; }
+      .option { grid-template-columns:34px 1fr auto;padding:12px 11px;gap:9px;border-radius:16px; }
+      .letter { width:32px;height:32px;border-radius:10px; }
+      .q-head { align-items:flex-start; }
+      .mark-btn { font-size:.77rem; }
+      .controls { gap:9px; }
+    }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important;transition:none!important;scroll-behavior:auto!important; } }
+  </style>
+</head>
+<body>
+  <section id="startScreen" class="start-screen">
+    <div class="start-card glass">
+      <div class="start-badge">A</div>
+      <h1>MPSC Group C Mains 2023</h1>
+      <p>Paper 1 — Marathi &amp; English. Choose an option to see instant feedback. Your progress stays saved on this device.</p>
+      <div class="exam-meta">
+        <div><b>100</b><span>Questions</span></div>
+        <div><b>60 min</b><span>Duration</span></div>
+        <div><b>200</b><span>Marks</span></div>
+      </div>
+      <button id="startBtn" class="btn primary">Start exam</button>
+      <button id="resumeBtn" class="btn" style="margin-top:10px;display:none">Resume saved exam</button>
+      <p class="source-note">Set A · Final key · 2 cancelled questions</p>
+    </div>
+  </section>
+
+  <header class="topbar glass">
+    <div class="brand">
+      <strong>MPSC Group C Mains 2023</strong>
+      <span>Paper 1 · Set A · Marathi &amp; English</span>
+    </div>
+    <div id="timer" class="timer" aria-label="Time remaining">◷ <span>60:00</span></div>
+  </header>
+
+  <div class="layout">
+    <main>
+      <section class="progress-shell glass" aria-label="Exam progress">
+        <div class="progress-labels"><span id="progressText">0 of 98 active questions answered</span><span id="progressPercent">0%</span></div>
+        <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+      </section>
+
+      <article class="question-card glass">
+        <div class="q-head">
+          <span id="questionNumber" class="q-number">Question 1 of 100</span>
+          <button id="markBtn" class="mark-btn" type="button">☆ Mark for review</button>
+        </div>
+        <details id="passageBox" class="passage" hidden>
+          <summary>Reading passage for questions 96–100</summary>
+          <div id="passageText"></div>
+        </details>
+        <h2 id="questionText" class="question-text"></h2>
+        <div id="options" class="options"></div>
+        <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+      </article>
+
+      <div class="controls">
+        <button id="prevBtn" class="btn" type="button">← Previous</button>
+        <button id="nextBtn" class="btn primary" type="button">Next →</button>
+      </div>
+    </main>
+
+    <aside class="glass">
+      <div class="aside-head"><strong>Question navigator</strong><span id="sideCount">0/98</span></div>
+      <div class="stats-row">
+        <div class="mini-stat"><b id="answeredCount">0</b><span>Answered</span></div>
+        <div class="mini-stat"><b id="correctCount">0</b><span>Correct</span></div>
+        <div class="mini-stat"><b id="reviewCount">0</b><span>Review</span></div>
+      </div>
+      <div id="navigator" class="navigator"></div>
+      <div class="legend">
+        <span><i style="background:#4ade80"></i>Correct</span>
+        <span><i style="background:#fb7185"></i>Incorrect</span>
+        <span><i style="background:#fbbf24"></i>Review</span>
+      </div>
+      <button id="submitBtn" class="btn primary submit-wide" type="button">Submit exam</button>
+      <button id="resetBtn" class="btn danger submit-wide" type="button">Reset attempt</button>
+    </aside>
+  </div>
+
+  <div class="mobile-dock">
+    <div class="dock-grid">
+      <button id="jumpBtn" class="btn" type="button">Questions</button>
+      <button id="mobileSubmitBtn" class="btn primary" type="button">Submit</button>
+    </div>
+  </div>
+
+  <dialog id="resultDialog">
+    <div class="modal-body">
+      <h2>Exam summary</h2>
+      <p>Your final attempt statistics</p>
+      <div class="score-card"><span>Estimated score</span><strong id="scoreValue">0 / 196</strong><small>+2 correct · −0.5 incorrect</small></div>
+      <div class="result-grid">
+        <div class="result"><b id="resultCorrect">0</b><span>Correct</span></div>
+        <div class="result"><b id="resultWrong">0</b><span>Incorrect</span></div>
+        <div class="result"><b id="resultUnanswered">0</b><span>Unanswered</span></div>
+        <div class="result"><b id="resultAccuracy">0%</b><span>Accuracy</span></div>
+        <div class="result"><b id="resultReview">0</b><span>Marked review</span></div>
+        <div class="result"><b id="resultTime">00:00</b><span>Time used</span></div>
+      </div>
+      <div class="modal-actions">
+        <button id="closeDialog" class="btn" type="button">Review answers</button>
+        <button id="restartDialog" class="btn danger" type="button">Start again</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="navDialog">
+    <div class="modal-body">
+      <div class="aside-head"><strong>Jump to question</strong><button id="closeNav" class="mark-btn" type="button">Close</button></div>
+      <div id="mobileNavigator" class="navigator"></div>
+    </div>
+  </dialog>
+
+  <script src="questions.js"></script>
+  <script>
+    (() => {
+      'use strict';
+      const STORAGE_KEY = 'mpsc-group-c-2023-paper-1-v1';
+      const EXAM_SECONDS = 60 * 60;
+      const letters = ['A','B','C','D'];
+      const activeTotal = questions.filter(q => !q.cancelled).length;
+      const maxMarks = activeTotal * 2;
+
+      const $ = id => document.getElementById(id);
+      const els = {
+        startScreen:$('startScreen'), startBtn:$('startBtn'), resumeBtn:$('resumeBtn'), timer:$('timer'),
+        progressText:$('progressText'), progressPercent:$('progressPercent'), progressFill:$('progressFill'),
+        questionNumber:$('questionNumber'), questionText:$('questionText'), options:$('options'), feedback:$('feedback'),
+        markBtn:$('markBtn'), prevBtn:$('prevBtn'), nextBtn:$('nextBtn'), passageBox:$('passageBox'), passageText:$('passageText'),
+        navigator:$('navigator'), mobileNavigator:$('mobileNavigator'), answeredCount:$('answeredCount'), correctCount:$('correctCount'),
+        reviewCount:$('reviewCount'), sideCount:$('sideCount'), submitBtn:$('submitBtn'), mobileSubmitBtn:$('mobileSubmitBtn'),
+        resetBtn:$('resetBtn'), jumpBtn:$('jumpBtn'), navDialog:$('navDialog'), closeNav:$('closeNav'), resultDialog:$('resultDialog'),
+        scoreValue:$('scoreValue'), resultCorrect:$('resultCorrect'), resultWrong:$('resultWrong'), resultUnanswered:$('resultUnanswered'),
+        resultAccuracy:$('resultAccuracy'), resultReview:$('resultReview'), resultTime:$('resultTime'), closeDialog:$('closeDialog'), restartDialog:$('restartDialog')
+      };
+
+      let state = { current:0, answers:Array(questions.length).fill(null), review:Array(questions.length).fill(false), startedAt:null, submitted:false };
+      let timerHandle = null;
+
+      function loadSaved() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+          if (!saved || !Array.isArray(saved.answers) || saved.answers.length !== questions.length) return false;
+          state = {
+            current:Number.isInteger(saved.current) ? Math.min(Math.max(saved.current,0),questions.length-1) : 0,
+            answers:saved.answers,
+            review:Array.isArray(saved.review) && saved.review.length === questions.length ? saved.review : Array(questions.length).fill(false),
+            startedAt:saved.startedAt || null,
+            submitted:Boolean(saved.submitted)
+          };
+          return true;
+        } catch { return false; }
+      }
+
+      function save() { localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
+      function start(fresh) {
+        if (fresh) {
+          state = { current:0,answers:Array(questions.length).fill(null),review:Array(questions.length).fill(false),startedAt:Date.now(),submitted:false };
+          save();
+        } else if (!state.startedAt) {
+          state.startedAt = Date.now();
+          save();
+        }
+        els.startScreen.classList.add('hidden');
+        render();
+        runTimer();
+      }
+
+      function formatTime(seconds) {
+        const safe = Math.max(0,Math.floor(seconds));
+        return `${String(Math.floor(safe/60)).padStart(2,'0')}:${String(safe%60).padStart(2,'0')}`;
+      }
+
+      function elapsedSeconds() { return state.startedAt ? Math.floor((Date.now()-state.startedAt)/1000) : 0; }
+      function remainingSeconds() { return Math.max(0,EXAM_SECONDS-elapsedSeconds()); }
+
+      function runTimer() {
+        clearInterval(timerHandle);
+        const tick = () => {
+          const left = remainingSeconds();
+          els.timer.querySelector('span').textContent = formatTime(left);
+          els.timer.classList.toggle('warning',left <= 600 && left > 120);
+          els.timer.classList.toggle('danger',left <= 120);
+          if (left === 0 && !state.submitted) { clearInterval(timerHandle);submit(true); }
+        };
+        tick();
+        timerHandle = setInterval(tick,1000);
+      }
+
+      function stats() {
+        let answered=0,correct=0,wrong=0,review=0;
+        questions.forEach((q,i) => {
+          if (state.review[i]) review++;
+          if (q.cancelled || state.answers[i] === null) return;
+          answered++;
+          if (state.answers[i] === q.answer) correct++; else wrong++;
+        });
+        return {answered,correct,wrong,review,unanswered:activeTotal-answered};
+      }
+
+      function render() {
+        const q = questions[state.current];
+        els.questionNumber.textContent = `Question ${q.id} of ${questions.length}`;
+        els.questionText.textContent = q.question;
+        els.markBtn.classList.toggle('active',state.review[state.current]);
+        els.markBtn.textContent = state.review[state.current] ? '★ Marked for review' : '☆ Mark for review';
+        els.prevBtn.disabled = state.current === 0;
+        els.nextBtn.textContent = state.current === questions.length-1 ? 'View summary →' : 'Next →';
+
+        if (q.passage) {
+          els.passageBox.hidden = false;
+          els.passageText.textContent = q.passage;
+          els.passageBox.open = q.id === 96;
+        } else {
+          els.passageBox.hidden = true;
+          els.passageBox.open = false;
+        }
+
+        els.options.innerHTML = '';
+        q.options.forEach((text,index) => {
+          const selected = state.answers[state.current] === index;
+          const answered = state.answers[state.current] !== null;
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'option';
+          if (selected) button.classList.add('selected');
+          if (answered && !q.cancelled && index === q.answer) button.classList.add('correct');
+          if (answered && selected && index !== q.answer) button.classList.add('wrong');
+          button.setAttribute('aria-pressed',selected ? 'true' : 'false');
+          button.innerHTML = `<span class="letter">${letters[index]}</span><span></span><span class="state-icon"></span>`;
+          button.children[1].textContent = text;
+          if (answered && !q.cancelled && index === q.answer) button.children[2].textContent = '✓';
+          if (answered && selected && index !== q.answer) button.children[2].textContent = '×';
+          button.addEventListener('click',() => choose(index));
+          els.options.appendChild(button);
+        });
+
+        renderFeedback(q);
+        renderStats();
+        renderNavigators();
+        window.scrollTo({top:0,behavior:'smooth'});
+      }
+
+      function renderFeedback(q) {
+        const choice = state.answers[state.current];
+        els.feedback.className = 'feedback';
+        els.feedback.textContent = '';
+        if (q.cancelled) {
+          els.feedback.classList.add('show','cancelled');
+          els.feedback.textContent = 'This question was cancelled in the final answer key and is not scored.';
+        } else if (choice !== null) {
+          const isCorrect = choice === q.answer;
+          els.feedback.classList.add('show',isCorrect ? 'good' : 'bad');
+          els.feedback.textContent = isCorrect ? 'Correct answer.' : `Incorrect. Correct answer: ${letters[q.answer]}. ${q.options[q.answer]}`;
+        }
+      }
+
+      function choose(index) {
+        const q = questions[state.current];
+        if (q.cancelled) return;
+        state.answers[state.current] = index;
+        save();
+        render();
+      }
+
+      function renderStats() {
+        const s = stats();
+        const pct = Math.round((s.answered/activeTotal)*100);
+        els.progressText.textContent = `${s.answered} of ${activeTotal} active questions answered`;
+        els.progressPercent.textContent = `${pct}%`;
+        els.progressFill.style.width = `${pct}%`;
+        els.answeredCount.textContent = s.answered;
+        els.correctCount.textContent = s.correct;
+        els.reviewCount.textContent = s.review;
+        els.sideCount.textContent = `${s.answered}/${activeTotal}`;
+      }
+
+      function navButton(q,index) {
+        const button = document.createElement('button');
+        button.type='button';
+        button.className='nav-dot';
+        button.textContent=q.id;
+        const answer=state.answers[index];
+        if (q.cancelled) button.classList.add('cancelled');
+        else if (answer !== null) button.classList.add(answer === q.answer ? 'answered' : 'wrong-answer');
+        if (state.review[index]) button.classList.add('review');
+        if (index === state.current) button.classList.add('current');
+        button.setAttribute('aria-label',`Go to question ${q.id}`);
+        button.addEventListener('click',() => { state.current=index;save();if(els.navDialog.open)els.navDialog.close();render(); });
+        return button;
+      }
+
+      function renderNavigators() {
+        els.navigator.innerHTML='';
+        els.mobileNavigator.innerHTML='';
+        questions.forEach((q,i) => {
+          els.navigator.appendChild(navButton(q,i));
+          els.mobileNavigator.appendChild(navButton(q,i));
+        });
+      }
+
+      function go(delta) {
+        if (state.current === questions.length-1 && delta > 0) { submit(false);return; }
+        state.current=Math.min(Math.max(state.current+delta,0),questions.length-1);
+        save();render();
+      }
+
+      function submit(auto) {
+        const s=stats();
+        if (!auto && s.unanswered > 0 && !confirm(`You still have ${s.unanswered} unanswered active questions. Submit anyway?`)) return;
+        state.submitted=true;save();clearInterval(timerHandle);
+        const score=Math.max(0,s.correct*2-s.wrong*.5);
+        const attempted=s.correct+s.wrong;
+        els.scoreValue.textContent=`${Number.isInteger(score)?score:score.toFixed(1)} / ${maxMarks}`;
+        els.resultCorrect.textContent=s.correct;
+        els.resultWrong.textContent=s.wrong;
+        els.resultUnanswered.textContent=s.unanswered;
+        els.resultAccuracy.textContent=attempted ? `${Math.round(s.correct/attempted*100)}%` : '0%';
+        els.resultReview.textContent=s.review;
+        els.resultTime.textContent=formatTime(Math.min(elapsedSeconds(),EXAM_SECONDS));
+        els.resultDialog.showModal();
+      }
+
+      function reset() {
+        if (!confirm('Reset all answers and start a new attempt?')) return;
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+
+      els.startBtn.addEventListener('click',() => start(true));
+      els.resumeBtn.addEventListener('click',() => start(false));
+      els.prevBtn.addEventListener('click',() => go(-1));
+      els.nextBtn.addEventListener('click',() => go(1));
+      els.markBtn.addEventListener('click',() => { state.review[state.current]=!state.review[state.current];save();render(); });
+      els.submitBtn.addEventListener('click',() => submit(false));
+      els.mobileSubmitBtn.addEventListener('click',() => submit(false));
+      els.resetBtn.addEventListener('click',reset);
+      els.jumpBtn.addEventListener('click',() => els.navDialog.showModal());
+      els.closeNav.addEventListener('click',() => els.navDialog.close());
+      els.closeDialog.addEventListener('click',() => { els.resultDialog.close();runTimer(); });
+      els.restartDialog.addEventListener('click',reset);
+      document.addEventListener('keydown',event => {
+        if (els.startScreen.classList.contains('hidden') && !els.resultDialog.open && !els.navDialog.open) {
+          if (event.key === 'ArrowRight') go(1);
+          if (event.key === 'ArrowLeft') go(-1);
+          const optionIndex=['1','2','3','4'].indexOf(event.key);
+          if (optionIndex >= 0) choose(optionIndex);
+        }
+      });
+
+      const hasSaved=loadSaved();
+      if (hasSaved && state.startedAt) {
+        els.resumeBtn.style.display='block';
+        els.startBtn.textContent='Start new exam';
+      }
+    })();
+  </script>
+</body>
+</html>
