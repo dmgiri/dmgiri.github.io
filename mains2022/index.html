@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<title>इंटरअॅक्टिव्ह एक्झाम पोर्टल</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans Devanagari', 'Mangal', sans-serif;
+    margin: 0; padding: 0;
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    color: #1a1a2e;
+  }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff; padding: 18px 24px; border-radius: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    position: sticky; top: 0; z-index: 1000;
+  }
+  .header h1 { margin: 0; font-size: 22px; }
+  .timer {
+    background: #fff; color: #c0392b; font-weight: bold;
+    padding: 8px 16px; border-radius: 25px; font-size: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .progress-container { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; margin-top: 15px; overflow: hidden; }
+  .progress-bar { height: 100%; background: #28a745; width: 0%; transition: width 0.3s; }
+  .card {
+    background: #fff; border-radius: 12px; padding: 25px;
+    margin: 20px 0; box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  }
+  .q-progress { color: #666; font-size: 14px; margin-bottom: 8px; }
+  .question { font-size: 19px; font-weight: 500; margin-bottom: 20px; line-height: 1.6; white-space: pre-line; }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    border: 2px solid #e0e0e0; border-radius: 10px;
+    padding: 14px 18px; cursor: pointer; transition: all 0.25s;
+    font-size: 16px; display: flex; align-items: center; gap: 12px;
+    white-space: pre-line;
+  }
+  .option:hover { border-color: #2a5298; background: #f0f5ff; transform: translateX(4px); }
+  .option.disabled { cursor: not-allowed; }
+  .option.correct {
+    background: #d4edda; border-color: #28a745; color: #155724; font-weight: 600;
+  }
+  .option.wrong {
+    background: #f8d7da; border-color: #dc3545; color: #721c24; font-weight: 600;
+  }
+  .option .badge {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #f0f0f0; display: flex; align-items: center;
+    justify-content: center; font-weight: bold; color: #555; flex-shrink: 0;
+  }
+  .option.correct .badge { background: #28a745; color: #fff; }
+  .option.wrong .badge { background: #dc3545; color: #fff; }
+  .feedback {
+    margin-top: 15px; padding: 12px 16px; border-radius: 8px;
+    display: none; font-size: 15px;
+  }
+  .feedback.show { display: block; }
+  .feedback.right { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+  .feedback.wrong { background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545; }
+  .controls {
+    display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    margin-top: 25px;
+  }
+  .btn {
+    padding: 12px 24px; border: none; border-radius: 8px;
+    cursor: pointer; font-size: 15px; font-weight: 600;
+    transition: all 0.2s; font-family: inherit;
+  }
+  .btn-primary { background: #1e3c72; color: #fff; }
+  .btn-primary:hover { background: #2a5298; }
+  .btn-secondary { background: #e0e0e0; color: #333; }
+  .btn-secondary:hover { background: #d0d0d0; }
+  .btn-success { background: #dc3545; color: #fff; width: 100%; margin-top: 15px; font-size: 17px; }
+  .btn-success:hover { background: #c82333; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .palette {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 8px; margin-top: 15px;
+  }
+  .palette-btn {
+    width: 40px; height: 40px; border-radius: 8px;
+    border: 2px solid #ddd; background: #fff; cursor: pointer;
+    font-weight: bold; color: #555;
+  }
+  .palette-btn.answered { background: #28a745; color: #fff; border-color: #28a745; }
+  .palette-btn.current { border-color: #1e3c72; box-shadow: 0 0 0 2px #1e3c72; }
+  .start-screen, .result-screen { text-align: center; padding: 30px; }
+  .instructions {
+    text-align: left; background: #f9f9f9; padding: 18px;
+    border-radius: 10px; margin: 20px 0; border-left: 4px solid #1e3c72;
+  }
+  .instructions ul { margin: 8px 0; padding-left: 22px; }
+  .score-circle {
+    width: 160px; height: 160px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; margin: 20px auto; color: #fff;
+    font-size: 38px; font-weight: bold;
+  }
+  .score-excellent { background: linear-gradient(135deg, #28a745, #20c997); }
+  .score-good { background: linear-gradient(135deg, #17a2b8, #2a5298); }
+  .score-poor { background: linear-gradient(135deg, #dc3545, #c82333); }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px; margin: 20px 0;
+  }
+  .stat-box {
+    background: #f8f9fa; padding: 15px; border-radius: 10px;
+    text-align: center; border: 1px solid #eee;
+  }
+  .stat-box h3 { margin: 0; font-size: 32px; color: #1e3c72; }
+  .stat-box p { margin: 5px 0 0 0; color: #666; font-size: 14px; }
+  .review-container {
+    max-height: 600px; overflow-y: auto; 
+    border: 1px solid #ddd; border-radius: 10px; padding: 15px;
+    background: #f9f9f9;
+  }
+  .review-item {
+    text-align: left; border: 1px solid #eee; border-radius: 8px;
+    padding: 15px; margin: 12px 0; background: #fff;
+  }
+  .review-q { font-weight: 600; margin-bottom: 8px; }
+  .review-ans { font-size: 14px; margin: 4px 0; }
+  .motivation-msg {
+    font-size: 18px; font-weight: 600; margin: 20px 0;
+    padding: 15px; background: #e8f4f8; border-radius: 10px; color: #1e3c72;
+  }
+  .hidden { display: none; }
+  @media (max-width: 600px) {
+    .header h1 { font-size: 18px; }
+    .question { font-size: 17px; }
+    .option { padding: 12px; font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>ऑनलाइन टेस्ट पोर्टल</h1>
+    <div class="timer" id="timer">⏱ ००:००:००</div>
+  </div>
+  <div class="progress-container hidden" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- सुरुवात स्क्रीन -->
+  <div class="card start-screen" id="startScreen">
+    <h2>सराव परीक्षा</h2>
+    <p>एकूण १०० प्रश्न (मराठी व इंग्रजी मिश्रित)</p>
+    <div class="instructions">
+      <strong>📖 सूचना:</strong>
+      <ul>
+        <li>परीक्षा सुरू झाल्यावर प्रश्न व पर्याय आपोआप शफल (Random) होतील.</li>
+        <li>एक पर्याय निवडल्यावर योग्य उत्तर लगेच हिरव्या रंगात दाखवले जाईल.</li>
+        <li>चुकीचे उत्तर निवडल्यास ते लाल रंगात दिसेल.</li>
+        <li>तुम्ही "परीक्षा संपवा" बटणावर क्लिक करून परीक्षा आधीच संपवू शकता.</li>
+        <li>शेवटी तुमची आकडेवारी, प्रेरणादायी संदेश आणि उत्तरांचे परीक्षण (Review) पाहू शकता.</li>
+      </ul>
+    </div>
+    <button class="btn btn-primary" onclick="startExam()">परीक्षा सुरू करा</button>
+  </div>
+
+  <!-- प्रश्न स्क्रीन -->
+  <div class="card hidden" id="examScreen">
+    <div class="q-progress" id="progressText"></div>
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionsContainer"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="controls">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">← मागील</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">पुढील →</button>
+    </div>
+    <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
+    <div class="q-progress">प्रश्न नकाशा (Question Palette):</div>
+    <div class="palette" id="palette"></div>
+    <button class="btn btn-success" onclick="finishExam()">परीक्षा संपवा (Finish Exam)</button>
+  </div>
+
+  <!-- निकाल स्क्रीन -->
+  <div class="card result-screen hidden" id="resultScreen">
+    <h2>परीक्षा पूर्ण झाली 🎉</h2>
+    <div class="score-circle" id="scoreCircle"></div>
+    <div class="motivation-msg" id="motivationMsg"></div>
+    
+    <div class="stats-grid">
+      <div class="stat-box"><h3 id="statCorrect">०</h3><p>बरोबर उत्तरे</p></div>
+      <div class="stat-box"><h3 id="statWrong">०</h3><p>चुकीची उत्तरे</p></div>
+      <div class="stat-box"><h3 id="statSkipped">०</h3><p>वगळलेले प्रश्न</p></div>
+      <div class="stat-box"><h3 id="statTime">००:००</h3><p>घेतलेला वेळ</p></div>
+    </div>
+
+    <div id="reviewSection" style="text-align: left;">
+      <h3>📋 उत्तरांचे परीक्षण (Review Answers):</h3>
+      <div class="review-container" id="reviewContainer"></div>
+    </div>
+    
+    <button class="btn btn-primary" style="margin-top: 20px;" onclick="location.reload()">पुन्हा परीक्षा द्या (Restart)</button>
+  </div>
+</div>
+
+<script>
+// ===== तुम्ही दिलेले प्रश्न =====
+const rawQuestions = [
+  {id:1,question:`‘मितव्ययी’ या शब्दाचा शब्दसमूह कोणता ?\n(a) कमी व्यस्त असलेला\n(b) मोजकेच खर्च करणारा\n(c) मोजकेच बोलणारा\n(d) मोजकेच काम करणारा`,options:[`फक्त (a) व (b) अचूक आहे`,`फक्त (b) अचूक आहे`,`फक्त (b) व (d) अचूक आहे`,`फक्त (c) अचूक आहे`],answer:2},
+  {id:2,question:`पुढे दिलेल्या शब्दांतून पोर्तुगीज शब्द ओळखा.`,options:[`मंजूर`,`मालक`,`तंबाखू`,`सौदागर`],answer:3},
+  {id:3,question:`‘चंद्र’ या शब्दाचे विविध अर्थ असलेले शब्द वापरून बनविलेली वाक्ये ओळखा.\n(a) शशी छान दिसते.\n(b) सुधाकर येथे उपस्थित आहे.\n(c) तारापती गावी गेला.\n(d) रजनीनाथ मंत्री झाले.`,options:[`फक्त (a) व (c) बरोबर`,`फक्त (b) व (d) बरोबर`,`फक्त (a) व (b) बरोबर`,`सर्व पर्याय बरोबर आहेत`],answer:4},
+  {id:4,question:`अ-कारान्त पुल्लिंगी नामाचे सामान्य रूप कसे होते ?`,options:[`या-कारान्त`,`आ-कारान्त`,`वा-कारान्त`,`ई-कारान्त`],answer:2},
+  {id:5,question:`ईकारान्त नामे स्त्रीलिंगी असतात मात्र काही ईकारान्त नामे पुल्लिंगी असतात ती ______ यांची असतात.`,options:[`पक्ष्यांची`,`प्राण्यांची`,`व्यावसायिकांची`,`फळांची`],answer:3},
+  {id:6,question:`‘तो भरभर – बोलतो’, यातील ‘भरभर’ हा शब्द अव्ययाचा कोणता प्रकार दर्शवितो ?`,options:[`क्रियाविशेषण अव्यय`,`शब्दयोगी अव्यय`,`केवल प्रयोगी अव्यय`,`उभयान्वयी अव्यय`],answer:1},
+  {id:7,question:`‘किंवा’, ‘अथवा’, ‘की’, ‘अगर’ – हे शब्द उभयान्वयी अव्ययातील कोणत्या प्रकारातील आहेत ?`,options:[`समुच्चयबोधक उभयान्वयी अव्यय`,`विकल्पबोधक उभयान्वयी अव्यय`,`न्यूनत्वबोधक उभयान्वयी अव्यय`,`परिणामबोधक उभयान्वयी अव्यय`],answer:2},
+  {id:8,question:`केवलप्रयोगी अव्ययांच्या योग्य जोड्यांचे गट ओळखा.\n(a) शोकद्योतक – हाय रे, अयाई, आई गं.\n(b) स्वीकारद्योतक – ठीक, बरे, होय.\n(c) संबोधनद्योतक – अरे, अगो, हो.\n(d) आश्चर्यद्योतक – अहाहा, अरे बापरे, ओहो.`,options:[`फक्त (b) व (d) बरोबर`,`फक्त (a) व (c) बरोबर`,`फक्त (c) व (d) बरोबर`,`सर्व पर्याय बरोबर आहेत`],answer:4},
+  {id:9,question:`‘च, देखील, ना, पण, मात्र, सुद्धा, ही’ – कोणती शब्दयोगी अव्यये आहेत ? योग्य पर्याय लिहा.`,options:[`हेतुवाचक`,`केवलप्रयोगी`,`विरोधवाचक`,`शुद्धशब्दयोगी`],answer:4},
+  {id:10,question:`‘कागदपत्र’, ‘कामकाज’, ‘बाजारहाट’ या अभ्यस्त शब्दांचा प्रकार कोणता ?`,options:[`पूर्णाभ्यस्त`,`अंशाभ्यस्त`,`अनुकरणवाचक`,`हे अभ्यस्त शब्द नाहीत`],answer:2},
+  {id:11,question:`‘आधीचे धरण भरून वाहिले. पुढील धरणांच्या साठ्यातही वाढ होत गेली.’ – याचे संयुक्तवाक्य कसे होईल ?`,options:[`पुढील धरणांतील साठा वाढला कारण आधीचे धरण भरून वाहिले.`,`आधीचे धरण भरून वाहिले म्हणून पुढील धरणांच्या साठ्यातही वाढ होत गेली.`,`आधीचे धरण भरून वाहिल्याने पुढील धरणांचा साठा वाढला.`,`आधीचे धरण भरून वाहिले तर पुढील धरणांचा साठा वाढला.`],answer:2},
+  {id:12,question:`‘होय, हाच तो माणूस तुला फसविणारा’, या वाक्याचे प्रश्नार्थी वाक्यरूप ओळखा.`,options:[`तुला फसविणारा हा माणूस आहे ?`,`काय ? हाच तो माणूस मला फसविणारा ?`,`फसविणारा माणूस हाच आहे ?`,`तोच हा फसविणारा माणूस आहे ?`],answer:2},
+  {id:13,question:`‘जगात सर्व सुखी असा कोण आहे ?’ या वाक्याचे विधानार्थी वाक्य कोणते ?`,options:[`जगात सर्व सुखी आहेत.`,`जगात सर्व दुःखी आहेत.`,`जगात कुणीच दुःखी नाही.`,`जगात सर्व सुखी असा कोणी नाही.`],answer:4},
+  {id:14,question:`श्रोत्यांनी सभागृहात शांतता राखावी. या वाक्याचा अर्थानुसार प्रकार कोणता ?`,options:[`होकारार्थी – आज्ञार्थ`,`नकारार्थी – आज्ञार्थ`,`होकारार्थी – विध्यर्थ`,`नकारार्थी – विध्यर्थ`],answer:3},
+  {id:15,question:`‘अमिता हे काम चांगले करील.’ – याचे रीतीभूतकाळ वापरून कसे रूपांतर होईल ?`,options:[`अमिताने हे काम चांगले केले.`,`अमिताने हे काम चांगले केले होते.`,`अमिता हे काम चांगले करी.`,`अमिता हे काम चांगले करत असावी.`],answer:3},
+  {id:16,question:`संपूर्ण कुटुंबाला कोणत्या दुहेरी काळजीने घेरले होते ?`,options:[`नातवंडे, पतवंडे यांनी वाडा रिकामा झाला होता आणि पणजोबांच्या मेंदूत रक्तस्राव झाला होता`,`अपुऱ्या दिवसांचं नवजात बालक अतिदक्षता विभागात ठेवलेलं होत आणि पणजोबांच्या मेंदूत रक्तस्राव झाला होता`,`बालकाच्या बाबतीत ऑक्सिजन स्वतःचं ‘प्राणवायू’ हे नाव सार्थ करू शकला नाही आणि पणजोबांच्या मेंदूतील रक्तस्राव थांबला होता`,`पणजोबांच्या प्रकृतीत सुधारणा झाली आणि बालकालाही जीवदान मिळाले`],answer:2},
+  {id:17,question:`आजोबांना अपराधी वाटण्याचं कारण\n(अ) सुनेच्या आईच्या नजरेतील नकारात्मकता\n(ब) बालकाचा आकांत\n(क) नाकातून घातलेली ऑक्सिजनची नळी\n(ड) आपण आता कायमचे जाणार याची खंत`,options:[`फक्त (क) आणि (ड) बरोबर`,`फक्त (अ) आणि (ब) बरोबर`,`फक्त (अ) बरोबर`,`फक्त (अ) आणि (क) बरोबर`],answer:3},
+  {id:18,question:`पणजोबांच्या मृत्यूचे कारण\n(अ) समाधानी जीवन\n(ब) बालकाच्या मृत्यूचे दुःख\n(क) अपराधीपणा\n(ड) सुनेच्या आईच्या दुःखाने धारण केलेले विकारी आणि विखारी स्वरूप`,options:[`फक्त (अ) आणि (ब) बरोबर`,`फक्त (ब) आणि (क) बरोबर`,`फक्त (क) आणि (ड) बरोबर`,`फक्त (अ) आणि (ड) बरोबर`],answer:3},
+  {id:19,question:`‘दिवस भरणे’ या वाक्प्रयोगाचा प्रस्तुत उताऱ्यात दिलेला अर्थ कोणता ?\n(अ) दिवस प्रकाशाने भरणे\n(ब) गर्भार बाईला नऊ महिने पूर्ण होणे\n(क) दिवस भराचे काम पूर्ण होणे\n(ड) एखाद्या माणसाने भयंकर अपराध करणे`,options:[`फक्त (ब) आणि (ड) बरोबर`,`फक्त (अ) बरोबर`,`फक्त (ड) बरोबर`,`फक्त (क) बरोबर`],answer:1},
+  {id:20,question:`‘ज्यांचं समदं सरलं, त्येला का नेलं न्हाई देवाने’ असे कोणी म्हटले ?`,options:[`सुनेने`,`सुनेच्या आईने`,`कवीने`,`पणजोबांनी स्वतःला`],answer:2},
+  {id:21,question:`‘श्रीमुखात देणे’ या शब्दाचा ध्वन्यार्थ कोणता ?\n(a) अभिधा\n(b) लक्षण-लक्षणा\n(c) व्यंजना\n(d) निरूढा लक्षणा`,options:[`फक्त (a) व (d) बरोबर`,`फक्त (b) बरोबर`,`फक्त (d) बरोबर`,`फक्त (b) व (c) बरोबर`],answer:3},
+  {id:22,question:`मराठी भाषेत ‘क्ष’ व ‘ज्ञ’ ही __________ आहेत.`,options:[`मृत व्यंजने`,`जोडाक्षरे`,`महाप्राण`,`कठोर व्यंजने`],answer:2},
+  {id:23,question:`व्याकरणिक दृष्ट्या बरोबर असलेला शब्द ओळखा.`,options:[`औपचारिक`,`तीर्थस्वरूप`,`दिपक`,`मनःस्थिती`],answer:2},
+  {id:24,question:`‘वयोमान’ या शब्दाच्या संधीमध्ये एकत्र येणारे स्वर, विसर्ग व संधी ओळखा.`,options:[`व् + य् + म् + आ + न् + आ + मान`,`व + य् + विसर्ग + म + आ = मान`,`व + य् + विसर्ग + मान = य् + ओ + मान`,`य् + अ + विसर्ग + मान = य् + ओ + मान`],answer:4},
+  {id:25,question:`‘हालअपेष्टा सहन करण्याचा गुण’ – या शब्दसमूहाबद्दल एक शब्द ओळखा.`,options:[`दानशूर`,`तगाई`,`तितिक्षा`,`दरवेशी`],answer:3},
+  {id:26,question:`गणेशने आंबा खाल्ला. (प्रयोग ओळखा)`,options:[`सकर्मक कर्तरी प्रयोग`,`कर्तरी प्रयोग`,`कर्मणी प्रयोग`,`भावे प्रयोग`],answer:3},
+  {id:27,question:`‘आईने मुलीला शाळेत पाठविले’ या वाक्याचा प्रयोग ओळखा.`,options:[`कर्तृ-भाव संकर प्रयोग`,`कर्म-भाव संकर प्रयोग`,`कर्तृ-कर्म संकर प्रयोग`,`कर्म कर्तरी प्रयोग`],answer:2},
+  {id:28,question:`कोणत्या विभक्तींच्या एकवचनाला प्रत्यय नाहीत ?`,options:[`द्वितीया व पंचमी`,`प्रथमा व संबोधन`,`संबोधन व तृतीया`,`फक्त प्रथमा`],answer:2},
+  {id:29,question:`संकेतार्थी वाक्याची उदाहरणे अचूक ओळखा.\n(a) मुलांनी जर मन लावून अभ्यास केला असता, तर त्यांना परीक्षेत चांगले यश मिळाले असते.\n(b) मुलांनी जर अभ्यासाकडे दुर्लक्ष केले असते, तर त्यांना परीक्षेत चांगले यश मिळाले नसते.\n(c) मुलांनी जर अभ्यास केला नसता, तर त्यांना परीक्षेत चांगले यश मिळाले नसते.\n(d) मुलांनी जर नीट अभ्यास केला नसता, तर त्यांना परीक्षेत कमीच गुण मिळाले असते.`,options:[`फक्त (a) व (d) बरोबर`,`फक्त (b) व (c) बरोबर`,`फक्त (b) बरोबर`,`सर्व पर्याय बरोबर आहेत`],answer:4},
+  {id:30,question:`जोड्या जुळवा :\nगट ‘अ’\n(a) सचिन उत्तम फलंदाज आहे.\n(b) किती छान आहे हे फूल !\n(c) पाऊस तर पडला नाही ना ?\n(d) मुले शाळेत गेली.\nगट ‘ब’\n(अ) स्वार्थी\n(ब) प्रश्नार्थी\n(क) विधानार्थी\n(ड) उद्गारार्थी`,options:[`(a)-(ड), (b)-(क), (c)-(अ), (d)-(ब)`,`(a)-(क), (b)-(ड), (c)-(ब), (d)-(अ)`,`(a)-(अ), (b)-(क), (c)-(ड), (d)-(ब)`,`(a)-(ड), (b)-(अ), (c)-(ब), (d)-(क)`],answer:2},
+  {id:31,question:`‘विदुर’ या शब्दाचा अर्थ\n(a) पत्नीचे निधन झालेला\n(b) माहितीगार\n(c) अनुभवी`,options:[`फक्त (a) बरोबर`,`फक्त (b) बरोबर`,`(a) आणि (b) बरोबर`,`(b) आणि (c) बरोबर`],answer:4},
+  {id:32,question:`‘सिंह’ या शब्दाला समानार्थी नसलेला शब्द अचूक ओळखून त्याचा योग्य तो पर्याय लिहा.`,options:[`पंचानन`,`मृगराज`,`केसरी`,`शाखामृग`],answer:4},
+  {id:33,question:`‘प्रश्न विचारणे हे प्रश्नार्थक सर्वनामाचे प्रमुख लक्षण आहे, पण जेथे जेथे प्रश्नार्थक सर्वनाम असेल तेथे तेथे प्रश्नार्थक वाक्य रचना असेलच असे नाही ?’`,options:[`या विधानाचा पूर्वार्ध बरोबर आहे`,`या विधानाचा उत्तरार्ध बरोबर आहे`,`हे संपूर्ण विधान बरोबर आहे`,`हे संपूर्ण विधान चूक आहे`],answer:3},
+  {id:34,question:`पुढे दिलेल्या समानार्थी शब्दांच्या पर्यायातून समानार्थी नसलेल्या शब्दांचा अचूक पर्याय ओळखा.`,options:[`अली, मिलिंद, मधुकर, भ्रमर`,`चंद्रिका, कौमुदी, ज्योत्स्ना, यामिनी`,`भार्या, कांता, जाया, दारा`,`नरेंद्र, भूपेंद्र, पृथ्वीपती, नरेश`],answer:2},
+  {id:35,question:`खालीलपैकी अनुस्वारयुक्त चुकीचा गट ओळखा.`,options:[`संयम, सिंह, संहिता`,`मुलांस, त्यांचा, देशांसाठी`,`घरांत, संसार, मांस`,`कांम, जाऊं, कांटा`],answer:4},
+  {id:36,question:`‘ससेमिरा लावणे’ याचा अर्थ\n(a) प्रचंड आवाज करणे.\n(b) धीर मिळणे.\n(c) एकसारखा तगादा लावणे.\n(d) तमाशा लावणे.`,options:[`फक्त (a) आणि (d) बरोबर`,`फक्त (b) बरोबर`,`फक्त (c) बरोबर`,`फक्त (a) बरोबर.`],answer:3},
+  {id:37,question:`‘अनेक पदार्थ इतस्ततः अव्यवस्थितपणे पसरणे’ या अर्थाची म्हण ओळखा.`,options:[`बाजार करणे`,`बाजाराला जाणे`,`बाजार भरविणे`,`बाजार मांडणे`],answer:4},
+  {id:38,question:`‘बावळी मुद्रा देवळी निद्रा’ याचा अर्थ कोणता ?`,options:[`बावळी मुद्रा घेऊन देवळात निजणारा`,`दिसण्यात बावळा, व्यवहारात चतुर`,`निरपराध माणसाला शिक्षा देणे`,`शहाणपणाचे सोंग आणणारा मूर्ख`],answer:2},
+  {id:39,question:`‘गाव जळाला, मारुती गावानिराळा’ या म्हणीचा अर्थ कोणता ?`,options:[`दुसऱ्याचे नुकसान करून नामनिराळा राहणे`,`गावावर संकट आले, तरी देव धावला नाही`,`दुसऱ्यांवर कुरघोडी करणारेच सुखी असतात`,`दुष्ट कृत्य करणारे सहीसलामत सुटतात`],answer:1},
+  {id:40,question:`प्रधानत्वबोधक उभयान्वयी अव्ययांनी जोडलेली वाक्ये अर्थाच्या दृष्टीने स्वतंत्र नसतात, म्हणजेच ती एकमेकांवर अवलंबून असतात.`,options:[`विधानाचा पूर्वार्ध बरोबर`,`विधानाचा उत्तरार्ध बरोबर`,`संपूर्ण विधान बरोबर`,`संपूर्ण विधान चूक`],answer:4},
+  {id:41,question:`विरुद्धार्थी शब्दांच्या जोड्या जुळवा :\n(a) अवघड — (अ) विरळ\n(b) बिजोड — (ब) पाया\n(c) कळस — (क) अनुरूप\n(d) गच्च — (ड) सोपे`,options:[`(a)-(अ), (b)-(ब), (c)-(क), (d)-(ड)`,`(a)-(ड), (b)-(क), (c)-(ब), (d)-(अ)`,`(a)-(ब), (b)-(क), (c)-(अ), (d)-(ड)`,`(a)-(ड), (b)-(ब), (c)-(क), (d)-(अ)`],answer:2},
+  {id:42,question:`हा आंबा साखरेपेक्षा गोड आहे. (अलंकार ओळखा)`,options:[`अनन्वय`,`दृष्टांत`,`भ्रांतिमान`,`व्यतिरेक`],answer:4},
+  {id:43,question:`शब्द जातीचे प्रमुख प्रकार किती ?`,options:[`दोन`,`चार`,`सहा`,`आठ`],answer:1},
+  {id:44,question:`भाववाचक नामांचा शब्द गट ओळखा.\n(a) देवपण, प्रामाणिकपणा, मोठेपण\n(b) गरिबी, गोडी, लबाडी\n(c) प्रौढत्व, मित्रत्व, शत्रुत्व\n(d) गांभीर्य, धैर्य, माधुर्य`,options:[`फक्त (a) व (c) बरोबर`,`फक्त (b) व (d) बरोबर`,`फक्त (b), (c) व (d) बरोबर`,`सर्व पर्याय बरोबर आहेत`],answer:4},
+  {id:45,question:`विशेष्याची माहिती देणारा व विशेषणाचे गुण सांगणारा विकारी शब्द`,options:[`विशेषनाम`,`सामान्यनाम`,`विशेषण`,`धातू`],answer:3},
+  {id:46,question:`अपूर्ण भविष्यकाळाचे उदाहरण ओळखा.`,options:[`सुधाने निबंध लिहिला असेल`,`सुधा निबंध लिहिणार असेल`,`सुधा निबंध लिहीत राहील`,`सुधा निबंध लिहील`],answer:1},
+  {id:47,question:`अनेकवचनी रूपातही न बदलणारा शब्द ओळखा.`,options:[`मुलगा`,`राजा`,`राणी`,`देव`],answer:4},
+  {id:48,question:`‘खर्चवेच’ हा शब्द शब्दसिद्धीच्या कोणत्या प्रकारातील आहे ?`,options:[`अभ्यस्त-पूर्णाभ्यस्त`,`अंशाभ्यस्त`,`अनुकरणवाचक`,`यांपैकी एकही नाही`],answer:2},
+  {id:49,question:`‘अनादी’ या शब्दाचा समास ओळखा.`,options:[`अव्ययीभाव समास`,`तत्पुरुष समास`,`द्वंद्व समास`,`बहुव्रीही समास`],answer:4},
+  {id:50,question:`‘तू नियमित व्यायाम करावास’ याचे आज्ञार्थी वाक्य करा.`,options:[`तू नियमित व्यायाम कर.`,`तू नियमित व्यायाम करतोस.`,`तू नियमित व्यायाम करीत नाहीस.`,`तू नियमित व्यायाम करीत असतोस.`],answer:1},
+  {id:51,question:`कोणत्या नामांचे सामान्य रूप होत नाहीत.\n(a) ऊकारान्त कुलनामांचे\n(b) एकारान्त नपुंसकलिंगी नामांचे\n(c) ईकारान्त ग्रामनामांचे\n(d) ईकारान्त कुलनामांचे`,options:[`(a) व (c) बरोबर`,`(a) (b) व (c) बरोबर`,`(a) (c) व (d) बरोबर`,`सर्व बरोबर`],answer:3},
+  {id:52,question:`पृथकत्ववाचक संख्या विशेषणाचे उदाहरण ओळखा.`,options:[`सहस्र किरणे`,`साठावे वर्ष`,`दुहेरी रंग`,`दहा-दहांचा गट`],answer:4},
+  {id:53,question:`दिलेल्या वाक्यातील क्रियापदाचा प्रकार ओळखा.\n‘भोजनशाळेत माणसे जेवू लागली’`,options:[`द्विकर्मक क्रियापद`,`साधित क्रियापद`,`संयुक्त क्रियापद`,`सकर्मक क्रियापद`],answer:3},
+  {id:54,question:`पारंपरिक व्याकरणात नामांचा क्रियापदांशी असणारा संबंध किती प्रकारचा असतो ?`,options:[`सात`,`पाच`,`दहा`,`आठ`],answer:4},
+  {id:55,question:`न, ना, या क्रियाविशेषणांचा प्रकार ओळखा.\n(a) सिद्ध क्रियाविशेषण अव्यये\n(b) साधित क्रियाविशेषण अव्यये\n(c) निषेधार्थक क्रियाविशेषण अव्यये\n(d) रीतिवाचक क्रियाविशेषण अव्यये`,options:[`फक्त (a) बरोबर`,`फक्त (b) व (d) बरोबर`,`फक्त (c) बरोबर`,`फक्त (d) बरोबर`],answer:3},
+  {id:56,question:`‘फुलांहून’ या शब्दात कोणती विभक्ती आहे ?`,options:[`सप्तमी`,`पंचमी`,`चतुर्थी`,`तृतीया`],answer:2},
+  {id:57,question:`संयुक्त वाक्य असलेले पर्याय ओळखा.\n(a) वर्गात मुले आणि मुलीही आल्या.\n(b) जेव्हा मोठी घंटा होते. तेव्हा शाळा सुटते.\n(c) आज रविवार आहे पण शाळेला सुट्टी नाही.\n(d) या समारंभाला मुख्यमंत्री येतील किंवा उपमुख्यमंत्री उपस्थित राहतील.`,options:[`फक्त (a) व (c) बरोबर`,`फक्त (b) व (d) बरोबर`,`फक्त (a), (c) व (d) बरोबर`,`सर्व पर्याय बरोबर आहेत`],answer:3},
+  {id:58,question:`पुढे दिलेले वाक्प्रचार व त्यांचे अर्थ यातून योग्य असणाऱ्या वाक्प्रचाराच्या अर्थाचा अचूक पर्याय लिहा.`,options:[`उखळ पांढरे होणे = भीक मागण्याची पाळी येणे`,`दाद न देणे = पुष्कळ फायदा होणे`,`हातावर तुरी देणे = डोळ्यादेखत फसवून निसटून जाणे`,`उलटी अंबारी हाती येणे = पूर्णपणे दुर्लक्ष करणे`],answer:3},
+  {id:59,question:`‘शहरात नोकरी करीत असताना गोकुळला दर अकरा महिन्यांनी नवीन भाड्याच्या घरात घरसामान हलवावे लागे. त्यामुळे तो या त्रासाला अगदी कंटाळून गेला होता.’ – या वाक्य समूहासाठी योग्य वाक्प्रचाराची निवड करा.`,options:[`जीव लावणे`,`जीवावर उदार होणे`,`जीवाला घोर लागणे`,`जीव मेटाकुटीस येणे`],answer:4},
+  {id:60,question:`‘ठाव पाहणे’ या वाक्प्रचाराचा समर्पक उपयोग असलेले वाक्य कोणते ?\n(a) शेतकरी पावसाचा ठाव पाहून पेरणी करतात.\n(b) रमेशने गाव सोडल्यापासून त्याचा ठाव लागत नाही.\n(c) एखाद्याच्या मनाचा ठाव पाहणे शक्य नसते.\n(d) बिळातील सापाचा ठाव पाहणे कसे जमेल ?`,options:[`फक्त (a) व (b) बरोबर`,`फक्त (b) व (d) बरोबर`,`फक्त (a) बरोबर`,`फक्त (c) व (d) बरोबर`],answer:3},
+  {id:61,question:`Identify the functions of the word ‘after’ in the following sentences.\n(a) They arrived soon after.\n(b) He takes after his father.\n(c) After ages shall sing his glory.\n(d) We went away after they had left.`,options:[`adjective, preposition, adverb, conjunction`,`conjunction, adverb, adjective, preposition`,`adverb, preposition, adjective, conjunction`,`adverb, adjective, preposition, conjunction`],answer:3},
+  {id:62,question:`(a) She is more charming than any other woman living.\n(b) I have no ulterior motive than helping you.\n(c) He has greater popularity than any other leader.\nChoose the correct sentence/s.`,options:[`Only (a)`,`Only (b)`,`Only (a) and (c)`,`Only (b) and (c)`],answer:3},
+  {id:63,question:`Which of the following sentences are grammatically correct ?\n(a) She did not break it nor lose it.\n(b) She did not break it or lose it.\n(c) A month has passed since I come here.\n(d) A month passed since I am coming here.`,options:[`Only (b) and (c)`,`Only (a) and (b)`,`Only (c) and (d)`,`Only (a) and (c)`],answer:null},
+  {id:64,question:`He said, “I went to my friend’s house yesterday”.\nIdentify the sentence written in correct indirect narration.`,options:[`He said that he had gone to his friend’s house yesterday.`,`He said that he had gone to his friend’s house the day before.`,`He told he had went to his friend’s house the day before.`,`He informed that he went to his friend’s house the previous day.`],answer:2},
+  {id:65,question:`Identify the type of the clause underlined.\nThe problem is who will bell the cat.`,options:[`Noun clause`,`Adjective clause`,`Adverb clause`,`Relative clause`],answer:1},
+  {id:66,question:`Identify the lexical relation in the underlined parts of the following sentences.\n(a) I saw a lunatic.\n(b) I saw a madman.`,options:[`Synonymy`,`Antonymy`,`Polysemy`,`Hyponymy`],answer:1},
+  {id:67,question:`Choose the correct pair of words to fill in the blanks.\n(a) Columbus set out to __________ India, but discovered America.\n(b) Eddison __________ the electric lamp.`,options:[`discover, discovered`,`invented, invented`,`invented, discovered`,`discover, invented`],answer:4},
+  {id:68,question:`Choose the correct alternative describing the following phrase.\nExtempore speech`,options:[`A speech made without preparation`,`An official announcement`,`A speech made with preparation`,`Eloquent speech`],answer:1},
+  {id:69,question:`(a) The hut was filled with smoke.\n(b) The child was tormented by thirst.\n(c) She was confined to bed with fever.\nIdentify the sentence/s in correct passive voice.`,options:[`Only (a)`,`Only (b)`,`Only (a) and (c)`,`Only (b) and (c)`],answer:3},
+  {id:70,question:`(a) I have a camera, haven’t I ?\n(b) Stop that noise, will you ?\n(c) I had had a bath, hadn’t I ?\nIdentify the correct sentence/s.`,options:[`Only (a)`,`Only (b)`,`Only (a) and (c)`,`Only (b) and (c)`],answer:4},
+  {id:71,question:`True education is ______`,options:[`The means of self-realisation`,`The means of our bread and butter`,`The means of gaining wealth`,`The means of knowledge and information`],answer:1},
+  {id:72,question:`The true happiness lies in ______`,options:[`Self-realization`,`Self-understanding`,`Self-help`,`Self-experience`],answer:1},
+  {id:73,question:`With the support of ______ we can achieve self-realization.`,options:[`others`,`family`,`education`,`religion`],answer:3},
+  {id:74,question:`What is the strength of a nation ?\nChoose the correct alternative from the passage.`,options:[`sum-total of strengths of people`,`educated people`,`military strength`,`literate people`],answer:1},
+  {id:75,question:`The liability of a nation is ______\nChoose the correct alternative from the passage.`,options:[`poor, illiterate and backward people`,`rich, literate and developed people`,`both rich and poor people`,`both educated and illiterate people`],answer:1},
+  {id:76,question:`Catch the opportunity when it comes.\nChoose the correct word to replace the underlined.`,options:[`Siege`,`Cease`,`Seize`,`Seal`],answer:3},
+  {id:77,question:`You will need to ______ the subject in greater detail.\nSelect the correct alternative to complete the sentence meaningfully.`,options:[`go down`,`go for`,`go in for`,`go into`],answer:4},
+  {id:78,question:`Match the pairs :\nI\n(a) Loss of memory\n(b) Loss of voice\n(c) A spiritual power given by God\n(d) Song in praise of God\nII\n(i) Charisma\n(ii) Hymn\n(iii) Amnesia\n(iv) Aphonia`,options:[`a-iii, b-iv, c-i, d-ii`,`a-iv, b-iii, c-ii, d-i`,`a-ii, b-iii, c-iv, d-i`,`a-ii, b-i, c-iii, d-iv`],answer:1},
+  {id:79,question:`The old house has outlast the war.\nSelect the correct phrase for the underlined word.`,options:[`Stood up to`,`Stood up for`,`Stood out`,`Stood by`],answer:1},
+  {id:80,question:`They ______ the merchant for his purse.\nSelect the correct word to complete the sentence meaningfully.`,options:[`Killed`,`Murdered`,`Hanged`,`Slained`],answer:2},
+  {id:81,question:`Match the pairs :\nI\n(a) One who tries to avoid reality\n(b) A person belonging to a wandering race\n(c) One who believes in fate\n(d) One who believes very easily\nII\n(i) Gipsy\n(ii) Fatalist\n(iii) Credulous\n(iv) Escapist`,options:[`(a)-(iii), (b)-(iv), (c)-(ii), (d)-(i)`,`(a)-(ii), (b)-(i), (c)-(iv), (d)-(iii)`,`(a)-(iv), (b)-(i), (c)-(ii), (d)-(iii)`,`(a)-(iv), (b)-(iii), (c)-(ii), (d)-(i)`],answer:3},
+  {id:82,question:`Here is a represent ______ sample.\nSelect the correct suffix to make the sentence meaningful.`,options:[`______ ible`,`______ able`,`______ ation`,`______ ative`],answer:4},
+  {id:83,question:`They perform the same ______ tasks all day.\nSelect the correct word to complete the sentence meaningfully.`,options:[`repetition`,`replete`,`repetitive`,`replacing`],answer:3},
+  {id:84,question:`One who poses to be better than what he really is ______ .\nComplete the sentence choosing the correct alternative.`,options:[`highbrow`,`humbug`,`smart`,`hoodoo`],answer:2},
+  {id:85,question:`The building was badly damaged.\nIdentify the correct meaning of the word underlined.`,options:[`completely`,`slightly`,`severely`,`partially`],answer:3},
+  {id:86,question:`(a) Rama or Hari must lend their hands.\n(b) None of my lost books were found.\n(c) Each of the employees was given bonus.\nIdentify the correct sentence/s.`,options:[`Only (a) and (b)`,`Only (a) and (c)`,`Only (a)`,`Only (b) and (c)`],answer:4},
+  {id:87,question:`Arbitrator is __________\nComplete the sentence choosing the correct alternative.`,options:[`a person who buys goods from the producer and sells them to customer.`,`a person who gives you social assistance.`,`a person who advocates a particular company’s product.`,`a person who is appointed by the parties to settle their disputes.`],answer:4},
+  {id:88,question:`(a) The luggages are in the cloakroom.\n(b) He gave me two dozen oranges.\n(c) The table’s leg is broken.\n(d) For goodness’ sake forgive me !\nIdentify the sentence/s grammatically correct.`,options:[`Only (a) and (c)`,`Only (b) and (d)`,`Only (a), (b) and (c)`,`Only (a), (b) and (d)`],answer:2},
+  {id:89,question:`Choose the correct option in which words are spelt correctly.`,options:[`reminescences, sanetorium, disastrous, compulsory`,`reminiscences, sanatorium, disastrous, compulsory`,`remeniscences, sanatorium, desastrous, compulsory`,`reminiscences, sanetorium, desastrous, compulsory`],answer:2},
+  {id:90,question:`(a) They are preparing lessons for the ensuing examinations.\n(b) Ranjan is doing this important work for the last five days.\n(c) The examinees stopped writing when the invigilator entered the hall.\nIdentify the sentence/s grammatically correct.`,options:[`Only (a) and (b)`,`Only (b) and (c)`,`Only (b)`,`Only (a)`],answer:4},
+  {id:91,question:`Choose the correct meaning of the word ‘uninhabitable’.`,options:[`Unsuitable for living in`,`Suitable for living in`,`Not habitual`,`Habitual`],answer:1},
+  {id:92,question:`At the very prime stage of his life he reached the zenith of power.\nIdentify the correct meaning of the underlined.`,options:[`Top position`,`Idle state`,`State of maturity`,`State of extreme pressure`],answer:1},
+  {id:93,question:`For all his predicaments his friend promised him help, and it was surely a silver lining in a dark cloud.\nIdentify the correct meaning of the underlined.`,options:[`A profitable agreement`,`The last opportunity`,`Plain dealing`,`Ray of hope`],answer:4},
+  {id:94,question:`Identify the correct sentence/s :\n(a) He is a finest young player around at the moment.\n(b) She was a company director when she retired.\n(c) Sydney is the capital city of new South Wales.`,options:[`Only (a)`,`Only (b)`,`Only (a) and (c)`,`Only (b) and (c)`],answer:2},
+  {id:95,question:`He is quite at home in English.\nIdentify the correct meaning of the underlined.`,options:[`Fluent`,`Competent`,`Full of comfort`,`Happy`],answer:2},
+  {id:96,question:`(a) Apples are sold by the dozen.\n(b) He is cleverer of the two boys.\n(c) Iron and coal are found in abundance in India.\nIdentify the sentence/s grammatically correct.`,options:[`Only (a)`,`Only (b) and (c)`,`Only (a) and (c)`,`Only (a) and (b)`],answer:3},
+  {id:97,question:`Identify the correct sentence.`,options:[`Not only she wrote the screenplay for the movie but also acted a role in it.`,`She wrote not only the screenplay for the movie but also acted a role in it.`,`She not only wrote the screenplay for the movie but also acted a role in it.`,`Not only she wrote a screenplay for the movie but acted a role in it also.`],answer:3},
+  {id:98,question:`She refused the proposal of his marriage point blank.\nIdentify the correct meaning of the idiom underlined.`,options:[`Strongly`,`Coldly`,`Directly`,`Boldly`],answer:3},
+  {id:99,question:`If I had been in his place, I __________ differently.\nChoose the correct alternative to complete the sentence meaningfully.`,options:[`shall have done`,`should have done`,`should have been done`,`would done`],answer:2},
+  {id:100,question:`Complete the sentence choosing the correct alternative.\nHe failed to __________ at the right time and missed the train.`,options:[`turn up`,`turn down`,`turn the corner`,`turn off`],answer:1}
+];
+
+// ===== व्हेरिएबल्स =====
+let currentQ = 0;
+let userAnswers = [];
+let startTime, timerInterval;
+let shuffledQuestions = [];
+
+// मराठी अंक
+function toMarathiNum(n) {
+  const map = ['०','१','२','३','४','५','६','७','८','९'];
+  return String(n).split('').map(d => map[d] || d).join('');
+}
+
+// Array Shuffle Function
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// प्रश्न व पर्याय शफल करणे
+function prepareQuestions() {
+  shuffledQuestions = rawQuestions.map(q => {
+    let options = [...q.options];
+    let correctOriginalIndex = q.answer ? q.answer - 1 : -1; // 1-based to 0-based
+    let correctOptionText = correctOriginalIndex !== -1 ? options[correctOriginalIndex] : null;
+
+    // Shuffle options
+    options = shuffleArray(options);
+
+    // Find new index of correct text
+    let newCorrectIndex = correctOptionText ? options.indexOf(correctOptionText) : -1;
+
+    return {
+      question: q.question,
+      options: options,
+      correct: newCorrectIndex
+    };
+  });
+
+  // Shuffle questions order
+  shuffledQuestions = shuffleArray(shuffledQuestions);
+  userAnswers = new Array(shuffledQuestions.length).fill(null);
+}
+
+// ===== परीक्षा सुरू करणे =====
+function startExam() {
+  prepareQuestions();
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('examScreen').classList.remove('hidden');
+  document.getElementById('progressContainer').classList.remove('hidden');
+  startTimer();
+  buildPalette();
+  loadQuestion();
+}
+
+// ===== टायमर =====
+function startTimer() {
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const h = Math.floor(elapsed / 3600);
+    const m = Math.floor((elapsed % 3600) / 60);
+    const s = elapsed % 60;
+    document.getElementById('timer').textContent =
+      `⏱ ${toMarathiNum(String(h).padStart(2,'0'))}:${toMarathiNum(String(m).padStart(2,'0'))}:${toMarathiNum(String(s).padStart(2,'0'))}`;
+  }, 1000);
+}
+
+// ===== प्रश्न लोड करणे =====
+function loadQuestion() {
+  const q = shuffledQuestions[currentQ];
+  document.getElementById('progressText').textContent =
+    `प्रश्न ${toMarathiNum(currentQ + 1)} क्रमांक ${toMarathiNum(shuffledQuestions.length)}`;
+  document.getElementById('questionText').textContent = q.question;
+
+  // Progress Bar
+  const progress = ((currentQ + 1) / shuffledQuestions.length) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  const labels = ['अ', 'ब', 'क', 'ड'];
+
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<span class="badge">${labels[i]}</span><span>${opt}</span>`;
+    div.onclick = () => selectOption(i, div);
+    container.appendChild(div);
+  });
+
+  const feedback = document.getElementById('feedback');
+  if (userAnswers[currentQ] !== null) {
+    showAnswer(userAnswers[currentQ], q);
+  } else {
+    feedback.className = 'feedback';
+    feedback.textContent = '';
+  }
+
+  document.getElementById('prevBtn').disabled = (currentQ === 0);
+  document.getElementById('nextBtn').textContent =
+    (currentQ === shuffledQuestions.length - 1) ? 'शेवटचा प्रश्न' : 'पुढील →';
+
+  updatePalette();
+}
+
+// ===== पर्याय निवड =====
+function selectOption(idx, el) {
+  if (userAnswers[currentQ] !== null) return;
+  userAnswers[currentQ] = idx;
+  showAnswer(idx, shuffledQuestions[currentQ]);
+  updatePalette();
+}
+
+function showAnswer(selectedIdx, q) {
+  const options = document.querySelectorAll('.option');
+  options.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    if (i === q.correct) opt.classList.add('correct');
+    else if (i === selectedIdx) opt.classList.add('wrong');
+  });
+
+  const feedback = document.getElementById('feedback');
+  feedback.classList.add('show');
+  if (q.correct === -1) {
+    feedback.className = 'feedback show wrong';
+    feedback.textContent = '⚠ या प्रश्नाचे योग्य उत्तर डेटाबेसमध्ये उपलब्ध नाही.';
+  } else if (selectedIdx === q.correct) {
+    feedback.className = 'feedback show right';
+    feedback.textContent = '✅ अगदी बरोबर! उत्तम.';
+  } else {
+    feedback.className = 'feedback show wrong';
+    feedback.textContent = `❌ चुकीचे उत्तर. योग्य उत्तर: "${q.options[q.correct]}"`;
+  }
+}
+
+// ===== नेव्हिगेशन =====
+function nextQuestion() { if (currentQ < shuffledQuestions.length - 1) { currentQ++; loadQuestion(); } }
+function prevQuestion() { if (currentQ > 0) { currentQ--; loadQuestion(); } }
+
+// ===== पॅलेट =====
+function buildPalette() {
+  const p = document.getElementById('palette');
+  p.innerHTML = '';
+  shuffledQuestions.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'palette-btn';
+    btn.textContent = toMarathiNum(i + 1);
+    btn.onclick = () => { currentQ = i; loadQuestion(); };
+    p.appendChild(btn);
+  });
+  updatePalette();
+}
+function updatePalette() {
+  document.querySelectorAll('.palette-btn').forEach((btn, i) => {
+    btn.classList.remove('answered', 'current');
+    if (userAnswers[i] !== null) btn.classList.add('answered');
+    if (i === currentQ) btn.classList.add('current');
+  });
+}
+
+// ===== फिनिश बटण =====
+function finishExam() {
+  const answered = userAnswers.filter(a => a !== null).length;
+  if (answered < shuffledQuestions.length) {
+    if (!confirm(`तुम्ही ${toMarathiNum(answered)} प्रश्नांची उत्तरे दिली आहेत. बाकीचे वगळून परीक्षा संपवायची?`)) return;
+  }
+  clearInterval(timerInterval);
+  showResult();
+}
+
+// ===== निकाल दाखवणे =====
+function showResult() {
+  document.getElementById('examScreen').classList.add('hidden');
+  document.getElementById('progressContainer').classList.add('hidden');
+  const result = document.getElementById('resultScreen');
+  result.classList.remove('hidden');
+
+  let score = 0;
+  let attempted = 0;
+  let wrong = 0;
+
+  userAnswers.forEach((a, i) => {
+    if (a !== null) {
+      attempted++;
+      if (a === shuffledQuestions[i].correct) score++;
+      else wrong++;
+    }
+  });
+
+  let skipped = shuffledQuestions.length - attempted;
+  const pct = Math.round((score / shuffledQuestions.length) * 100);
+
+  // Score Circle
+  const circle = document.getElementById('scoreCircle');
+  circle.className = 'score-circle ' + (pct >= 75 ? 'score-excellent' : pct >= 40 ? 'score-good' : 'score-poor');
+  circle.innerHTML = `<div>${toMarathiNum(pct)}%</div>`;
+
+  // Stats
+  document.getElementById('statCorrect').textContent = toMarathiNum(score);
+  document.getElementById('statWrong').textContent = toMarathiNum(wrong);
+  document.getElementById('statSkipped').textContent = toMarathiNum(skipped);
+  
+  // Time
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const m = Math.floor(elapsed / 60);
+  const s = elapsed % 60;
+  document.getElementById('statTime').textContent = `${toMarathiNum(String(m).padStart(2,'0'))}:${toMarathiNum(String(s).padStart(2,'0'))}`;
+
+  // Motivational Message
+  const msgEl = document.getElementById('motivationMsg');
+  if (pct >= 75) {
+    msgEl.innerHTML = "🌟 उत्कृष्ट कामगिरी! तुम्ही खरोखरच अव्वल आहात. असेच कायम राहा!";
+  } else if (pct >= 50) {
+    msgEl.innerHTML = "👏 अतिशय चांगले! थोडक्याच मेहनतीने तुम्ही तुमचे ध्येय गाठाल. शाबास!";
+  } else if (pct >= 35) {
+    msgEl.innerHTML = "📚 चांगला प्रयत्न! पुन्हा सराव केल्यास तुम्ही नक्कीच अधिक चांगले कराल.";
+  } else {
+    msgEl.innerHTML = "💪 निराश होऊ नका. चुका तपासा आणि पुन्हा प्रयत्न करा. यश नक्कीच मिळेल!";
+  }
+
+  // Review
+  const labels = ['अ','ब','क','ड'];
+  const review = document.getElementById('reviewContainer');
+  review.innerHTML = '';
+  shuffledQuestions.forEach((q, i) => {
+    const ua = userAnswers[i];
+    const isCorrect = ua === q.correct;
+    const isSkipped = ua === null;
+    const noAnswer = q.correct === -1;
+    
+    let statusColor = isCorrect ? '#28a745' : (isSkipped ? '#6c757d' : '#dc3545');
+    let statusText = isCorrect ? '✅ बरोबर' : (isSkipped ? '— वगळले' : '❌ चूक');
+
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.style.borderLeft = `4px solid ${statusColor}`;
+    
+    let userAnsHtml = isSkipped ? 'उत्तर दिले नाही' : `${labels[ua]}) ${q.options[ua]}`;
+    let correctAnsHtml = noAnswer ? '<i>उपलब्ध नाही</i>' : `${labels[q.correct]}) ${q.options[q.correct]}`;
+
+    div.innerHTML = `
+      <div class="review-q">${toMarathiNum(i+1)}. ${q.question.replace(/\n/g, '<br>')}</div>
+      <div class="review-ans" style="color:${statusColor}; font-weight:600;">तुमचे उत्तर: ${userAnsHtml} (${statusText})</div>
+      ${!isCorrect && !noAnswer ? `<div class="review-ans" style="color:#28a745;">योग्य उत्तर: ${correctAnsHtml}</div>` : ''}
+    `;
+    review.appendChild(div);
+  });
+}
+</script>
+</body>
+</html>
