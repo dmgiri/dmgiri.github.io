@@ -1,598 +1,777 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="mr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#111827">
-  <title>MPSC Group C Mains 2023 — Paper 1</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg-1:#07111f;
-      --bg-2:#172554;
-      --glass:rgba(255,255,255,.10);
-      --glass-strong:rgba(255,255,255,.16);
-      --line:rgba(255,255,255,.17);
-      --text:#f8fafc;
-      --muted:#b8c4d8;
-      --blue:#6ee7ff;
-      --violet:#a78bfa;
-      --green:#4ade80;
-      --red:#fb7185;
-      --amber:#fbbf24;
-      --shadow:0 24px 70px rgba(0,0,0,.34);
-    }
+<meta charset="UTF-8">
+<title>इंटरअॅक्टिव्ह एक्झाम पोर्टल</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --text-light: #ffffff;
+    --text-dark: #1a1a2e;
+    --accent-color: #6a89ff;
+    --success-color: #2ecc71;
+    --danger-color: #e74c3c;
+  }
 
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body {
-      margin:0;
-      min-height:100vh;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Devanagari",sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(34,211,238,.24), transparent 31rem),
-        radial-gradient(circle at 92% 22%, rgba(139,92,246,.26), transparent 32rem),
-        radial-gradient(circle at 55% 95%, rgba(59,130,246,.18), transparent 35rem),
-        linear-gradient(145deg,var(--bg-1),var(--bg-2));
-      background-attachment:fixed;
-      overflow-x:hidden;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body::before, body::after {
-      content:"";
-      position:fixed;
-      z-index:-1;
-      border-radius:999px;
-      filter:blur(2px);
-      opacity:.65;
-      animation:float 11s ease-in-out infinite;
-    }
-    body::before { width:220px;height:220px;left:-65px;top:40%;background:rgba(103,232,249,.14); }
-    body::after { width:280px;height:280px;right:-120px;bottom:-30px;background:rgba(196,181,253,.13);animation-delay:-5s; }
-    @keyframes float { 50% { transform:translate3d(16px,-18px,0) scale(1.05); } }
+  body {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    color: var(--text-light);
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
 
-    button { font:inherit; }
-    .glass {
-      background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.07));
-      border:1px solid var(--line);
-      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.13);
-      backdrop-filter:blur(24px) saturate(150%);
-      -webkit-backdrop-filter:blur(24px) saturate(150%);
-    }
+  /* Liquid Blobs Background */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    z-index: -1;
+    animation: floatBlob 15s infinite ease-in-out;
+  }
+  .blob-1 { width: 500px; height: 500px; background: #ff00cc; top: -150px; left: -150px; }
+  .blob-2 { width: 400px; height: 400px; background: #3333ff; bottom: -100px; right: -100px; animation-delay: -5s; }
+  .blob-3 { width: 300px; height: 300px; background: #00ff99; top: 40%; left: 50%; animation-delay: -10s; }
 
-    .topbar {
-      position:sticky;
-      top:0;
-      z-index:20;
-      display:flex;
-      align-items:center;
-      gap:14px;
-      padding:12px max(16px,calc((100vw - 1180px)/2));
-      border-width:0 0 1px;
-      border-radius:0;
-    }
-    .brand { min-width:0;flex:1; }
-    .brand strong { display:block;font-size:clamp(.94rem,2.8vw,1.12rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
-    .brand span { color:var(--muted);font-size:.76rem; }
-    .timer {
-      display:flex;
-      align-items:center;
-      gap:7px;
-      padding:8px 11px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(5,12,26,.32);
-      font-weight:800;
-      font-variant-numeric:tabular-nums;
-    }
-    .timer.warning { color:#fde68a;border-color:rgba(251,191,36,.45); }
-    .timer.danger { color:#fecdd3;border-color:rgba(251,113,133,.55);animation:pulse 1.2s infinite; }
-    @keyframes pulse { 50% { opacity:.7; } }
+  @keyframes floatBlob {
+    0%, 100% { transform: translate(0, 0) scale(1); border-radius: 50%; }
+    33% { transform: translate(80px, -50px) scale(1.1); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    66% { transform: translate(-50px, 60px) scale(0.9); border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  }
 
-    .layout {
-      width:min(1180px,100%);
-      margin:0 auto;
-      padding:22px 16px 116px;
-      display:grid;
-      grid-template-columns:minmax(0,1fr) 300px;
-      gap:20px;
-    }
-    main { min-width:0; }
+  .container { width: 100%; max-width: 900px; z-index: 1; }
 
-    .progress-shell {
-      padding:14px 16px;
-      border-radius:20px;
-      margin-bottom:16px;
-    }
-    .progress-labels { display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-size:.84rem;margin-bottom:9px; }
-    .progress-track { height:8px;background:rgba(255,255,255,.10);border-radius:999px;overflow:hidden; }
-    .progress-fill { height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:inherit;transition:width .3s ease; }
+  /* Glass Cards */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+  }
 
-    .question-card { border-radius:28px;padding:clamp(20px,4vw,34px);min-height:520px; }
-    .q-head { display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px; }
-    .q-number {
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 13px;border-radius:999px;
-      background:rgba(110,231,255,.11);border:1px solid rgba(110,231,255,.25);
-      color:#cffafe;font-weight:800;font-size:.88rem;
-    }
-    .mark-btn {
-      border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--muted);
-      border-radius:999px;padding:9px 13px;cursor:pointer;transition:.18s ease;
-    }
-    .mark-btn.active { color:#fff7cc;background:rgba(251,191,36,.16);border-color:rgba(251,191,36,.5); }
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
+  }
+  .header h1 { font-size: 24px; font-weight: 700; color: var(--text-light); text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  .timer {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
 
-    .passage {
-      margin:0 0 20px;
-      border:1px solid var(--line);
-      background:rgba(2,6,23,.25);
-      border-radius:18px;
-      overflow:hidden;
-    }
-    .passage summary { cursor:pointer;padding:14px 16px;font-weight:800;color:#dbeafe; }
-    .passage div { max-height:270px;overflow:auto;padding:0 16px 16px;color:#d5deec;white-space:pre-line;line-height:1.65;font-size:.94rem; }
+  /* Progress Bar */
+  .progress-container { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 15px; overflow: hidden; }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #00c6ff, #0072ff); width: 0%; transition: width 0.4s ease; border-radius: 10px; }
 
-    .question-text { margin:0 0 24px;font-size:clamp(1.08rem,3.2vw,1.38rem);line-height:1.65;white-space:pre-line;font-weight:700; }
-    .options { display:grid;gap:12px; }
-    .option {
-      width:100%;display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:12px;
-      text-align:left;color:var(--text);padding:14px 16px;border-radius:18px;
-      border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.065);
-      cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease;
-      line-height:1.45;
-    }
-    .option:hover { transform:translateY(-1px);border-color:rgba(110,231,255,.48);background:rgba(110,231,255,.09); }
-    .option:focus-visible,.btn:focus-visible,.mark-btn:focus-visible,.nav-dot:focus-visible { outline:3px solid rgba(110,231,255,.55);outline-offset:2px; }
-    .letter { width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.10);font-weight:900; }
-    .option.selected { border-color:rgba(110,231,255,.7);background:rgba(14,165,233,.13); }
-    .option.correct { border-color:rgba(74,222,128,.75);background:rgba(34,197,94,.14); }
-    .option.wrong { border-color:rgba(251,113,133,.78);background:rgba(244,63,94,.14); }
-    .state-icon { min-width:24px;text-align:center;font-weight:900;font-size:1.1rem; }
-    .correct .state-icon { color:var(--green); }
-    .wrong .state-icon { color:var(--red); }
+  /* Start Screen */
+  .start-screen, .result-screen { text-align: center; padding: 40px; }
+  .start-screen h2, .result-screen h2 { font-size: 28px; margin-bottom: 10px; }
+  .start-screen p { color: rgba(255,255,255,0.8); margin-bottom: 20px; }
+  .instructions { text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px solid var(--glass-border); }
+  .instructions ul { margin: 8px 0; padding-left: 22px; }
+  .instructions li { margin-bottom: 8px; color: rgba(255,255,255,0.9); }
 
-    .feedback {
-      display:none;margin-top:16px;padding:13px 15px;border-radius:16px;line-height:1.45;font-weight:700;
-    }
-    .feedback.show { display:block; }
-    .feedback.good { color:#dcfce7;background:rgba(34,197,94,.12);border:1px solid rgba(74,222,128,.35); }
-    .feedback.bad { color:#ffe4e6;background:rgba(244,63,94,.12);border:1px solid rgba(251,113,133,.35); }
-    .feedback.cancelled { color:#fef3c7;background:rgba(245,158,11,.12);border:1px solid rgba(251,191,36,.35); }
+  /* Question Screen */
+  .q-progress { color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 10px; font-weight: 600; }
+  .passage-box {
+    background: rgba(0,0,0,0.2);
+    border-left: 4px solid var(--accent-color);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .question { font-size: 20px; font-weight: 600; margin-bottom: 20px; line-height: 1.6; white-space: pre-line; color: #fff; }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #fff;
+    white-space: pre-line;
+    user-select: none;
+  }
+  .option:hover:not(.disabled) {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  .option.disabled { cursor: not-allowed; }
+  .option.correct {
+    background: rgba(46, 204, 113, 0.4);
+    border-color: var(--success-color);
+    color: #fff;
+    font-weight: 700;
+  }
+  .option.wrong {
+    background: rgba(231, 76, 60, 0.4);
+    border-color: var(--danger-color);
+    color: #fff;
+    font-weight: 700;
+  }
+  .option .badge {
+    min-width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 14px; flex-shrink: 0;
+  }
+  .option.correct .badge { background: var(--success-color); color: #fff; }
+  .option.wrong .badge { background: var(--danger-color); color: #fff; }
 
-    .controls { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px; }
-    .btn {
-      border:1px solid var(--line);border-radius:16px;padding:13px 16px;color:var(--text);font-weight:850;
-      background:rgba(255,255,255,.08);cursor:pointer;transition:.18s ease;
-    }
-    .btn:hover { transform:translateY(-1px);background:rgba(255,255,255,.13); }
-    .btn.primary { border-color:transparent;background:linear-gradient(135deg,#0891b2,#7c3aed);box-shadow:0 12px 30px rgba(8,145,178,.22); }
-    .btn.danger { background:rgba(244,63,94,.14);border-color:rgba(251,113,133,.38); }
-    .btn:disabled { opacity:.4;cursor:not-allowed;transform:none; }
+  /* Feedback */
+  .feedback {
+    margin-top: 15px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    display: none;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .feedback.show { display: block; }
+  .feedback.right { background: rgba(46, 204, 113, 0.2); color: #fff; border: 1px solid var(--success-color); }
+  .feedback.wrong { background: rgba(231, 76, 60, 0.2); color: #fff; border: 1px solid var(--danger-color); }
+  .feedback.cancelled { background: rgba(255, 165, 0, 0.2); color: #fff; border: 1px solid orange; }
 
-    aside { position:sticky;top:86px;align-self:start;border-radius:24px;padding:18px;max-height:calc(100vh - 108px);overflow:auto; }
-    .aside-head { display:flex;justify-content:space-between;align-items:center;margin-bottom:14px; }
-    .aside-head strong { font-size:1rem; }
-    .stats-row { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px; }
-    .mini-stat { padding:10px 6px;border-radius:14px;background:rgba(255,255,255,.06);text-align:center;border:1px solid rgba(255,255,255,.09); }
-    .mini-stat b { display:block;font-size:1.05rem; }
-    .mini-stat span { color:var(--muted);font-size:.66rem; }
-    .navigator { display:grid;grid-template-columns:repeat(5,1fr);gap:8px; }
-    .nav-dot {
-      aspect-ratio:1;border:1px solid rgba(255,255,255,.13);border-radius:11px;background:rgba(255,255,255,.055);
-      color:var(--muted);font-weight:800;cursor:pointer;
-    }
-    .nav-dot.current { border-color:var(--blue);color:white;box-shadow:0 0 0 2px rgba(110,231,255,.14); }
-    .nav-dot.answered { color:#d1fae5;background:rgba(34,197,94,.16);border-color:rgba(74,222,128,.34); }
-    .nav-dot.wrong-answer { color:#ffe4e6;background:rgba(244,63,94,.15);border-color:rgba(251,113,133,.34); }
-    .nav-dot.review { box-shadow:inset 0 -4px 0 var(--amber); }
-    .nav-dot.cancelled { color:#fef3c7;background:rgba(245,158,11,.12); }
-    .legend { display:flex;flex-wrap:wrap;gap:9px;margin:14px 0;color:var(--muted);font-size:.72rem; }
-    .legend i { width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px; }
-    .submit-wide { width:100%;margin-top:4px; }
+  /* Controls */
+  .controls { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-top: 25px; }
+  
+  /* Buttons */
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(4px);
+  }
+  .btn:hover:not(:disabled) { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  
+  .btn-primary { background: linear-gradient(45deg, #0072ff, #00c6ff); border: none; }
+  .btn-success { background: linear-gradient(45deg, #ff512f, #dd2476); border: none; width: 100%; margin-top: 20px; font-size: 18px; padding: 15px; }
+  .btn-confirm { background: linear-gradient(45deg, #f7971e, #ffd200); color: #000; animation: pulse 1s infinite; }
 
-    .mobile-dock {
-      display:none;position:fixed;z-index:18;bottom:0;left:0;right:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-      background:rgba(5,11,24,.74);border-top:1px solid var(--line);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
-    }
-    .dock-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:680px;margin:auto; }
+  @keyframes pulse {
+    0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); }
+  }
 
-    dialog {
-      width:min(540px,calc(100% - 28px));border:1px solid var(--line);border-radius:26px;padding:0;color:var(--text);
-      background:linear-gradient(145deg,rgba(14,26,49,.96),rgba(28,22,61,.96));box-shadow:0 30px 100px rgba(0,0,0,.55);
-    }
-    dialog::backdrop { background:rgba(1,5,15,.72);backdrop-filter:blur(7px); }
-    .modal-body { padding:24px; }
-    .modal-body h2 { margin:0 0 6px;font-size:1.55rem; }
-    .modal-body > p { color:var(--muted);margin:0 0 20px; }
-    .result-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0; }
-    .result { padding:15px;border:1px solid var(--line);background:rgba(255,255,255,.07);border-radius:17px; }
-    .result b { display:block;font-size:1.45rem; }
-    .result span { color:var(--muted);font-size:.78rem; }
-    .score-card { text-align:center;padding:18px;border-radius:20px;background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(124,58,237,.22));border:1px solid rgba(110,231,255,.25); }
-    .score-card strong { display:block;font-size:2.25rem; }
-    .modal-actions { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px; }
+  /* Palette */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .palette-btn {
+    width: 40px; height: 40px; border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.1);
+    cursor: pointer;
+    font-weight: bold;
+    color: #fff;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .palette-btn:hover { background: rgba(255,255,255,0.2); }
+  .palette-btn.answered { background: linear-gradient(45deg, #2ecc71, #27ae60); border: none; }
+  .palette-btn.cancelled { background: rgba(255, 165, 0, 0.5); border: none; cursor: not-allowed; }
+  .palette-btn.current { border: 2px solid #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
-    .start-screen { position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:18px;background:linear-gradient(145deg,#07111f,#172554); }
-    .start-screen.hidden { display:none; }
-    .start-card { width:min(560px,100%);padding:clamp(24px,6vw,42px);border-radius:30px;text-align:center; }
-    .start-badge { width:70px;height:70px;margin:0 auto 20px;display:grid;place-items:center;border-radius:22px;background:linear-gradient(135deg,#06b6d4,#7c3aed);font-size:1.5rem;font-weight:950;box-shadow:0 16px 40px rgba(34,211,238,.22); }
-    .start-card h1 { margin:0 0 10px;font-size:clamp(1.55rem,6vw,2.35rem); }
-    .start-card p { color:var(--muted);line-height:1.6;margin:0 auto 22px;max-width:46ch; }
-    .exam-meta { display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:22px 0; }
-    .exam-meta div { padding:13px 5px;border-radius:15px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1); }
-    .exam-meta b { display:block; }
-    .exam-meta span { color:var(--muted);font-size:.72rem; }
-    .start-card .btn { width:100%; }
-    .source-note { margin-top:12px!important;font-size:.75rem; }
+  /* Result Screen */
+  .score-circle {
+    width: 160px; height: 160px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin: 20px auto;
+    color: #fff;
+    font-size: 42px;
+    font-weight: 800;
+    box-shadow: 0 0 30px rgba(106, 137, 255, 0.5);
+  }
+  .score-excellent { background: linear-gradient(135deg, #2ecc71, #20c997); }
+  .score-good { background: linear-gradient(135deg, #0072ff, #00c6ff); }
+  .score-poor { background: linear-gradient(135deg, #e74c3c, #dd2476); }
 
-    @media (max-width:850px) {
-      .layout { grid-template-columns:1fr;padding-top:15px; }
-      aside { display:none; }
-      .mobile-dock { display:block; }
-      .question-card { min-height:auto;border-radius:23px; }
-      .topbar { padding-left:14px;padding-right:14px; }
-    }
-    @media (max-width:480px) {
-      .brand span { display:none; }
-      .timer { padding:7px 9px;font-size:.85rem; }
-      .question-card { padding:18px 15px; }
-      .option { grid-template-columns:34px 1fr auto;padding:12px 11px;gap:9px;border-radius:16px; }
-      .letter { width:32px;height:32px;border-radius:10px; }
-      .q-head { align-items:flex-start; }
-      .mark-btn { font-size:.77rem; }
-      .controls { gap:9px; }
-    }
-    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important;transition:none!important;scroll-behavior:auto!important; } }
-  </style>
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px; margin: 20px 0;
+  }
+  .stat-box {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid var(--glass-border);
+  }
+  .stat-box h3 { margin: 0; font-size: 36px; font-weight: 800; color: #fff; }
+  .stat-box p { margin: 5px 0 0 0; color: rgba(255,255,255,0.7); font-size: 14px; }
+
+  .motivation-msg {
+    font-size: 18px; font-weight: 600; margin: 20px 0;
+    padding: 15px; background: rgba(255,255,255,0.1); border-radius: 15px; color: #fff;
+  }
+
+  /* Review */
+  .review-container {
+    max-height: 600px; overflow-y: auto;
+    border: 1px solid var(--glass-border); border-radius: 15px; padding: 15px;
+    background: rgba(0,0,0,0.1);
+  }
+  .review-item {
+    text-align: left; border: 1px solid var(--glass-border); border-radius: 12px;
+    padding: 15px; margin: 12px 0; background: rgba(255,255,255,0.05);
+  }
+  .review-q { font-weight: 600; margin-bottom: 8px; color: #fff; white-space: pre-line; }
+  .review-ans { font-size: 14px; margin: 4px 0; color: rgba(255,255,255,0.8); }
+
+  .hidden { display: none !important; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.5); }
+
+</style>
 </head>
 <body>
-  <section id="startScreen" class="start-screen">
-    <div class="start-card glass">
-      <div class="start-badge">A</div>
-      <h1>MPSC Group C Mains 2023</h1>
-      <p>Paper 1 — Marathi &amp; English. Choose an option to see instant feedback. Your progress stays saved on this device.</p>
-      <div class="exam-meta">
-        <div><b>100</b><span>Questions</span></div>
-        <div><b>60 min</b><span>Duration</span></div>
-        <div><b>200</b><span>Marks</span></div>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header glass">
+      <h1>ऑनलाइन टेस्ट पोर्टल</h1>
+      <div class="timer" id="timer">⏱ ००:००:००</div>
+      <div class="progress-container hidden" id="progressContainer" style="width: 100%;">
+        <div class="progress-bar" id="progressBar"></div>
       </div>
-      <button id="startBtn" class="btn primary">Start exam</button>
-      <button id="resumeBtn" class="btn" style="margin-top:10px;display:none">Resume saved exam</button>
-      <p class="source-note">Set A · Final key · 2 cancelled questions</p>
     </div>
-  </section>
 
-  <header class="topbar glass">
-    <div class="brand">
-      <strong>MPSC Group C Mains 2023</strong>
-      <span>Paper 1 · Set A · Marathi &amp; English</span>
+    <!-- Start Screen -->
+    <div class="glass start-screen" id="startScreen">
+      <h2>सराव परीक्षा (Glassmorphism UI)</h2>
+      <p>एकूण १०० प्रश्न (मराठी व इंग्रजी मिश्रित)</p>
+      <div class="instructions">
+        <strong>📖 सूचना:</strong>
+        <ul>
+          <li>परीक्षा सुरू झाल्यावर प्रश्न व पर्याय आपोआप शफल (Random) होतील.</li>
+          <li>एक पर्याय निवडल्यावर योग्य उत्तर लगेच हिरव्या रंगात दाखवले जाईल.</li>
+          <li>चुकीचे उत्तर निवडल्यास ते लाल रंगात दिसेल.</li>
+          <li>परीक्षेमध्ये काही प्रश्न रद्द (Cancelled) करण्यात आले आहेत, त्यांचे गुण आपोआप मिळतील.</li>
+          <li>तुम्ही "परीक्षा संपवा" बटणावर दोन वेळा क्लिक करून परीक्षा आधीच संपवू शकता.</li>
+        </ul>
+      </div>
+      <button class="btn btn-primary" onclick="startExam()">परीक्षा सुरू करा</button>
     </div>
-    <div id="timer" class="timer" aria-label="Time remaining">◷ <span>60:00</span></div>
-  </header>
 
-  <div class="layout">
-    <main>
-      <section class="progress-shell glass" aria-label="Exam progress">
-        <div class="progress-labels"><span id="progressText">0 of 98 active questions answered</span><span id="progressPercent">0%</span></div>
-        <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
-      </section>
-
-      <article class="question-card glass">
-        <div class="q-head">
-          <span id="questionNumber" class="q-number">Question 1 of 100</span>
-          <button id="markBtn" class="mark-btn" type="button">☆ Mark for review</button>
-        </div>
-        <details id="passageBox" class="passage" hidden>
-          <summary>Reading passage for questions 96–100</summary>
-          <div id="passageText"></div>
-        </details>
-        <h2 id="questionText" class="question-text"></h2>
-        <div id="options" class="options"></div>
-        <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
-      </article>
-
+    <!-- Exam Screen -->
+    <div class="glass hidden" id="examScreen">
+      <div class="q-progress" id="progressText"></div>
+      
+      <div class="passage-box hidden" id="passageBox"></div>
+      
+      <div class="question" id="questionText"></div>
+      <div class="options" id="optionsContainer"></div>
+      <div class="feedback" id="feedback"></div>
+      
       <div class="controls">
-        <button id="prevBtn" class="btn" type="button">← Previous</button>
-        <button id="nextBtn" class="btn primary" type="button">Next →</button>
+        <button class="btn" id="prevBtn" onclick="prevQuestion()">← मागील</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">पुढील →</button>
       </div>
-    </main>
+      
+      <hr style="margin: 20px 0; border: none; border-top: 1px solid rgba(255,255,255,0.2);">
+      <div class="q-progress">प्रश्न नकाशा (Question Palette):</div>
+      <div class="palette" id="palette"></div>
+      
+      <button class="btn btn-success" id="finishBtn" onclick="handleFinishClick()">परीक्षा संपवा (Finish Exam)</button>
+    </div>
 
-    <aside class="glass">
-      <div class="aside-head"><strong>Question navigator</strong><span id="sideCount">0/98</span></div>
-      <div class="stats-row">
-        <div class="mini-stat"><b id="answeredCount">0</b><span>Answered</span></div>
-        <div class="mini-stat"><b id="correctCount">0</b><span>Correct</span></div>
-        <div class="mini-stat"><b id="reviewCount">0</b><span>Review</span></div>
+    <!-- Result Screen -->
+    <div class="glass result-screen hidden" id="resultScreen">
+      <h2>परीक्षा पूर्ण झाली 🎉</h2>
+      <div class="score-circle" id="scoreCircle"></div>
+      <div class="motivation-msg" id="motivationMsg"></div>
+      
+      <div class="stats-grid">
+        <div class="stat-box"><h3 id="statCorrect">०</h3><p>बरोबर उत्तरे</p></div>
+        <div class="stat-box"><h3 id="statWrong">०</h3><p>चुकीची उत्तरे</p></div>
+        <div class="stat-box"><h3 id="statSkipped">०</h3><p>वगळलेले प्रश्न</p></div>
+        <div class="stat-box"><h3 id="statTime">००:००</h3><p>घेतलेला वेळ</p></div>
       </div>
-      <div id="navigator" class="navigator"></div>
-      <div class="legend">
-        <span><i style="background:#4ade80"></i>Correct</span>
-        <span><i style="background:#fb7185"></i>Incorrect</span>
-        <span><i style="background:#fbbf24"></i>Review</span>
-      </div>
-      <button id="submitBtn" class="btn primary submit-wide" type="button">Submit exam</button>
-      <button id="resetBtn" class="btn danger submit-wide" type="button">Reset attempt</button>
-    </aside>
-  </div>
 
-  <div class="mobile-dock">
-    <div class="dock-grid">
-      <button id="jumpBtn" class="btn" type="button">Questions</button>
-      <button id="mobileSubmitBtn" class="btn primary" type="button">Submit</button>
+      <div id="reviewSection" style="text-align: left;">
+        <h3>📋 उत्तरांचे परीक्षण (Review Answers):</h3>
+        <div class="review-container" id="reviewContainer"></div>
+      </div>
+      
+      <button class="btn btn-primary" style="margin-top: 20px;" onclick="location.reload()">पुन्हा परीक्षा द्या (Restart)</button>
     </div>
   </div>
 
-  <dialog id="resultDialog">
-    <div class="modal-body">
-      <h2>Exam summary</h2>
-      <p>Your final attempt statistics</p>
-      <div class="score-card"><span>Estimated score</span><strong id="scoreValue">0 / 196</strong><small>+2 correct · −0.5 incorrect</small></div>
-      <div class="result-grid">
-        <div class="result"><b id="resultCorrect">0</b><span>Correct</span></div>
-        <div class="result"><b id="resultWrong">0</b><span>Incorrect</span></div>
-        <div class="result"><b id="resultUnanswered">0</b><span>Unanswered</span></div>
-        <div class="result"><b id="resultAccuracy">0%</b><span>Accuracy</span></div>
-        <div class="result"><b id="resultReview">0</b><span>Marked review</span></div>
-        <div class="result"><b id="resultTime">00:00</b><span>Time used</span></div>
-      </div>
-      <div class="modal-actions">
-        <button id="closeDialog" class="btn" type="button">Review answers</button>
-        <button id="restartDialog" class="btn danger" type="button">Start again</button>
-      </div>
-    </div>
-  </dialog>
+<script>
+// ===== प्रश्न डेटा =====
+const rawQuestions = [
+  {id:1,question:`‘पत्नी’ या शब्दाला समानार्थी शब्द कोणता?`,options:[`धव`,`भर्ता`,`कान्ता`,`कलत्र`]},
+  {id:2,question:`‘वाईट कृत्य करणाऱ्याला ते उघडकीस येईल की काय याची सतत भीती वाटते’ या अर्थाची म्हण कोणती?`,options:[`बळी तो कान पिळी`,`चोराच्या मनात चांदणे`,`कर नाही त्याला डर कशाला`,`दिव्याखाली अंधार`]},
+  {id:3,question:`‘सोने’ या शब्दाला पर्यायी समानार्थी शब्द निवडा.\n(a) कनक  (b) सुवर्ण  (c) हेम  (d) कांचन`,options:[`फक्त (a) व (b) बरोबर`,`फक्त (a), (b) व (d) बरोबर`,`फक्त (c) व (d) बरोबर`,`सर्व पर्याय बरोबर`]},
+  {id:4,question:`खालीलपैकी देशी शब्दांचा शब्दगट ओळखा.`,options:[`तंबाखू, बशी, चावी, प्रीती`,`साबण, फणस, हापूस, कोबी`,`बाजरी, चिमणी, बोका, ओसरी`,`कागद, मिठाई, नोकरी, दवाखाना`]},
+  {id:5,question:`‘जो गरीब असतो त्याला केलेली गोष्ट नसते आणि ज्याला केलेली गोष्ट असते त्याला अनुकूलता नसते.’ या वाक्याचा प्रकार ओळखा.`,options:[`केवळ संयुक्त`,`मिश्र संयुक्त`,`मिश्र वाक्य`,`केवळ मिश्र संयुक्त`]},
+  {id:6,question:`दंड नसलेले व्यंजन शोधा.`,options:[`रक्त`,`कष्ट`,`अल्प`,`अर्पण`]},
+  {id:7,question:`‘हर्ष’ चा विरुद्धार्थी शब्द कोणता?`,options:[`आनंद`,`हानी`,`खेद`,`मोद`]},
+  {id:8,question:`‘आपली पाठ आपणास दिसत नाही’, या वाक्यातील ध्वन्यार्थ पुढे दिलेल्या पर्यायातून निवडा.`,options:[`दुसऱ्यांचे दोष दिसत नाहीत.`,`स्वतःचे दोष स्वतःला दिसत नाहीत.`,`स्वतःचे गुण स्वतःला दिसतात.`,`दुसऱ्यांचे गुण दिसतात.`]},
+  {id:9,question:`‘गोडवा’ हा शब्द कोणत्या नामाचा प्रकार आहे?`,options:[`सामान्यनाम`,`विशेषनाम`,`दर्शकनाम`,`भाववाचकनाम`]},
+  {id:10,question:`‘मी तुला रामकडून पाच रुपये देववीन’, या वाक्यातील क्रियापदाचा प्रकार ओळखा.`,options:[`भावकर्तृक क्रियापद`,`संयुक्त क्रियापद`,`प्रयोजक क्रियापद`,`सहाय क्रियापद`]},
+  {id:11,question:`‘पारध्याकडून मोर पकडला गेला’ या वाक्यातील प्रयोगाचा उपप्रकार ओळखा.`,options:[`कर्तरी`,`शक्य कर्मणी`,`कर्मकर्तरी`,`भावे`]},
+  {id:12,question:`समानार्थी शब्दांच्या जोड्या जुळवा.\n‘अ’: (a) अमृत, (b) पोपट, (c) अनल, (d) चंद्र\n‘ब’: (i) शुक, (ii) विस्तव, (iii) हिमांशू, (iv) सुधा`,options:[`(a)-(iv), (b)-(i), (c)-(ii), (d)-(iii)`,`(a)-(iv), (b)-(iii), (c)-(ii), (d)-(i)`,`(a)-(iii), (b)-(iv), (c)-(i), (d)-(ii)`,`(a)-(ii), (b)-(iii), (c)-(iv), (d)-(i)`]},
+  {id:13,question:`अफलातून, जुलूम, कबूल हे शब्द कोणत्या भाषेतील आहेत?`,options:[`इंग्रजी`,`पोर्तुगीज`,`फारसी`,`अरबी`]},
+  {id:14,question:`खालीलपैकी कोणते देवनागरी लिपीचे वैशिष्ट्य आहे?\n(a) वर्णमालेचे वैज्ञानिक वर्गीकरण\n(b) एक ध्वनी, एक लिपिचिन्ह\n(c) एक चिन्ह, एक ध्वनी\n(d) उच्चारण लेखनासाठी एकरूपता`,options:[`फक्त (a) व (b) बरोबर`,`सर्व पर्याय बरोबर`,`फक्त (c) व (d) बरोबर`,`फक्त (a), (b) व (c) बरोबर`]},
+  {id:15,question:`कल्याची किंवा कर्माची क्रियापदाशी अशी जी जुळणी, ठेवण किंवा रचना असते, तिला काय म्हणतात?`,options:[`विभक्ती`,`धातुसाधिते`,`आख्यात`,`प्रयोग`]},
+  {id:16,question:`‘मुंबईस जाताना खंडाळ्याजवळ उजाडले’ हे वाक्य कोणत्या प्रयोगाचे लक्षण आहे?`,options:[`मिश्र संकर प्रयोग`,`कर्मभाव संकर प्रयोग`,`भाव कर्तरी प्रयोग`,`कर्मणी प्रयोग`]},
+  {id:17,question:`यावर्षी बाजारात सूर्यफुलाची खूप आवक आहे. या वाक्यातील अधोरेखित शब्दाचा विरुद्धार्थी शब्द कोणता?`,options:[`संगम`,`जावक`,`आयात`,`आगम`]},
+  {id:18,question:`‘त्यांच्या मनात काहीतरी गौड आहे’ या वाक्यातील अधोरेखित शब्दासाठी अयोग्य अर्थ असणारा शब्द निवडा.`,options:[`दोष`,`व्यंग`,`व्याधी`,`रहस्य`]},
+  {id:19,question:`ज्या वाक्यातील क्रियापदाच्या रूपावरून अमुक केले असते तर अमुक झाले असते अशी अट किंवा संकेत असा अर्थ निघत असेल तर त्यास कोणत्या प्रकारचे वाक्य म्हणावे?`,options:[`संकेतार्थी`,`आज्ञार्थी`,`नकारार्थी`,`विधानार्थी`]},
+  {id:20,question:`खालील शब्दांपैकी कोणते सामान्यरूप चुकीचे आहे?`,options:[`घरात`,`येण्याचे`,`करणीत`,`फौजांनी`]},
+  {id:21,question:`‘उंचच्या उंच डोंगर चढताना लोंढे काकांच्या नाकी नऊ आले’ या विधानातील वाक्प्रचाराचा अर्थ सांगा.`,options:[`पायाला गोळे येणे`,`जीवात जीव येणे`,`जीव टांगणीला लागणे`,`प्राण कासावीस होणे`]},
+  {id:22,question:`“दुसऱ्याने आपल्या विरोधात तक्रार करण्यापूर्वी आपणच त्या विरोधात तक्रार करावी”, हा आशय स्पष्ट करणारी म्हण ओळखा.`,options:[`अटकळ्या देवा दंडवत`,`आदपाव भोपळा आणि अडीच शेर तेल`,`अवसबाई तुझ्याकडे, पुनवबाई तुझ्याकडे`,`अस्सलआधी आरोळी`]},
+  {id:23,question:`शब्दशः होणाऱ्या अर्थापेक्षा भिन्न व विशिष्ट अर्थाने रूढ होऊन बसलेल्या शब्दसमूहाला काय म्हणतात?`,options:[`विशेषण`,`वाक्प्रचार`,`शब्दशक्ती`,`शब्दजाती`]},
+  {id:24,question:`‘मुले मोजून पाहिली, पण ती वीसच भरली,’ वाक्याचा प्रकार ओळखा.`,options:[`केवळ वाक्य`,`संयुक्त वाक्य`,`मिश्र वाक्य`,`स्वार्थी वाक्य`]},
+  {id:25,question:`खालील शब्दसमूहांपैकी अंशाभ्यस्त शब्दसमूह ओळखा.`,options:[`गोलंबिला, आंबटचिंबट, उलटासुलटा`,`रानरान, खोलोखोल, मागोमाग`,`गडगडाट, घमघम, गदगद`,`पळापळ, डागमागणे, कडकडाट`]},
+  {id:26,question:`‘रसिक’ हा शब्द ______ आहे.`,options:[`उपसर्गघटित शब्द`,`अभ्यस्त शब्द`,`प्रत्ययघटित शब्द`,`सामासिक शब्द`]},
+  {id:27,question:`‘तप घालीत बसणे’, या वाक्प्रचाराचा अर्थ खालीलपैकी कोणता?`,options:[`तप करून बसणे`,`अंतर्मुख होऊन बसणे`,`तपश्चर्या करणे`,`प्रार्थना करणे`]},
+  {id:28,question:`पुढील शब्दांपैकी तत्सम शब्द ओळखा.`,options:[`उत्सव`,`पान`,`आग`,`विनंती`]},
+  {id:29,question:`‘अपमान केल्यास कुणाला राग येत नाही’ या वाक्याचे होकारार्थी वाक्य करा.`,options:[`अपमान केल्यास राग येणार नाही का?`,`अपमान केल्यास राग का येऊ नये?`,`अपमान केल्यास प्रत्येकाला राग येतोच.`,`अपमान केल्यास राग का यावा.`]},
+  {id:30,question:`‘तो उत्तीर्ण झाल्यामुळे सर्वांना आनंद झाला’, या वाक्याचा प्रकार ओळखा.`,options:[`संयुक्त वाक्य`,`केवळ वाक्य`,`प्रश्नार्थी वाक्य`,`उद्गारार्थी वाक्य`]},
+  {id:31,question:`बंडा देसायाच्या अकाली निधनानंतर वाड्यातल्या विहाडकरांचेच वाड्याचा ताबा मिळविला. या आशयाची योग्य म्हण ओळखा.`,options:[`चोराच्या मनात चांदणे`,`गोगलगाय पोटात पाय`,`आयत्या बिळावर नागोबा`,`थेंबे थेंबे तळे साचे`]},
+  {id:32,question:`‘आई बापासारखीच मुले असतात’ हा आशय स्पष्ट करणारी म्हण ओळखा.`,options:[`अनुभवाच्या खाणी`,`बाप बेटा सवाई`,`खाण तशी माती`,`घरोघरी मातीच्या चुली`]},
+  {id:33,question:`‘प्रथमग्रासे मक्षिकापातः’ या म्हणीचा अर्थ काय?`,options:[`पहिल्या घासाला मधमाशी सापडली.`,`एखादी चांगली गोष्ट सुरू होताच त्यात विघ्न येणे.`,`पहिल्या घासाला आनंद झाला.`,`पहिल्या घासाची चव चांगली असते.`]},
+  {id:34,question:`नामाच्या व सर्वनामाच्या ठिकाणी संख्या सुचविण्याचा धर्म असतो त्यास ______ म्हणतात.`,options:[`आख्यात`,`कारकार्थ`,`पूरक`,`वचन`]},
+  {id:35,question:`‘त्याने आपल्या मुलीला कालच सासरी पाठविलेन.’ या वाक्यातील प्रयोग ओळखा.`,options:[`कर्तृकर्म संकर`,`कर्तृकर्मभावे संकर`,`कर्मभावे संकर`,`कर्तृभावे संकर`]},
+  {id:36,question:`धातूला विविध प्रत्यय लागून क्रिया अपुरी दाखविणाऱ्या शब्दांना काय म्हणतात?`,options:[`धातू`,`धातुसाधिते`,`विशेषण`,`शक्य क्रियापदे`]},
+  {id:37,question:`‘मलिन’ या शब्दाच्या विरुद्धार्थी शब्दाचा खालीलपैकी कोणत्या वाक्यात उपयोग केला आहे?`,options:[`स्वच्छतेचे पालन करावे.`,`तो मळलेल्या कपड्यानिशी गावी गेला.`,`घाणेरड्या नजरेने तो माझ्याकडे पाहत होता.`,`निर्मळ अंतःकरणाने ती कधी वागलीच नाही.`]},
+  {id:38,question:`‘काल सकाळी बाजूच्या मैदानावर सचिन जोरात धावला’ हे वाक्य कोणत्या प्रकारचे आहे?`,options:[`विधेय विस्तार`,`कर्म विस्तार`,`कर्मपूरक`,`विधीपूरक`]},
+  {id:39,question:`‘शेतकऱ्यांना मिळणारे सरकारी कर्ज’, या शब्दसमूहासाठी योग्य पर्यायी शब्द निवडा.`,options:[`अनुदान`,`तगाई`,`सानुग्रह`,`धनादेश`]},
+  {id:40,question:`‘शिडीवर चढून डबा काढ’ या वाक्यातील अधोरेखित शब्द कोणत्या प्रकारचा आहे?`,options:[`क्रियाविशेषण अव्यय`,`शब्दयोगी अव्यय`,`उभयान्वयी अव्यय`,`विकल्पबोध अव्यय`]},
+  {id:41,question:`‘वेदांश हा प्रश्न विचारातच योग्य ते उत्तर ताबडतोब देणारा विद्यार्थी आहे,’ अधोरेखित शब्दसमूहासाठी एक शब्द सांगा.\n(a) स्थितबुद्धी (b) स्थितमती (c) हजरजबाबी (d) मनकवडा`,options:[`(a) आणि (b)`,`(b) आणि (d)`,`(c)`,`(d)`]},
+  {id:42,question:`देवी + औदार्य या पोटशब्दापासून तयार होणारा योग्य जोडशब्द ओळखा.`,options:[`देवदार्य`,`देवीदार्य`,`देवीऔदार्य`,`देव्यौदार्य`]},
+  {id:43,question:`खालील ‘होकारार्थी’ वाक्याचे ‘नकारार्थी’ वाक्य करा.\nया लोकांचे अज्ञान पाहून मला दुःख होते.`,options:[`या लोकांचे अज्ञान पाहून मला दुःख होत नाही.`,`या अज्ञानी लोकांचे काय होणार?`,`या अज्ञानी लोकांनी शिक्षण घ्यावे.`,`या लोकांचे अज्ञान पाहून मला सुख होत नाही.`]},
+  {id:44,question:`उद्देशाचे प्रथमोपस्थित संघटक कोणते?`,options:[`मूळ उद्देश्य व मूळ विधेय`,`मूळ उद्देश्य व विधेयविस्तार`,`विधेयविस्तार व विधेयपूरक`,`मूळ उद्देश्य व उद्देश्यविस्तार`]},
+  {id:45,question:`‘______ जगले तरच भविष्यात प्राणवायू मिळणार आहे.’ या वाक्यातील रिकाम्या जागी तत्सम शब्दाचा वापर करा.`,options:[`झाड`,`वृक्ष`,`रोप`,`वेल`]},
+  {id:46,question:`भाषेचे अंतिम उपयोजन कोणते?`,options:[`धर्मप्रसार`,`साहित्यनिर्मिती`,`दैनंदिन व्यवहार`,`प्रशासकीय व्यवहार`]},
+  {id:47,question:`प्रारंभी युरोपीय राष्ट्रवादाचे मूलाधार कोणते होते?`,options:[`लोकभाषा व वाङ्मयनिर्मिती`,`भाषांतरे आणि संस्कृती`,`भाषा, वंश आणि संस्कृती`,`भौगोलिकता, धार्मिकता आणि भाषा`]},
+  {id:48,question:`कोणत्याही समाजाला राष्ट्र ही पात्रता प्राप्त होण्यासाठी कोणती गोष्ट आवश्यक असते?`,options:[`साहित्यनिर्मिती करण्याची क्षमता`,`धर्म आणि देवत कल्पना`,`लोकभाषा व संस्कृती`,`भाषांतर करण्याची क्षमता`]},
+  {id:49,question:`सांस्कृतिक संक्रमणाचे महत्त्वाचे माध्यम कोणते?`,options:[`राष्ट्रवाद`,`वंश`,`धर्म`,`भाषा`]},
+  {id:50,question:`वेगवेगळ्या धर्मचिंतकांनी धर्मचिंतनासाठी कोणत्या भाषेचा आधार घेतला?`,options:[`वैदिक भाषा`,`संस्कृत भाषा`,`प्रमाण भाषा`,`लोकभाषा`]},
+  {id:51,question:`It is always desirable / to listen to the advice / who have extensive practical experience / No error. Spot the error in the sentence.`,options:[`(a)`,`(b)`,`(c)`,`(d)`]},
+  {id:52,question:`Select the grammatically correct sentence/s.\n(a) Neither did men nor women go out at night.\n(b) Not only the kitten was wet but cold also.\n(c) No sooner does the curtain go up when the children watch the play closely.`,options:[`Only (a)`,`Only (b)`,`Only (a) and (b)`,`Only (c)`]},
+  {id:53,question:`______ pronouns are always singular. Which of the following correctly fills in the blank?\n(a) Reciprocal (b) Relative (c) Personal (d) Distributive`,options:[`(c) only`,`(a) only`,`(d) only`,`both (b) and (d)`]},
+  {id:54,question:`Choose the idiom that means “to reveal a secret or confidential information”.`,options:[`Break the ice.`,`Let the cat out of the bag.`,`Bite the bullet.`,`Hit the nail on the head.`]},
+  {id:55,question:`Choose the correct sentences:\n(a) Try and come tomorrow.\n(b) I felt sure he would die and his money would go to his son.\n(c) The pundit read the first mantra and the bridegroom read the second.`,options:[`(c) only`,`(b) only`,`(b) and (c) only`,`(a), (b) and (c)`]},
+  {id:56,question:`Find the correct indirect speech sentence for: He said, “I shall go home.”`,options:[`He says that he shall go home.`,`He said that he shall go home.`,`He said that he would go home.`,`He says that he would go home.`]},
+  {id:57,question:`Had he not sent money on time, the poor farmer ______ his son? Select the correct alternative.`,options:[`would lost`,`would have lost`,`would have been lost`,`will have lost`]},
+  {id:58,question:`Fill in the blank. Many people are painting ______.`,options:[`white their houses these days`,`these days white their houses`,`their houses white these days`,`their houses these days white`]},
+  {id:59,question:`After years of guilt, she finally decided to make a clean breast of her involvement in the scandal and confessed everything to the authorities. What does “make a clean breast of” mean?`,options:[`To clean something thoroughly`,`To reveal or confess something`,`To make heartfelt apology`,`To face the consequences of one’s actions`]},
+  {id:60,question:`Identify the sentence/s with adverbial clause.\n(a) The doctor advised his patient where he should go for a holiday.\n(b) The judge wondered who had committed the crime.\n(c) It is a pity that you couldn’t come.\n(d) Although aeroplanes sometimes crash, accidents are rare.`,options:[`Only (a) and (c)`,`Only (b) and (d)`,`Only (a) and (b)`,`Only (d)`]},
+  {id:61,question:`Fill in the blank: “Manisha will ______ the prize which is declared yesterday.”`,options:[`Except`,`Accept`,`Acsept`,`Exept`]},
+  {id:62,question:`Find the correct option of the question tag for “They will fail.”\n(a) They will fail, will they?\n(b) They will fail, would they?\n(c) They will fail, won’t they?\n(d) They will fail, will not they?`,options:[`(a) and (b)`,`(b) and (d)`,`(c) and (d)`,`Only (c)`]},
+  {id:63,question:`“I knew that he was ill, but I did not know that he suffered from cancer.” The sentence exemplifies:`,options:[`Compound sentence`,`Compound-Complex sentence`,`Complex sentence`,`Simple sentence`]},
+  {id:64,question:`Choose the correct sentences:\n(a) Can you tell me why you’re interested in an administrative career?\n(b) Can you tell me why you are late?\n(c) Do you think does your name indicate your personality?`,options:[`(c) only`,`(a) and (b) only`,`(b) and (c) only`,`(a), (b) and (c)`]},
+  {id:65,question:`Fill in the blanks with the correct pair of articles: ______ death of the Prime Minister is being grieved by many people in ______ UK.`,options:[`the, an`,`the, the`,`a, an`,`a, the`]},
+  {id:66,question:`Choose the correct idiom: The President was ______ and lived beyond his tenure.`,options:[`hale and hearty`,`quite a catch`,`talking by the dozen`,`head over heels`]},
+  {id:67,question:`Choose the correct meaning of the underlined word: “The staff members are conversant with the issues.”`,options:[`Frosty`,`Unfriendly`,`Unknown`,`Familiar`]},
+  {id:68,question:`Select the correct meaning of the idiom: “My father burnt his fingers by interfering in his neighbour’s affair.”`,options:[`Got opportunity for revenge`,`Got himself into trouble`,`Got injury on fingers`,`Got worried for his fingers`]},
+  {id:69,question:`Choose the word closest to the opposite in meaning of “pragmatic” in: “The leader was pragmatic in his approach to the peoples’ problems.”`,options:[`Indefinite`,`Vague`,`Optimistic`,`Idealistic`]},
+  {id:70,question:`Identify the correct sentences:\n(a) I met Renu after I had finished my work.\n(b) When I first seeing him, I thought he was a lawyer.\n(c) He joined after had his dinner.`,options:[`(a) only`,`(a) and (b) only`,`(a) and (c) only`,`(a), (b) and (c)`]},
+  {id:71,question:`Find out the meaning of the word “forever” as used in the following sentences:\n(a) She is forever interrupting the conversation.\n(b) She has left him forever.`,options:[`(a) Previously; (b) Currently`,`(a) Officially; (b) Previously`,`(a) Endlessly; (b) Permanently`,`(a) Permanently; (b) Endlessly`]},
+  {id:72,question:`Identify the form of the underlined verb in the sentence: “Swimming is a good exercise.”`,options:[`Infinitive`,`Gerund`,`Phrase`,`Clause`]},
+  {id:73,question:`Choose the correct meaning of “cut down” in the sentence: “The government must cut down its expenditure.”`,options:[`obtain`,`increase`,`reduce`,`stop`]},
+  {id:74,question:`Choose the correct reported speech of the following sentence:\nHe said, “I do not wish to see any of you; go away.”`,options:[`He said that he did not wish to see any of them and ordered them to go away.`,`He told that he did not wish to see any one of them and punished them to went away.`,`He exclaimed them that he did not wish to see them and even told them to go away.`,`He said to them that he did not wish to see anyone of them and told them to go away.`]},
+  {id:75,question:`Choose the correct sequencing of the following sentence:\nThe students are\n(a) with the help\n(b) for last two hours\n(c) of the teacher\n(d) solving the questions`,options:[`(d), (c), (a), (b)`,`(d), (a), (c), (b)`,`(d), (a), (b), (c)`,`(d), (b), (c), (a)`]},
+  {id:76,question:`Choose the one-word substitute for “people living in the same age.”`,options:[`Delegate`,`Cosmopolitan`,`Curator`,`Contemporaries`]},
+  {id:77,question:`“After years of searching for answers, she had an epiphany and finally understood the true meaning of happiness.” Which phrase represents the word “epiphany”?`,options:[`A sudden realization or insight`,`A feeling of confusion or uncertainty`,`A state of complete contentment`,`A strong sense of empathy`]},
+  {id:78,question:`“He must be asleep for there is no light in his room.”\nThe underlined conjunction expresses ______ and hence is called ______ conjunction.\n(a) inference, illative\n(b) addition, copulative\n(c) contrast, adversative\n(d) choice, alternative`,options:[`(c) only`,`(a) only`,`(d) only`,`(b) only`]},
+  {id:79,question:`Everybody ______ speak the truth. Complete the sentence by choosing the correct alternative.`,options:[`should`,`would`,`will`,`may`]},
+  {id:80,question:`Match the following pairs with the correct meaning:\n(a) Ignorant — (ii) Uniformed\n(b) Imminent — (iv) Approaching\n(c) Obstinate — (i) Stubborn\n(d) Prudent — (iii) Wise`,options:[`(a)-(ii), (b)-(iv), (c)-(i), (d)-(iii)`,`(a)-(iii), (b)-(iv), (c)-(i), (d)-(ii)`,`(a)-(ii), (b)-(iii), (c)-(i), (d)-(iv)`,`(a)-(ii), (b)-(i), (c)-(iii), (d)-(iv)`]},
+  {id:81,question:`Choose the meaning of the underlined idiom: “How can you trust a man who plays fast and loose?”`,options:[`Corrupt nature`,`Who is not existing`,`Vicious`,`Says one thing and does another`]},
+  {id:82,question:`Which of the following is/are correct with respect to Relative Pronoun agreement?\n(a) It is I who am to blame.\n(b) It is I who is to blame.\n(c) It is me who is to blame.\n(d) It is I who is to be blamed.`,options:[`(b) only`,`both (a) and (d)`,`(a) only`,`(c) only`]},
+  {id:83,question:`Match the words from A with their correct meaning from B.\nA: (a) Annihilate, (b) Celibacy, (c) Indefatigable, (d) Somnambulist\nB: (i) One who walks in sleep, (ii) One incapable of being tired, (iii) The state of remaining unmarried, (iv) To destroy completely`,options:[`(a)-(i), (b)-(ii), (c)-(iii), (d)-(iv)`,`(a)-(ii), (b)-(i), (c)-(iii), (d)-(iv)`,`(a)-(iv), (b)-(i), (c)-(iii), (d)-(ii)`,`(a)-(iv), (b)-(iii), (c)-(ii), (d)-(i)`]},
+  {id:84,question:`Find the correct meaning of the underlined idiom: “Why are you hanging back? You sing as well as anyone else.”`,options:[`To hesitate to proceed`,`To repeat`,`To break the voice`,`To come late`]},
+  {id:85,question:`“If I had wings, I would come flying to you.” Which condition is expressed?\n(a) Impossible condition\n(b) Improbable condition\n(c) Probable condition\n(d) Likely condition`,options:[`(d) only`,`(a) only`,`(c) only`,`(b) only`]},
+  {id:86,question:`Select the idiom that means “to try to achieve something that is difficult or unlikely.”`,options:[`Turn over a new leaf`,`Throw in the towel`,`Beat the dead horse`,`Reach for the stars`]},
+  {id:87,question:`“Those who are ______ in the art of flattery make a rapid progress in their life.” Select the correct word.`,options:[`adopt`,`adept`,`adapt`,`about`]},
+  {id:88,question:`Find the correct meaning of the underlined idiom: “Unless a poet is in his element, he cannot write good poetry.”`,options:[`In his home`,`In his job`,`In his`,`In the right mood`]},
+  {id:89,question:`Match the following:\n(a) Demonstrative pronouns\n(b) Emphatic pronouns\n(c) Interrogative pronouns\n(d) Indefinite pronouns\n(i) myself, herself; (ii) what, which; (iii) anyone, everybody; (iv) This, that`,options:[`(a)-(iii), (b)-(i), (c)-(ii), (d)-(iv)`,`(a)-(iv), (b)-(i), (c)-(ii), (d)-(iii)`,`(a)-(ii), (b)-(iv), (c)-(i), (d)-(iii)`,`(a)-(iv), (b)-(iii), (c)-(ii), (d)-(i)`]},
+  {id:90,question:`Identify the wrongly spelt word/s:\n(a) Accept  (b) Anciant  (c) Attract  (d) Arrive`,options:[`(b) and (d)`,`Only (a)`,`(b) and (c)`,`Only (b)`]},
+  {id:91,question:`Identify the grammatically correct sentence/s.\n(a) He is the man whom we all respect.\n(b) I don’t know why she like dogs.\n(c) His endeavours needs to be rewarded.\n(d) Give me some food which I may eat.`,options:[`(a) and (b) only`,`(b) and (c) only`,`(a) and (d) only`,`(a) and (c) only`]},
+  {id:92,question:`Find the correct synonym for the word “Tranquil”.`,options:[`Agitated`,`Angry`,`Quiet`,`Disturbed`]},
+  {id:93,question:`Find the correct matching option:\n(a) Altar\n(b) Alter\n(c) Affection\n(d) Affectation\n(i) Pretence, false show; (ii) Place of worship; (iii) To change; (iv) Love, dedicate, emotions of liking`,options:[`(a)-(i), (b)-(ii), (c)-(iii), (d)-(iv)`,`(a)-(ii), (b)-(i), (c)-(iv), (d)-(iii)`,`(a)-(ii), (b)-(iii), (c)-(iv), (d)-(i)`,`(a)-(iv), (b)-(ii), (c)-(i), (d)-(iii)`]},
+  {id:94,question:`The politician’s response to the accusation simply begged the question and failed to provide a clear answer. What does the phrase “to beg the question” mean?`,options:[`To ask for a favour or assistance`,`To avoid answering the question directly`,`To make a logical fallacy by assuming the conclusion in premise`,`To question someone’s authority or credibility`]},
+  {id:95,question:`Choose the correct sentences.\n(a) Her work is superior than her brother’s.\n(b) This photograph is the better of the two.\n(c) This little girl is better than clever.`,options:[`(b) only`,`(a) and (b) only`,`(b) and (c) only`,`(a), (b) and (c)`]},
+  {id:96,question:`Deep Learning algorithms can be corrected on the basis of error-feedback provided by ______.\n(a) Layers of interconnected neurons\n(b) Fraudulent transactions in banking\n(c) Back-propagation\n(d) Data Management System (DMS)`,options:[`(b) only`,`(a) only`,`(d) only`,`(c) only`]},
+  {id:97,question:`Basically speaking, Deep Learning is a ______.\n(a) Neural Module\n(b) Hot topic in the world of Artificial Intelligence (AI)\n(c) Data Management Strategy\n(d) Back-Propagation technique`,options:[`(d) only`,`(c) only`,`(a) only`,`(b) only`]},
+  {id:98,question:`Deep Learning plays a very important role in ______.\n(a) identifying the structure of human brain\n(b) the treatment, classification, analysis and security of data\n(c) controlling the dropout and Rectified Linear Units (ReLU)\n(d) measuring the depth of layers in neural networks`,options:[`(c) only`,`(b) only`,`(a) only`,`(d) only`]},
+  {id:99,question:`One important feature of Deep Learning is that ______.\n(a) Deep Learning requires a Chief Data Officer (CDO)\n(b) Deep Learning is a module not requiring labelled data to learn from\n(c) Deep Learning is a subset of Artificial Intelligence (AI)\n(d) Deep Learning is more efficient than Machine Learning (ML)`,options:[`(d) only`,`(c) only`,`(b) only`,`(a) only`]},
+  {id:100,question:`Deep Learning is a part of ______.\n(a) AlexNet\n(b) ChatGPT\n(c) Machine Learning (ML)\n(d) Natural Language Processing (NLP)`,options:[`(c) only`,`(b) only`,`(d) only`,`(a) only`]}
+];
 
-  <dialog id="navDialog">
-    <div class="modal-body">
-      <div class="aside-head"><strong>Jump to question</strong><button id="closeNav" class="mark-btn" type="button">Close</button></div>
-      <div id="mobileNavigator" class="navigator"></div>
-    </div>
-  </dialog>
+const answerKey = [
+  null,1,3,2,1,3,2,1,3,2,2,0,3,1,3,2,1,2,0,2,3,3,1,1,0,
+  2,1,0,2,1,2,2,1,3,1,1,3,0,1,1,2,3,3,3,1,3,2,0,3,3,
+  null,0,2,1,0,2,1,2,1,3,1,3,1,1,1,0,3,1,3,0,2,1,2,0,1,
+  3,0,1,0,0,3,2,3,0,3,3,1,3,1,3,2,2,2,2,0,3,1,1,2,0
+];
 
-  <script src="questions.js"></script>
-  <script>
-    (() => {
-      'use strict';
-      const STORAGE_KEY = 'mpsc-group-c-2023-paper-1-v1';
-      const EXAM_SECONDS = 60 * 60;
-      const letters = ['A','B','C','D'];
-      const activeTotal = questions.filter(q => !q.cancelled).length;
-      const maxMarks = activeTotal * 2;
+const deepLearningPassage = `Data Management is one of the hardest and costliest tasks every organization faces. The fact that organizations appoint a Chief Data Officer (CDO) shows how much importance they give to managing data—its treatment, classification, analysis, security and compliance. This is where Deep Learning (DL) shines as a perfect data management strategy when employed with the right set of tools.\n\nWhile DL has been around for a while, the recent popularity of ChatGPT brings it back to being a hot topic in the world of AI. Deep Learning is a subset of Machine Learning (ML) and is based on how the human brain is structured and works. DL uses artificial neural networks to learn from large amounts of data. It gets the name “deep” because it leverages multiple layers of interconnected neurons to process and learn from the data. DL algorithms are capable of learning complex patterns in images, audio and text. Deep learning uses large amounts of unlabelled data to learn the underlying structure and patterns in data. It is an unsupervised learning module that does not require labelled data to start learning from.\n\nDeep Learning gained popularity in the 1980s with the development of back-propagation—a technique for training neural networks. In the 2000s the evolution of advanced techniques with respect to dropout and rectified linear units (ReLU) helped address core challenges. In 2012, AlexNet, a convolutional neural network focused on image recognition, won awards and regained popularity for mainstream uses in Natural Language Processing, speech recognition and autonomous vehicles.\n\nCommon uses include image recognition, Natural Language Processing, speech recognition, fraud detection and autonomous vehicles. As the “deep” in Deep Learning represents the depth of layers in neural networks, a neural network that consists of more than three layers is considered a deep learning algorithm. Deep Learning networks are feed-forward models but they can be trained to back-propagate as well. The latter is especially useful to provide feedback on errors so that the algorithm can be corrected appropriately.`;
 
-      const $ = id => document.getElementById(id);
-      const els = {
-        startScreen:$('startScreen'), startBtn:$('startBtn'), resumeBtn:$('resumeBtn'), timer:$('timer'),
-        progressText:$('progressText'), progressPercent:$('progressPercent'), progressFill:$('progressFill'),
-        questionNumber:$('questionNumber'), questionText:$('questionText'), options:$('options'), feedback:$('feedback'),
-        markBtn:$('markBtn'), prevBtn:$('prevBtn'), nextBtn:$('nextBtn'), passageBox:$('passageBox'), passageText:$('passageText'),
-        navigator:$('navigator'), mobileNavigator:$('mobileNavigator'), answeredCount:$('answeredCount'), correctCount:$('correctCount'),
-        reviewCount:$('reviewCount'), sideCount:$('sideCount'), submitBtn:$('submitBtn'), mobileSubmitBtn:$('mobileSubmitBtn'),
-        resetBtn:$('resetBtn'), jumpBtn:$('jumpBtn'), navDialog:$('navDialog'), closeNav:$('closeNav'), resultDialog:$('resultDialog'),
-        scoreValue:$('scoreValue'), resultCorrect:$('resultCorrect'), resultWrong:$('resultWrong'), resultUnanswered:$('resultUnanswered'),
-        resultAccuracy:$('resultAccuracy'), resultReview:$('resultReview'), resultTime:$('resultTime'), closeDialog:$('closeDialog'), restartDialog:$('restartDialog')
-      };
+// Apply Answer Key and Passage
+rawQuestions.forEach((item, index) => {
+  item.answer = answerKey[index];
+  item.cancelled = answerKey[index] === null;
+});
+rawQuestions.slice(95).forEach(item => { item.passage = deepLearningPassage; });
 
-      let state = { current:0, answers:Array(questions.length).fill(null), review:Array(questions.length).fill(false), startedAt:null, submitted:false };
-      let timerHandle = null;
+// ===== Variables =====
+let currentQ = 0;
+let userAnswers = [];
+let startTime, timerInterval;
+let shuffledQuestions = [];
+let finishClicked = false;
 
-      function loadSaved() {
-        try {
-          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-          if (!saved || !Array.isArray(saved.answers) || saved.answers.length !== questions.length) return false;
-          state = {
-            current:Number.isInteger(saved.current) ? Math.min(Math.max(saved.current,0),questions.length-1) : 0,
-            answers:saved.answers,
-            review:Array.isArray(saved.review) && saved.review.length === questions.length ? saved.review : Array(questions.length).fill(false),
-            startedAt:saved.startedAt || null,
-            submitted:Boolean(saved.submitted)
-          };
-          return true;
-        } catch { return false; }
+// ===== Marathi Number Helper =====
+function toMarathiNum(n) {
+  const map = ['०','१','२','३','४','५','६','७','८','९'];
+  return String(n).split('').map(d => map[d] || d).join('');
+}
+
+// ===== Shuffle Array =====
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ===== Prepare Questions =====
+function prepareQuestions() {
+  shuffledQuestions = rawQuestions.map(q => {
+    let options = [...q.options];
+    let correctOriginalIndex = q.cancelled ? -1 : q.answer;
+    let correctOptionText = correctOriginalIndex !== -1 ? options[correctOriginalIndex] : null;
+
+    // Shuffle options if not cancelled
+    if (!q.cancelled) {
+      options = shuffleArray(options);
+    }
+
+    // Find new index of correct text
+    let newCorrectIndex = correctOptionText ? options.indexOf(correctOptionText) : -1;
+
+    return {
+      question: q.question,
+      options: options,
+      correct: newCorrectIndex,
+      cancelled: q.cancelled,
+      passage: q.passage || null
+    };
+  });
+
+  // Shuffle questions order
+  shuffledQuestions = shuffleArray(shuffledQuestions);
+  userAnswers = new Array(shuffledQuestions.length).fill(null);
+}
+
+// ===== Start Exam =====
+function startExam() {
+  prepareQuestions();
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('examScreen').classList.remove('hidden');
+  document.getElementById('progressContainer').classList.remove('hidden');
+  startTimer();
+  buildPalette();
+  loadQuestion();
+}
+
+// ===== Timer =====
+function startTimer() {
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const h = Math.floor(elapsed / 3600);
+    const m = Math.floor((elapsed % 3600) / 60);
+    const s = elapsed % 60;
+    document.getElementById('timer').textContent =
+      `⏱ ${toMarathiNum(String(h).padStart(2,'0'))}:${toMarathiNum(String(m).padStart(2,'0'))}:${toMarathiNum(String(s).padStart(2,'0'))}`;
+  }, 1000);
+}
+
+// ===== Load Question =====
+function loadQuestion() {
+  const q = shuffledQuestions[currentQ];
+  document.getElementById('progressText').textContent =
+    `प्रश्न ${toMarathiNum(currentQ + 1)} क्रमांक ${toMarathiNum(shuffledQuestions.length)}`;
+  document.getElementById('questionText').textContent = q.question;
+
+  // Progress Bar
+  const progress = ((currentQ + 1) / shuffledQuestions.length) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+
+  // Passage Box
+  const passageBox = document.getElementById('passageBox');
+  if (q.passage) {
+    passageBox.textContent = q.passage;
+    passageBox.classList.remove('hidden');
+  } else {
+    passageBox.classList.add('hidden');
+    passageBox.textContent = '';
+  }
+
+  // Options
+  const container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  const labels = ['अ', 'ब', 'क', 'ड'];
+
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<span class="badge">${labels[i]}</span><span>${opt}</span>`;
+    if (!q.cancelled) {
+      div.onclick = () => selectOption(i, div);
+    } else {
+      div.classList.add('disabled');
+      div.style.opacity = '0.5';
+    }
+    container.appendChild(div);
+  });
+
+  const feedback = document.getElementById('feedback');
+  if (q.cancelled) {
+    userAnswers[currentQ] = 'cancelled'; // Auto-mark
+    feedback.className = 'feedback show cancelled';
+    feedback.textContent = '⚠ हा प्रश्न रद्द करण्यात आला आहे. सर्वांना गुण मिळतील.';
+  } else if (userAnswers[currentQ] !== null) {
+    showAnswer(userAnswers[currentQ], q);
+  } else {
+    feedback.className = 'feedback';
+    feedback.textContent = '';
+  }
+
+  document.getElementById('prevBtn').disabled = (currentQ === 0);
+  document.getElementById('nextBtn').textContent =
+    (currentQ === shuffledQuestions.length - 1) ? 'शेवटचा प्रश्न' : 'पुढील →';
+
+  updatePalette();
+}
+
+// ===== Select Option =====
+function selectOption(idx, el) {
+  if (userAnswers[currentQ] !== null) return;
+  userAnswers[currentQ] = idx;
+  showAnswer(idx, shuffledQuestions[currentQ]);
+  updatePalette();
+}
+
+// ===== Show Answer =====
+function showAnswer(selectedIdx, q) {
+  const options = document.querySelectorAll('.option');
+  options.forEach((opt, i) => {
+    opt.classList.add('disabled');
+    if (i === q.correct) opt.classList.add('correct');
+    else if (i === selectedIdx) opt.classList.add('wrong');
+  });
+
+  const feedback = document.getElementById('feedback');
+  feedback.classList.add('show');
+  if (selectedIdx === q.correct) {
+    feedback.className = 'feedback show right';
+    feedback.textContent = '✅ अगदी बरोबर! उत्तम.';
+  } else {
+    feedback.className = 'feedback show wrong';
+    feedback.textContent = `❌ चुकीचे उत्तर. योग्य उत्तर: "${q.options[q.correct]}"`;
+  }
+}
+
+// ===== Navigation =====
+function nextQuestion() { if (currentQ < shuffledQuestions.length - 1) { currentQ++; loadQuestion(); } }
+function prevQuestion() { if (currentQ > 0) { currentQ--; loadQuestion(); } }
+
+// ===== Palette =====
+function buildPalette() {
+  const p = document.getElementById('palette');
+  p.innerHTML = '';
+  shuffledQuestions.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'palette-btn';
+    btn.textContent = toMarathiNum(i + 1);
+    btn.onclick = () => { currentQ = i; loadQuestion(); };
+    p.appendChild(btn);
+  });
+  updatePalette();
+}
+function updatePalette() {
+  document.querySelectorAll('.palette-btn').forEach((btn, i) => {
+    btn.classList.remove('answered', 'current', 'cancelled');
+    if (shuffledQuestions[i].cancelled) {
+      btn.classList.add('cancelled');
+    }
+    if (userAnswers[i] !== null) btn.classList.add('answered');
+    if (i === currentQ) btn.classList.add('current');
+  });
+}
+
+// ===== Finish Button Logic =====
+function handleFinishClick() {
+  const btn = document.getElementById('finishBtn');
+  
+  if (!finishClicked) {
+    finishClicked = true;
+    btn.textContent = '⚠ खात्री आहे? पुन्हा क्लिक करा (Confirm)';
+    btn.classList.add('btn-confirm');
+    
+    setTimeout(() => {
+      if (!finishClicked) return;
+      finishClicked = false;
+      btn.textContent = 'परीक्षा संपवा (Finish Exam)';
+      btn.classList.remove('btn-confirm');
+    }, 3000);
+  } else {
+    clearInterval(timerInterval);
+    showResult();
+  }
+}
+
+// ===== Show Result =====
+function showResult() {
+  document.getElementById('examScreen').classList.add('hidden');
+  document.getElementById('progressContainer').classList.add('hidden');
+  const result = document.getElementById('resultScreen');
+  result.classList.remove('hidden');
+
+  let score = 0;
+  let attempted = 0;
+  let wrong = 0;
+  let validQuestions = 0;
+
+  userAnswers.forEach((a, i) => {
+    const q = shuffledQuestions[i];
+    if (!q.cancelled) {
+      validQuestions++;
+      if (a !== null && a !== 'cancelled') {
+        attempted++;
+        if (a === q.correct) score++;
+        else wrong++;
       }
+    } else {
+      score++; // Give marks for cancelled questions
+      validQuestions++;
+    }
+  });
 
-      function save() { localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
-      function start(fresh) {
-        if (fresh) {
-          state = { current:0,answers:Array(questions.length).fill(null),review:Array(questions.length).fill(false),startedAt:Date.now(),submitted:false };
-          save();
-        } else if (!state.startedAt) {
-          state.startedAt = Date.now();
-          save();
-        }
-        els.startScreen.classList.add('hidden');
-        render();
-        runTimer();
-      }
+  let skipped = validQuestions - attempted - score; // Skipped valid questions
+  const totalValidForPercentage = shuffledQuestions.length; // Use total length for percentage denominator
+  const pct = Math.round((score / totalValidForPercentage) * 100);
 
-      function formatTime(seconds) {
-        const safe = Math.max(0,Math.floor(seconds));
-        return `${String(Math.floor(safe/60)).padStart(2,'0')}:${String(safe%60).padStart(2,'0')}`;
-      }
+  // Score Circle
+  const circle = document.getElementById('scoreCircle');
+  circle.className = 'score-circle ' + (pct >= 75 ? 'score-excellent' : pct >= 40 ? 'score-good' : 'score-poor');
+  circle.innerHTML = `<div>${toMarathiNum(pct)}%</div>`;
 
-      function elapsedSeconds() { return state.startedAt ? Math.floor((Date.now()-state.startedAt)/1000) : 0; }
-      function remainingSeconds() { return Math.max(0,EXAM_SECONDS-elapsedSeconds()); }
+  // Stats
+  document.getElementById('statCorrect').textContent = toMarathiNum(score);
+  document.getElementById('statWrong').textContent = toMarathiNum(wrong);
+  document.getElementById('statSkipped').textContent = toMarathiNum(skipped);
+  
+  // Time
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const m = Math.floor(elapsed / 60);
+  const s = elapsed % 60;
+  document.getElementById('statTime').textContent = `${toMarathiNum(String(m).padStart(2,'0'))}:${toMarathiNum(String(s).padStart(2,'0'))}`;
 
-      function runTimer() {
-        clearInterval(timerHandle);
-        const tick = () => {
-          const left = remainingSeconds();
-          els.timer.querySelector('span').textContent = formatTime(left);
-          els.timer.classList.toggle('warning',left <= 600 && left > 120);
-          els.timer.classList.toggle('danger',left <= 120);
-          if (left === 0 && !state.submitted) { clearInterval(timerHandle);submit(true); }
-        };
-        tick();
-        timerHandle = setInterval(tick,1000);
-      }
+  // Motivational Message
+  const msgEl = document.getElementById('motivationMsg');
+  if (pct >= 75) {
+    msgEl.innerHTML = "🌟 उत्कृष्ट कामगिरी! तुम्ही खरोखरच अव्वल आहात. असेच कायम राहा!";
+  } else if (pct >= 50) {
+    msgEl.innerHTML = "👏 अतिशय चांगले! थोडक्याच मेहनतीने तुम्ही तुमचे ध्येय गाठाल. शाबास!";
+  } else if (pct >= 35) {
+    msgEl.innerHTML = "📚 चांगला प्रयत्न! पुन्हा सराव केल्यास तुम्ही नक्कीच अधिक चांगले कराल.";
+  } else {
+    msgEl.innerHTML = "💪 निराश होऊ नका. चुका तपासा आणि पुन्हा प्रयत्न करा. यश नक्कीच मिळेल!";
+  }
 
-      function stats() {
-        let answered=0,correct=0,wrong=0,review=0;
-        questions.forEach((q,i) => {
-          if (state.review[i]) review++;
-          if (q.cancelled || state.answers[i] === null) return;
-          answered++;
-          if (state.answers[i] === q.answer) correct++; else wrong++;
-        });
-        return {answered,correct,wrong,review,unanswered:activeTotal-answered};
-      }
+  // Review
+  const labels = ['अ','ब','क','ड'];
+  const review = document.getElementById('reviewContainer');
+  review.innerHTML = '';
+  shuffledQuestions.forEach((q, i) => {
+    const ua = userAnswers[i];
+    const isCorrect = ua === q.correct;
+    const isSkipped = ua === null;
+    const isCancelled = q.cancelled;
+    
+    let statusColor = isCancelled ? 'orange' : (isCorrect ? '#2ecc71' : (isSkipped ? '#95a5a6' : '#e74c3c'));
+    let statusText = isCancelled ? '🚫 रद्द प्रश्न' : (isCorrect ? '✅ बरोबर' : (isSkipped ? '— वगळले' : '❌ चूक'));
 
-      function render() {
-        const q = questions[state.current];
-        els.questionNumber.textContent = `Question ${q.id} of ${questions.length}`;
-        els.questionText.textContent = q.question;
-        els.markBtn.classList.toggle('active',state.review[state.current]);
-        els.markBtn.textContent = state.review[state.current] ? '★ Marked for review' : '☆ Mark for review';
-        els.prevBtn.disabled = state.current === 0;
-        els.nextBtn.textContent = state.current === questions.length-1 ? 'View summary →' : 'Next →';
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.style.borderLeft = `4px solid ${statusColor}`;
+    
+    let userAnsHtml = isSkipped ? 'उत्तर दिले नाही' : (isCancelled ? 'N/A' : `${labels[ua]}) ${q.options[ua]}`);
+    let correctAnsHtml = isCancelled ? 'N/A' : `${labels[q.correct]}) ${q.options[q.correct]}`;
 
-        if (q.passage) {
-          els.passageBox.hidden = false;
-          els.passageText.textContent = q.passage;
-          els.passageBox.open = q.id === 96;
-        } else {
-          els.passageBox.hidden = true;
-          els.passageBox.open = false;
-        }
-
-        els.options.innerHTML = '';
-        q.options.forEach((text,index) => {
-          const selected = state.answers[state.current] === index;
-          const answered = state.answers[state.current] !== null;
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.className = 'option';
-          if (selected) button.classList.add('selected');
-          if (answered && !q.cancelled && index === q.answer) button.classList.add('correct');
-          if (answered && selected && index !== q.answer) button.classList.add('wrong');
-          button.setAttribute('aria-pressed',selected ? 'true' : 'false');
-          button.innerHTML = `<span class="letter">${letters[index]}</span><span></span><span class="state-icon"></span>`;
-          button.children[1].textContent = text;
-          if (answered && !q.cancelled && index === q.answer) button.children[2].textContent = '✓';
-          if (answered && selected && index !== q.answer) button.children[2].textContent = '×';
-          button.addEventListener('click',() => choose(index));
-          els.options.appendChild(button);
-        });
-
-        renderFeedback(q);
-        renderStats();
-        renderNavigators();
-        window.scrollTo({top:0,behavior:'smooth'});
-      }
-
-      function renderFeedback(q) {
-        const choice = state.answers[state.current];
-        els.feedback.className = 'feedback';
-        els.feedback.textContent = '';
-        if (q.cancelled) {
-          els.feedback.classList.add('show','cancelled');
-          els.feedback.textContent = 'This question was cancelled in the final answer key and is not scored.';
-        } else if (choice !== null) {
-          const isCorrect = choice === q.answer;
-          els.feedback.classList.add('show',isCorrect ? 'good' : 'bad');
-          els.feedback.textContent = isCorrect ? 'Correct answer.' : `Incorrect. Correct answer: ${letters[q.answer]}. ${q.options[q.answer]}`;
-        }
-      }
-
-      function choose(index) {
-        const q = questions[state.current];
-        if (q.cancelled) return;
-        state.answers[state.current] = index;
-        save();
-        render();
-      }
-
-      function renderStats() {
-        const s = stats();
-        const pct = Math.round((s.answered/activeTotal)*100);
-        els.progressText.textContent = `${s.answered} of ${activeTotal} active questions answered`;
-        els.progressPercent.textContent = `${pct}%`;
-        els.progressFill.style.width = `${pct}%`;
-        els.answeredCount.textContent = s.answered;
-        els.correctCount.textContent = s.correct;
-        els.reviewCount.textContent = s.review;
-        els.sideCount.textContent = `${s.answered}/${activeTotal}`;
-      }
-
-      function navButton(q,index) {
-        const button = document.createElement('button');
-        button.type='button';
-        button.className='nav-dot';
-        button.textContent=q.id;
-        const answer=state.answers[index];
-        if (q.cancelled) button.classList.add('cancelled');
-        else if (answer !== null) button.classList.add(answer === q.answer ? 'answered' : 'wrong-answer');
-        if (state.review[index]) button.classList.add('review');
-        if (index === state.current) button.classList.add('current');
-        button.setAttribute('aria-label',`Go to question ${q.id}`);
-        button.addEventListener('click',() => { state.current=index;save();if(els.navDialog.open)els.navDialog.close();render(); });
-        return button;
-      }
-
-      function renderNavigators() {
-        els.navigator.innerHTML='';
-        els.mobileNavigator.innerHTML='';
-        questions.forEach((q,i) => {
-          els.navigator.appendChild(navButton(q,i));
-          els.mobileNavigator.appendChild(navButton(q,i));
-        });
-      }
-
-      function go(delta) {
-        if (state.current === questions.length-1 && delta > 0) { submit(false);return; }
-        state.current=Math.min(Math.max(state.current+delta,0),questions.length-1);
-        save();render();
-      }
-
-      function submit(auto) {
-        const s=stats();
-        if (!auto && s.unanswered > 0 && !confirm(`You still have ${s.unanswered} unanswered active questions. Submit anyway?`)) return;
-        state.submitted=true;save();clearInterval(timerHandle);
-        const score=Math.max(0,s.correct*2-s.wrong*.5);
-        const attempted=s.correct+s.wrong;
-        els.scoreValue.textContent=`${Number.isInteger(score)?score:score.toFixed(1)} / ${maxMarks}`;
-        els.resultCorrect.textContent=s.correct;
-        els.resultWrong.textContent=s.wrong;
-        els.resultUnanswered.textContent=s.unanswered;
-        els.resultAccuracy.textContent=attempted ? `${Math.round(s.correct/attempted*100)}%` : '0%';
-        els.resultReview.textContent=s.review;
-        els.resultTime.textContent=formatTime(Math.min(elapsedSeconds(),EXAM_SECONDS));
-        els.resultDialog.showModal();
-      }
-
-      function reset() {
-        if (!confirm('Reset all answers and start a new attempt?')) return;
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-      }
-
-      els.startBtn.addEventListener('click',() => start(true));
-      els.resumeBtn.addEventListener('click',() => start(false));
-      els.prevBtn.addEventListener('click',() => go(-1));
-      els.nextBtn.addEventListener('click',() => go(1));
-      els.markBtn.addEventListener('click',() => { state.review[state.current]=!state.review[state.current];save();render(); });
-      els.submitBtn.addEventListener('click',() => submit(false));
-      els.mobileSubmitBtn.addEventListener('click',() => submit(false));
-      els.resetBtn.addEventListener('click',reset);
-      els.jumpBtn.addEventListener('click',() => els.navDialog.showModal());
-      els.closeNav.addEventListener('click',() => els.navDialog.close());
-      els.closeDialog.addEventListener('click',() => { els.resultDialog.close();runTimer(); });
-      els.restartDialog.addEventListener('click',reset);
-      document.addEventListener('keydown',event => {
-        if (els.startScreen.classList.contains('hidden') && !els.resultDialog.open && !els.navDialog.open) {
-          if (event.key === 'ArrowRight') go(1);
-          if (event.key === 'ArrowLeft') go(-1);
-          const optionIndex=['1','2','3','4'].indexOf(event.key);
-          if (optionIndex >= 0) choose(optionIndex);
-        }
-      });
-
-      const hasSaved=loadSaved();
-      if (hasSaved && state.startedAt) {
-        els.resumeBtn.style.display='block';
-        els.startBtn.textContent='Start new exam';
-      }
-    })();
-  </script>
+    div.innerHTML = `
+      <div class="review-q">${toMarathiNum(i+1)}. ${q.question.replace(/\n/g, '<br>')}</div>
+      <div class="review-ans" style="color:${statusColor}; font-weight:600;">तुमचे उत्तर: ${userAnsHtml} (${statusText})</div>
+      ${!isCorrect && !isCancelled ? `<div class="review-ans" style="color:#2ecc71;">योग्य उत्तर: ${correctAnsHtml}</div>` : ''}
+    `;
+    review.appendChild(div);
+  });
+}
+</script>
 </body>
 </html>
